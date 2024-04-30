@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from './navbar';
-import { customerActive, dashboardIcon, leaderActive, settingIcon, walletIcon } from './assets';
+import { customerActive, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, settingIcon, walletIcon } from './assets';
 import styles from './style';
 
 const Sidebar = () => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   useEffect(() => {
     // Extract the pathname from the location object and set the activeItem state
@@ -28,7 +37,7 @@ const Sidebar = () => {
                 to="/"
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/' ? 'btn-active' : ''}`}
               >
-                <img src={dashboardIcon} alt="dashboard" className="w-6" />
+                <img src={dashboardIcon} alt="dashboard" className="w-4 mr-1" />
                 <span className="ml-3">Dashboard</span>
               </Link>
             </li>
@@ -37,45 +46,63 @@ const Sidebar = () => {
                 to="/leaderBoard"
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/leaderBoard' ? 'btn-active' : ''}`}
               >
-                <img src={leaderActive} alt="leader" className="w-6" />
+                <img src={leaderActive} alt="leader" className="w-4 mr-1" />
                 <span className="ml-3">Lead Board</span>
               </Link>
             </li>
             <li>
-              <a
-                to="/webinar"
-                className="flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group"
+              <Link
+                to="/customers"
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
               >
-                <img src={customerActive} alt="customer" className="w-6" />
+                <img src={customerActive} alt="customer" className="w-6 mr-1" />
                 <span className="ml-3">Customer</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group"
+              <Link
+                to="/wallet"
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
               >
-                <img src={walletIcon} alt="wallet" className="w-6" />
+                <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
+                <span className="ml-3">Marketing Partner</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/wallet"
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/wallet' ? 'btn-active' : ''}`}
+              >
+                <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
                 <span className="ml-3">Wallet</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a
                 href="#"
                 className="flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group"
               >
-                <img src={settingIcon} alt="setting" className="w-6" />
+                <img src={settingIcon} alt="setting" className="w-6 mr-1" />
                 <span className="ml-3">Setting</span>
               </a>
             </li>
             <li>
               <a
                 href="#"
-                className="flex items-center p-2 py-4 text-white rounded-lg tab-btn group"
+                className="flex items-center p-2 py-4 text-white rounded-lg group"
               >
-                <button className="flex items-center bg-[#fff] p-2 rounded-lg">
-                  <span className="mr-3">Dashboard</span>
-                  <img src={dashboardIcon} alt="dashboard" className="w-6" />
+                <button className="flex items-center  p-3 bg-[#fff] text-[#000] rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-300">
+                {isHovered ? (
+                  <>
+                    <img src={loginBtn} alt="" className="inline-block w-4 mr-1" />
+                    Dhasboard
+                  </>
+                ) : (
+                  <>
+                    <img src={loginBlack} alt="" className="inline-block w-4 mr-1" />
+                    Dashboard
+                  </>
+                )}
                 </button>
               </a>
             </li>

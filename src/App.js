@@ -5,6 +5,9 @@ import styles from "./style";
 import Sidebar from "./sidebar.jsx";
 import Dashboard from "./components/Dashboard";
 import Leader from './components/Leader.jsx'
+import Customers from './components/Customers.jsx'
+import SingleCustomer from "./components/SingleCustomer.jsx";
+import Wallet from "./components/wallet.jsx";
 function App() {
   return (
     <Router>
@@ -15,6 +18,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/leaderBoard" element={<Leader />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/wallet" element={<Wallet />} />
+
+            <Route path="/customers/singleCustomer" element={<SingleCustomer />} />
             </Routes>
           </div>
         </div>

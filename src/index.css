@@ -528,3 +528,27 @@
     rgba(231, 231, 231, 0.197)
   );
 }
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+}
+
+td, th {
+  border: none;
+  padding: 15px 0;
+}
+
+tr:nth-child(even) {
+  background-color: #29303F;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
