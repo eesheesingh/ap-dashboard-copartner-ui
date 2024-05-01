@@ -78,13 +78,13 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="/setting"
                 className="flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group"
               >
                 <img src={settingIcon} alt="setting" className="w-6 mr-1" />
                 <span className="ml-3">Setting</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a

@@ -30,7 +30,18 @@ import graph4 from "./graph4.png"
 import download from './downloadBtn.png'
 import invoiceBtn from "./invoice.png"
 import editBtn from './EditBtn.png'
+import editBlack from "./editBlack.png"
 import playBtn from './PlayBtn.png'
+import mail from './mailBtn.png'
+import call from './phoneBtn.png'
+import card from './cardBtn.png'
+import cardHolder from './cardholderBtn.png'
+import document from './doucmentBtn.png'
+import userImg from './image 11 (2).png'
+import tick from './tickImg.png'
+import userBack from './userBck.png'
+import hdfcImg from "./hdfc.png"
+import paytmImg from "./paytm.png"
 export {
     availableIcon,
     chatIcon,
@@ -65,4 +76,15 @@ export {
     invoiceBtn,
     editBtn,
     playBtn,
+    mail,
+    call,
+    card,
+    cardHolder,
+    document,
+    userImg,
+    tick,
+    editBlack,
+    userBack,
+    hdfcImg,
+    paytmImg,
 }

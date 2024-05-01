@@ -8,6 +8,7 @@ import Leader from './components/Leader.jsx'
 import Customers from './components/Customers.jsx'
 import SingleCustomer from "./components/SingleCustomer.jsx";
 import Wallet from "./components/wallet.jsx";
+import Setting from "./components/Setting.jsx";
 function App() {
   return (
     <Router>
@@ -20,6 +21,7 @@ function App() {
             <Route path="/leaderBoard" element={<Leader />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/wallet" element={<Wallet />} />
+            <Route path="/setting" element={<Setting />} />
 
             <Route path="/customers/singleCustomer" element={<SingleCustomer />} />
             </Routes>

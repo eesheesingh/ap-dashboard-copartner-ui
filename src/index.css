@@ -552,3 +552,11 @@ tr:nth-child(even) {
   display: none;
 }
 
+.userBack{
+  background-image: url('./assets/userBck.png');
+  background-position: 100%;
+  background-repeat: no-repeat;
+}
+ .maskImage{
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) 70%, transparent);
+ }

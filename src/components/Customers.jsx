@@ -18,7 +18,7 @@ const Customers = () => {
       <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-3">
         <div className="relative">
           {/* Third Section */}
-          <div className="flex justify-between mt-10 items-center">
+          <div className="flex justify-between mt-12 items-center">
             
             <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Channel Listing</h2>
             
