@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { customBtn, graph, graph2, usersPurple } from "../assets";
+import { customBtn, graph, graph2, usersPurple } from "../../assets";
 import LeaderboardTable from "./LeaderboardTable";
 
 const Subscription = () => {

@@ -42,6 +42,11 @@ import tick from './tickImg.png'
 import userBack from './userBck.png'
 import hdfcImg from "./hdfc.png"
 import paytmImg from "./paytm.png"
+import banner from './Website banner 2-02.jpg'
+import banner2 from "./Website banner 2-01.jpg"
+import comingSoon from "./comingSoon.png"
+import clipboard from "./Clipboard.png"
+import close from "./close.png"
 export {
     availableIcon,
     chatIcon,
@@ -65,7 +70,6 @@ export {
     webinarPurple,
     coursePurple,
     customBtn,
-    loginBtn,
     filterBtn,
     leftArrow,
     filterBlack,
@@ -87,4 +91,10 @@ export {
     userBack,
     hdfcImg,
     paytmImg,
+    banner,
+    banner2,
+    comingSoon,
+    loginBtn,
+    clipboard,
+    close,
 }

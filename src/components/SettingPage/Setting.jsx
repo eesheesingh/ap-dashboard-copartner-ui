@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { useRef } from 'react';
-import { expertise_data } from "../constants/data";
+import { expertise_data } from "../../constants/data";
 import { useParams } from 'react-router-dom';
-import { call, card, cardHolder, mail, rightArrow, userImg, clipboard, tick, editBtn, editBlack } from '../assets'; // Assuming you have imported clipboard and tick icons
+import { call, card, cardHolder, mail, rightArrow, userImg, clipboard, tick, editBtn, editBlack } from '../../assets'; // Assuming you have imported clipboard and tick icons
 import DocumentSetting from './DocumentSetting';
 import BankSetting from './BankSetting';
+import EditProfilePopup from './EditProfilePopup';
 
 const Setting = () => {
   const [copied, setCopied] = useState(false);
-  const [copiedCode, setCopiedCode] = useState()
+  const [copiedCode, setCopiedCode] = useState(false)
   const [showTick, setShowTick] = useState(false);
   const referralLinkRef = useRef(null);
+  const referralCodeRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false); // State to manage the visibility of the EditProfilePopup
+
+  const handleEditProfileClick = () => {
+    setIsEditProfileOpen(true); // Open the EditProfilePopup
+  };
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -37,9 +44,9 @@ const Setting = () => {
   };
 
   const copyCodeToClipboard = () => {
-    if (referralLinkRef.current) {
-      const fullLink = referralLinkRef.current.innerText;
-      navigator.clipboard.writeText(fullLink);
+    if (referralCodeRef.current) {
+      const fullCode = referralCodeRef.current.innerText;
+      navigator.clipboard.writeText(fullCode);
       setCopiedCode(true);
       setShowTick(true);
       setTimeout(() => {
@@ -107,7 +114,7 @@ const Setting = () => {
                       Referral Code:
                     </span>
                     <div className='border-[#fff] border-[1px] flex flex-row gap-2 rounded-[50px] px-3 py-1'>
-                      <span ref={referralLinkRef} className='overflow-hidden whitespace-nowrap overflow-ellipsis text-[#c9c9c9]'>YOURMOMMY</span>|
+                      <span ref={referralCodeRef} className='overflow-hidden whitespace-nowrap overflow-ellipsis text-[#c9c9c9]'>YOURMOMMY</span>|
                       <button onClick={copyCodeToClipboard}>
                         {copiedCode ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={call} alt="Copy" className='w-5'/>) : <img src={call} alt="Copy" className='w-5'/>}
                       </button>
@@ -121,6 +128,7 @@ const Setting = () => {
                 <button className="absolute flex bottom-0 right-0 bg-[#ffffff43] hover:bg-[#fff] items-center text-white hover:text-[#000] px-5 py-1 border-[1px] rounded-[50px] transition duration-300"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={handleEditProfileClick} // Open the EditProfilePopup on click
               >
                 {isHovered ? (
                   <>
@@ -165,6 +173,8 @@ const Setting = () => {
           </div>
         </div>
       </div>
+      <EditProfilePopup isOpen={isEditProfileOpen} onClose={() => setIsEditProfileOpen(false)} />
+
     </div>
   );
 };

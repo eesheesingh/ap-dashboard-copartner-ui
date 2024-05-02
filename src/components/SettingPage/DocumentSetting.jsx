@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { document, editBlack, editBtn, deleteIcon } from '../assets';
+import { document, editBlack, editBtn, deleteIcon } from '../../assets';
 
 const DocumentSetting = () => {
   const [isHovered, setIsHovered] = useState(false);

@@ -1,10 +1,42 @@
-import React, { useState } from "react";
-import { graph, graph2, usersPurple, customBtn } from "../assets";
+import React, { useRef, useState } from "react";
+import { graph, graph2, usersPurple, customBtn, tick, clipboard } from "../../assets";
 import DashboardTable from "./DashboardTable";
+import WithdrawalPopup from "./WithdrawalPopup";
+
+
+
 
 const Dashboard = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("weekly");
+  const [copiedReferralLink, setCopiedReferralLink] = useState(false);
+  const [copiedReferralCode, setCopiedReferralCode] = useState(false);
+  const [isWithdrawalPopupOpen, setIsWithdrawalPopupOpen] = useState(false);
+
+  const referralLinkRef = useRef(null);
+  const referralCodeRef = useRef(null);
+
+  const copyReferralLinkToClipboard = () => {
+    if (referralLinkRef.current) {
+      const fullLink = referralLinkRef.current.innerText;
+      navigator.clipboard.writeText(fullLink);
+      setCopiedReferralLink(true);
+      setTimeout(() => {
+        setCopiedReferralLink(false);
+      }, 3000);
+    }
+  };
+
+  const copyReferralCodeToClipboard = () => {
+    if (referralCodeRef.current) {
+      const fullCode = referralCodeRef.current.innerText;
+      navigator.clipboard.writeText(fullCode);
+      setCopiedReferralCode(true);
+      setTimeout(() => {
+        setCopiedReferralCode(false);
+      }, 3000);
+    }
+  };
 
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
@@ -50,11 +82,46 @@ const Dashboard = () => {
                   <span className="text-[#fff]">Say no to spreadsheets.</span>
                 </p>
               </div>
-              <button className="bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#fff] transition duration-300 py-2 px-6 rounded">
-                Withdrawn
-              </button>
+              {/* Withdrawal Button */}
+          <div className="flex justify-center">
+            <button className="bg-[#fff] transition duration-300 text-[#000] hover:bg-[#000] hover:text-[#fff] px-6 py-3 rounded" onClick={() => setIsWithdrawalPopupOpen(true)}>
+              Withdraw
+            </button>
+          </div>
+
+          {/* Withdrawal Popup */}
+          <WithdrawalPopup isOpen={isWithdrawalPopupOpen} onClose={() => setIsWithdrawalPopupOpen(false)} />
             </div>
           </div>
+
+          <div className="flex flex-row justify-between p-3 px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+  <div className="flex flex-row items-center gap-3">
+    <span className="text-lg">Referral Link :</span>
+    <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+    <span ref={referralLinkRef} className="mr-1">https://www.example.com/referral</span>
+    <button onClick={copyReferralLinkToClipboard} className="flex items-center mt-[2px]">| 
+      {copiedReferralLink ? (
+        <img src={tick} alt="Copied" className="w-5" />
+      ) : (
+        <img src={clipboard} alt="Copy" className="w-5" />
+      )}
+    </button>
+    </div>
+  </div>
+  <div className="flex flex-row items-center gap-3 py-2">
+    <span className="text-lg">Referral Code :</span>
+    <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+    <span ref={referralCodeRef} className="mr-1">REFCODE123</span>
+    <button onClick={copyReferralCodeToClipboard}className="flex items-center">| 
+      {copiedReferralCode ? (
+        <img src={tick} alt="Copied" className="w-5" />
+      ) : (
+        <img src={clipboard} alt="Copy" className="w-5" />
+      )}
+    </button>
+    </div>
+  </div>
+</div>
 
           {/* Second Section */}
           <div className="flex justify-between mt-10">

@@ -58,6 +58,13 @@
   text-fill-color: transparent;
 }
 
+.subheading-color{
+  font-weight: 700;
+  background: linear-gradient(#FFFFFF, #71717A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .bg-gradient {
   background: rgba(34, 38, 47, 1);
 }
@@ -560,3 +567,4 @@ tr:nth-child(even) {
  .maskImage{
   mask-image: linear-gradient(rgba(0, 0, 0, 1) 70%, transparent);
  }
+

@@ -1,12 +1,20 @@
-import React, { useRef } from 'react';
-import {  filterBtn } from '../assets';
-
+import React, { useRef, useState } from 'react';
+import { filterBlack, filterBtn } from '../../assets';
 const LeaderboardTable = () => {
   const tableRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleScroll = (e) => {
     const { scrollTop, scrollLeft } = e.target;
     tableRef.current.scrollLeft = scrollLeft;
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -17,10 +25,23 @@ const LeaderboardTable = () => {
         <div className="flex items-center">
           {/* Filter button */}
           
-          <button className="bg-transparent border-[1px] hover:bg-[#fff] hover:text-[#000] text-white px-5 py-3 rounded-lg transition duration-300">
-          <img src={filterBtn} alt="" className="inline-block w-5 mr-1" />
-            Filter
-            </button>
+          <button
+                className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {isHovered ? (
+                  <>
+                    <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
+                    Filter
+                  </>
+                ) : (
+                  <>
+                    <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
+                    Filter
+                  </>
+                )}
+              </button>
         </div>
       </div>
 

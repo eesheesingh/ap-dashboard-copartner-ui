@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from './navbar';
-import { customerActive, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, settingIcon, walletIcon } from './assets';
+import { customerActive, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon } from './assets';
 import styles from './style';
 
 const Sidebar = () => {
@@ -61,10 +61,10 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/wallet"
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
+                to="/marketing-planning"
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/marketing-planning' ? 'btn-active' : ''}`}
               >
-                <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
+                <img src={marketingIcon} alt="wallet" className="w-6 mr-1" />
                 <span className="ml-3">Marketing Partner</span>
               </Link>
             </li>
@@ -80,7 +80,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/setting"
-                className="flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group"
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/setting' ? 'btn-active' : ''}`}
               >
                 <img src={settingIcon} alt="setting" className="w-6 mr-1" />
                 <span className="ml-3">Setting</span>
@@ -94,13 +94,13 @@ const Sidebar = () => {
                 <button className="flex items-center  p-3 bg-[#fff] text-[#000] rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-300">
                 {isHovered ? (
                   <>
+                    Logout
                     <img src={loginBtn} alt="" className="inline-block w-4 mr-1" />
-                    Dhasboard
                   </>
                 ) : (
                   <>
+                    Logout
                     <img src={loginBlack} alt="" className="inline-block w-4 mr-1" />
-                    Dashboard
                   </>
                 )}
                 </button>

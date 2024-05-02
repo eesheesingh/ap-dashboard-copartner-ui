@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { filterBlack, filterBtn, rightArrow } from '../assets';
+import { filterBlack, filterBtn, rightArrow } from '../../assets';
 
 const SingleCustomer = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -42,7 +42,7 @@ const SingleCustomer = () => {
                 onMouseLeave={handleHoverLeave}
                 onClick={handleClick} // Add onClick handler to go back
               />
-              <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Channel Listing</h2>
+              <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Krishan</h2>
             </div>
             <div className="flex items-center">
               {/* Filter button */}

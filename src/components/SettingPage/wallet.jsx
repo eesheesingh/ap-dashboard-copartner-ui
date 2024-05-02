@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { customBtn,  graph3, graph4 } from '../assets';
+import { customBtn,  graph3, graph4 } from '../../assets';
 import WalletTable from './WalletTable';
+import WithdrawalPopup from '../Dashboard/WithdrawalPopup';
 
 const Wallet = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState('weekly');
+  const [isWithdrawalPopupOpen, setIsWithdrawalPopupOpen] = useState(false);
 
 
   return (
@@ -93,9 +95,11 @@ const Wallet = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-center md:w-[40%]">
+            <div className="w-full flex justify-center md:w-[40%] cursor-pointer" onClick={() => setIsWithdrawalPopupOpen(true)}>
               <img src={activeButtonFirstSection === "monthly" ? graph3 : graph4} alt="Graph" className="w-full rounded-lg" />
             </div>
+            {/* Withdrawal Popup */}
+          <WithdrawalPopup isOpen={isWithdrawalPopupOpen} onClose={() => setIsWithdrawalPopupOpen(false)} />
           </div>
         </div>
 

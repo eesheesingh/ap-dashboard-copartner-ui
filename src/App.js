@@ -3,12 +3,13 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import styles from "./style";
 // import Navbar from "./Navbar";
 import Sidebar from "./sidebar.jsx";
-import Dashboard from "./components/Dashboard";
-import Leader from './components/Leader.jsx'
-import Customers from './components/Customers.jsx'
-import SingleCustomer from "./components/SingleCustomer.jsx";
-import Wallet from "./components/wallet.jsx";
-import Setting from "./components/Setting.jsx";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import Leader from './components/LeaderBoard/Leader.jsx'
+import Customers from './components/Customers/Customers.jsx'
+import SingleCustomer from "./components/Customers/SingleCustomer.jsx";
+import Wallet from "./components/SettingPage/wallet.jsx";
+import Setting from "./components/SettingPage/Setting.jsx";
+import Marketing from "./components/Marketing/Marketing.jsx";
 function App() {
   return (
     <Router>
@@ -22,6 +23,8 @@ function App() {
             <Route path="/customers" element={<Customers />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/setting" element={<Setting />} />
+            <Route path="/marketing-planning" element={<Marketing />} />
+
 
             <Route path="/customers/singleCustomer" element={<SingleCustomer />} />
             </Routes>

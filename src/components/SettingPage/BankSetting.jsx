@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { hdfcImg, paytmImg } from '../assets'
+import { hdfcImg, paytmImg } from '../../assets'
 
 const BankSetting = () => {
 

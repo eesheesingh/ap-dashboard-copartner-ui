@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { filterBlack, filterBtn, invoiceBtn } from '../assets';
+import { filterBlack, filterBtn, invoiceBtn } from '../../assets';
 
 const WalletTable = () => {
     const [isHovered, setIsHovered] = useState(false);
