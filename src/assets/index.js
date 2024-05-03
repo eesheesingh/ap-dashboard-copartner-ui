@@ -47,6 +47,7 @@ import banner2 from "./Website banner 2-01.jpg"
 import comingSoon from "./comingSoon.png"
 import clipboard from "./Clipboard.png"
 import close from "./close.png"
+import deleteIcon from "./deleteIcon.png"
 export {
     availableIcon,
     chatIcon,
@@ -97,4 +98,5 @@ export {
     loginBtn,
     clipboard,
     close,
+    deleteIcon,
 }

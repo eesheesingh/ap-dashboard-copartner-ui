@@ -16,7 +16,7 @@ const WalletTable = () => {
           {/* Third Section */}
           <div className="flex justify-between mt-10 items-center">
             
-            <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Channel Listing</h2>
+            <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Transaction History</h2>
             
             <div className="flex items-center">
               {/* Filter button */}
@@ -44,7 +44,7 @@ const WalletTable = () => {
             <table>
               <thead className="text-center bg-[#29303F] sticky top-0">
                 <tr>
-                  <th className="text-center text-[15px]">TRANSAACTION ID</th>
+                  <th className="text-center text-[15px]">TRANSACTION ID</th>
                   <th className="text-center text-[15px]">Date</th>
                   <th className="text-center text-[15px]">Bank</th>
                   <th className="text-center text-[15px]">Account Number</th>

@@ -32,7 +32,7 @@ const Customers = () => {
           {/* Third Section */}
           <div className="flex justify-between mt-12 items-center">
             
-            <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Channel Listing</h2>
+            <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">CUstomers Listing</h2>
             
             <div className="flex items-center">
               {/* Filter button */}

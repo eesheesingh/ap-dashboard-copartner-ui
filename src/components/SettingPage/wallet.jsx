@@ -44,11 +44,11 @@ const Wallet = () => {
               <h3 className="text-center font-semibold md:text-[30px] xl:text-[50px]">Total Earning</h3>
               <div className="flex flex-row items-center justify-between mt-2 gap-5 ">
                 <span className='text-[20px]'>
-                Withdrawl Balance: 200
+                Withdrawal Balance: 200
                 </span>
                 <div className='p-2 items-center'>
                 <button className="bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#fff] transition duration-300 py-2 px-6 rounded">
-                Withdrawn
+                Withdrawal
               </button>
               </div>
               </div>

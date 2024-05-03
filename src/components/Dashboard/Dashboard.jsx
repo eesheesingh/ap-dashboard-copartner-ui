@@ -85,7 +85,7 @@ const Dashboard = () => {
               {/* Withdrawal Button */}
           <div className="flex justify-center">
             <button className="bg-[#fff] transition duration-300 text-[#000] hover:bg-[#000] hover:text-[#fff] px-6 py-3 rounded" onClick={() => setIsWithdrawalPopupOpen(true)}>
-              Withdraw
+              Withdrawal
             </button>
           </div>
 
@@ -163,7 +163,7 @@ const Dashboard = () => {
                   <span className="font-semibold text-[#247673]">100</span>
                 </div>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
-                  <span>Users:</span>
+                  <span>Paid Users:</span>
                   <span className="font-semibold text-[#25A2DE]">+40</span>
                 </div>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">

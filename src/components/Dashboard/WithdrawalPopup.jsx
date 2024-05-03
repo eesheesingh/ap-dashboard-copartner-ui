@@ -1,8 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { close } from '../../assets';
 
 const WithdrawalPopup = ({ isOpen, onClose }) => {
   const [panCard, setPanCard] = useState('');
+
+  useEffect(() => {
+    // Function to disable scrolling when the popup is open
+    const disableScroll = () => {
+      if (isOpen) {
+        document.documentElement.style.overflow = 'hidden';
+      } else {
+        document.documentElement.style.overflow = 'auto';
+      }
+    };
+
+    // Call the function when the component mounts or isOpen changes
+    disableScroll();
+
+    // Cleanup function to enable scrolling when the component unmounts
+    return () => {
+      document.documentElement.style.overflow = 'auto';
+    };
+  }, [isOpen]);
 
   const handleChange = (e) => {
     const value = e.target.value;

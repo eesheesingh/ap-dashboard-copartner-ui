@@ -8,13 +8,19 @@ import BankSetting from './BankSetting';
 import EditProfilePopup from './EditProfilePopup';
 
 const Setting = () => {
+  const [profile, setProfile] = useState({
+    name: 'Arun Kumar',
+    email: 'arunkumar@gmail.com',
+    mobile: "12345678",
+  });
   const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false)
   const [showTick, setShowTick] = useState(false);
   const referralLinkRef = useRef(null);
   const referralCodeRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false); // State to manage the visibility of the EditProfilePopup
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  
 
   const handleEditProfileClick = () => {
     setIsEditProfileOpen(true); // Open the EditProfilePopup
@@ -58,6 +64,11 @@ const Setting = () => {
     }
   };
 
+   // Function to update profile details
+   const updateProfile = (updatedProfile) => {
+    setProfile({ ...profile, ...updatedProfile });
+  };
+
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
       <div className="p-4 px-10 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
@@ -65,15 +76,15 @@ const Setting = () => {
           <div className='container-bg rounded-[20px] p-3 px-10'>
             <div className='profileCard w-[1048] flex items-center'>
               <div className='w-2/3'>
-                <span className='text-gradient text-[70px] font-bold'>Arun Kumar</span>
-                <div className='flex flex-col md:w-full xl:w-[40%] gap-5'>
+                <span className='text-gradient text-[70px] font-bold'>{profile.name}</span>
+                <div className='flex flex-col md:w-full xl:w-[80%] gap-5'>
 
-                  <div className='flex flex-row justify-start gap-28'>
-                    <div className='flex flex-col gap-3'>
+                  <div className='flex flex-row justify-start gap-28 '>
+                    <div className='flex flex-col gap-3 '>
                       <div className='flex flex-row'>
                         <span className='flex items-center gap-3 text-[#c9c9c9]'>
                           <img src={mail} alt="" className='w-5'/>
-                          Arunkumar@gmail.com
+                          {profile.email}
                         </span>
                       </div>
                       <div className='flex flex-row'>
@@ -84,12 +95,12 @@ const Setting = () => {
                       </div>
                     </div>
                     <div className='flex flex-col gap-3'>
-                      <span className='flex items-center gap-3 text-[#c9c9c9]'>
+                      <span className='flex items-center gap-3 text-[#c9c9c9] '>
                         <img src={call} alt="" className='w-5'/>
-                        9876545321
+                        {profile.mobile}
                       </span>
-                      <div className='flex flex-row'>
-                        <span className='flex items-center gap-3 text-[#c9c9c9]'>
+                      <div className='flex flex-row flex-nowrap'>
+                        <span className='flex items-center  gap-3 text-[#c9c9c9] flex-nowrap'>
                           <img src={card} alt="" className='w-5'/>
                           PAN Card Number
                         </span>
@@ -173,7 +184,13 @@ const Setting = () => {
           </div>
         </div>
       </div>
-      <EditProfilePopup isOpen={isEditProfileOpen} onClose={() => setIsEditProfileOpen(false)} />
+      <EditProfilePopup 
+  isOpen={isEditProfileOpen} 
+  onClose={() => setIsEditProfileOpen(false)} 
+  onUpdateProfile={updateProfile}   
+  initialProfile={{ name: profile.name, email: profile.email, mobile: profile.number }} // Pass mobile as part of initialProfile
+/>
+
 
     </div>
   );
