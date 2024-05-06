@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
 import { Link } from 'react-router-dom';
+import BankListingPopup from './BankListingPopup';
 
 const Customers = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
   const itemsPerPage = 10; // Number of items to display per page
   const totalData = 20; // Total number of data items
   const totalPages = Math.ceil(totalData / itemsPerPage);
@@ -15,6 +17,10 @@ const Customers = () => {
   
     const handleMouseLeave = () => {
       setIsHovered(false);
+    };
+
+    const toggleBankListingPopup = () => {
+      setIsBankListingPopupOpen(!isBankListingPopupOpen);
     };
 
   const handleNextPage = () => {
@@ -40,6 +46,7 @@ const Customers = () => {
                 className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
+                onClick={toggleBankListingPopup}
               >
                 {isHovered ? (
                   <>
@@ -54,7 +61,10 @@ const Customers = () => {
                 )}
               </button>
             </div>
+
           </div>
+          {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup}/>}
+
 
           <div className="overflow-x-auto mt-4 scroll-container shadow-md sm:rounded-[30px] rounded-lg border border-[#ffffff3f]">
             <table>

@@ -47,7 +47,7 @@ const Wallet = () => {
                 Withdrawal Balance: 200
                 </span>
                 <div className='p-2 items-center'>
-                <button className="bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#fff] transition duration-300 py-2 px-6 rounded">
+                <button className="bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#fff] transition duration-300 py-2 px-6 rounded" onClick={() => setIsWithdrawalPopupOpen(true)}>
                 Withdrawal
               </button>
               </div>
@@ -95,7 +95,7 @@ const Wallet = () => {
                 </div>
               </div>
             </div>
-            <div className="w-full flex justify-center md:w-[40%] cursor-pointer" onClick={() => setIsWithdrawalPopupOpen(true)}>
+            <div className="w-full flex justify-center md:w-[40%] cursor-pointer" >
               <img src={activeButtonFirstSection === "monthly" ? graph3 : graph4} alt="Graph" className="w-full rounded-lg" />
             </div>
             {/* Withdrawal Popup */}

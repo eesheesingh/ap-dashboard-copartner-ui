@@ -42,12 +42,18 @@ import tick from './tickImg.png'
 import userBack from './userBck.png'
 import hdfcImg from "./hdfc.png"
 import paytmImg from "./paytm.png"
+import iciciBank from "./icicBank.png"
+import kotakBank from "./kotakBank.png"
 import banner from './Website banner 2-02.jpg'
 import banner2 from "./Website banner 2-01.jpg"
 import comingSoon from "./comingSoon.png"
 import clipboard from "./Clipboard.png"
 import close from "./close.png"
 import deleteIcon from "./deleteIcon.png"
+import banner3 from "./banner3.png"
+import banner4 from "./banner5.jpg"
+import banner5 from "./banner6.jpg"
+import banner6 from "./banner3.png"
 export {
     availableIcon,
     chatIcon,
@@ -94,9 +100,15 @@ export {
     paytmImg,
     banner,
     banner2,
+    banner3,
+banner4,
+banner5,
+banner6,
     comingSoon,
     loginBtn,
     clipboard,
     close,
     deleteIcon,
+    iciciBank,
+kotakBank,
 }

@@ -135,7 +135,7 @@ const Setting = () => {
               </div>
 
               <div className='rightImgCol flex justify-center w-[1/2] relative userBack'>
-                <img src={userImg} alt="" className='w-[60%] maskImage' />
+                <img src={profile.imageURL || userImg} alt="" className='w-[60%] maskImage' />
                 <button className="absolute flex bottom-0 right-0 bg-[#ffffff43] hover:bg-[#fff] items-center text-white hover:text-[#000] px-5 py-1 border-[1px] rounded-[50px] transition duration-300"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -188,7 +188,7 @@ const Setting = () => {
   isOpen={isEditProfileOpen} 
   onClose={() => setIsEditProfileOpen(false)} 
   onUpdateProfile={updateProfile}   
-  initialProfile={{ name: profile.name, email: profile.email, mobile: profile.number }} // Pass mobile as part of initialProfile
+  initialProfile={{ name: profile.name, email: profile.email, mobile: profile.number, file: profile.file}} // Pass mobile as part of initialProfile
 />
 
 

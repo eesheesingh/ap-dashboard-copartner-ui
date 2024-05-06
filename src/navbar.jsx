@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { dummyUser, logo, notification, searchIcon } from './assets'
 import styles from './style'
+import EarningPopup from './components/EarningPopup';
 
 
-const navbar = () => {
+const Navbar = () => {
+  const [isEarningPopupOpen, setIsEarningPopupOpen] = useState(false);
+
+  const toggleEarningPopup = () => {
+    setIsEarningPopupOpen(!isEarningPopupOpen);
+  };
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
         <nav class="fixed left-0 top-0 z-50 w-full bg-[#22262F]">
@@ -22,7 +28,7 @@ const navbar = () => {
       </div>
       <div class="flex items-center">
           <div class="flex items-center ms-3 gap-4"> 
-          <button className="bg-[#fff] text-[#000] md:text-[15px] px-8 py-3 rounded-md font-semibold">
+          <button className="bg-[#fff] text-[#000] md:text-[15px] px-8 py-3 rounded-md font-semibold" onClick={toggleEarningPopup}>
             Earning Calculator
           </button>
             {/* Search field */}
@@ -62,10 +68,12 @@ const navbar = () => {
         </div>
     </div>
   </div>
+  {isEarningPopupOpen && <EarningPopup onClose={toggleEarningPopup} />}
+
 </nav>
 
     </div>
   )
 }
 
-export default navbar
+export default Navbar

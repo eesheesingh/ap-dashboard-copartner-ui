@@ -6,23 +6,28 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [file, setFile] = useState(null);
+  const [imageURL, setImageURL] = useState(null); // URL for the uploaded image
 
   useEffect(() => {
     if (initialProfile) {
       setName(initialProfile.name);
       setEmail(initialProfile.email);
       setMobile(initialProfile.mobile); // Set the mobile number value
-      // Set other initial details here
+      if (initialProfile.imageURL) {
+        setImageURL(initialProfile.imageURL); // Set the image URL if available
+      }
     }
   }, [initialProfile]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+    setImageURL(URL.createObjectURL(selectedFile)); // Create URL for the uploaded file
+
   };
 
   const handleSave = () => {
-    onUpdateProfile({ name, email, mobile /* Add other details here */ });
+    onUpdateProfile({ name, email, mobile, imageURL  /* Add other details here */ });
     console.log("Saved Mobile Number:", mobile); // Log the saved mobile number
     onClose();
   };
