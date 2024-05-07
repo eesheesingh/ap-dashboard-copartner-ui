@@ -23,6 +23,11 @@ const DashboardTable = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
+  // Function to replace the first six digits of the mobile number with "*"
+  const hideFirstSixDigits = (mobileNumber) => {
+    return mobileNumber.replace(/^(\d{6})/, '******');
+  };
+
   return (
     <div className="relative">
       {/* Third Section */}
@@ -45,7 +50,8 @@ const DashboardTable = () => {
             {[...Array(totalData).keys()].slice(startIndex, endIndex).map((index) => (
               <tr key={index}>
                 <td className='text-center'>26/01/2024</td>
-                <td className='text-center'>9876545321</td>
+                <td className='text-center'>{hideFirstSixDigits("9876545321")}</td>
+                {/* Use hideFirstSixDigits function to hide the first six digits */}
                 <td className='text-center'>Service</td>
                 <td className='text-center'>Rohit Sharma</td>
                 <td className='text-center'>₹5,999</td>

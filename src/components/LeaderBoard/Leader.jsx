@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { customBtn, graph, graph2, usersPurple } from "../../assets";
 import LeaderboardTable from "./LeaderboardTable";
+import LeaderBoardAnalysisChart from "../Dashboard/LeaderBoardAnalysisChart";
 
 const Subscription = () => {
-  const [activeButtonLeaderSection, setActiveButtonLeaderSection] = useState("weekly");
+  const [activeButtonLeaderSection, setActiveButtonLeaderSection] = useState("today");
+  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today"); // Change initial state to "today"
 
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
@@ -11,22 +13,28 @@ const Subscription = () => {
         <div className="text-white text-center">
           <div className="flex justify-between">
             <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Lead Board Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[60px] flex items-center">
+            <div className="space-x-4 md:mr-1 xl:mr-[60px]">
               <button
-                className={`button ${activeButtonLeaderSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
-                onClick={() => setActiveButtonLeaderSection("weekly")}
+                className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonSecondSection("today")}
+              >
+                Today
+              </button>
+              <button
+                className={`button ${activeButtonSecondSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonSecondSection("weekly")}
               >
                 Weekly
               </button>
               <button
-                className={`button ${activeButtonLeaderSection === "monthly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
-                onClick={() => setActiveButtonLeaderSection("monthly")}
+                className={`button ${activeButtonSecondSection === "monthly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonSecondSection("monthly")}
               >
                 Monthly
               </button>
               <button
-                className={`button flex items-center ${activeButtonLeaderSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
-                onClick={() => setActiveButtonLeaderSection("custom")}
+                className={`button ${activeButtonSecondSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonSecondSection("custom")}
               >
                 Custom
                 <img src={customBtn} alt="" className="inline-block w-5 ml-1" />
@@ -36,7 +44,9 @@ const Subscription = () => {
 
           <div className="flex mt-8">
             <div className="w-full md:w-2/3 pr-8">
-              <img src={activeButtonLeaderSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" />
+            <LeaderBoardAnalysisChart activeButton={activeButtonSecondSection}/> {/* Change activeButton prop to activeButtonSecondSection */}
+
+              {/* <img src={activeButtonLeaderSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" /> */}
             </div>
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center container-bg rounded-[30px] p-2">
               <img src={usersPurple} alt="" className="w-[150px] border-[2px] rounded-full p-4" />
@@ -47,7 +57,7 @@ const Subscription = () => {
                   <span className="font-semibold text-[#247673]">100</span>
                 </div>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
-                  <span>Users:</span>
+                  <span>Paid Users:</span>
                   <span className="font-semibold text-[#25A2DE]">+40</span>
                 </div>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">

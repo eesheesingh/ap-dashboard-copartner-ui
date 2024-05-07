@@ -10,6 +10,7 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
     accountHolderName: '',
   });
 
+  const [acknowledged, setAcknowledged] = useState(false); // State to track acknowledgment
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -17,15 +18,24 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
     setBankDetails({ ...bankDetails, [id]: value });
   };
 
+  const handleAcknowledgmentChange = () => {
+    setAcknowledged(!acknowledged); // Toggle acknowledgment state
+  };
+
   const handleSubmit = () => {
+    // Check if acknowledgment is given
+    if (!acknowledged) {
+      setError('Please acknowledge that the bank/payment details provided are accurate.');
+      return;
+    }
     // Check if any field is empty
     const { accountNumber, confirmAccountNumber, ifscCode, bankName, accountHolderName } = bankDetails;
     if (!accountNumber || !confirmAccountNumber || !ifscCode || !bankName || !accountHolderName) {
-      setError('All fields are required to be field');
+      setError('All fields are required to be filled.');
       return;
     }
 
-    // If all fields are filled, submit the form
+    // If all fields are filled and acknowledgment is given, submit the form
     addBankDetails({ ...bankDetails });
     onClose();
   };
@@ -62,12 +72,28 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
           </div>
         </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
+        {/* Acknowledgment checklist */}
+        <div className="flex items-start mt-4">
+          <input
+            type="checkbox"
+            id="acknowledgment"
+            checked={acknowledged}
+            onChange={handleAcknowledgmentChange}
+            className="mr-2 mt-2"
+          />
+          <label htmlFor="acknowledgment" className="text-gray-400 text-md text-left">
+            I acknowledge that the bank/payment details provided are accurate and authorize Hailgro Tech Solutions Pvt. Ltd. to process transactions accordingly.
+          </label>
+        </div>
+        <div className="flex justify-center mt-1">
+         {/* Submit button */}
         <div className="flex justify-center mt-8">
           <button onClick={handleSubmit} className="px-10 py-2 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#FFF] transition duration-300 rounded-md hover:[#000] focus:outline-none focus:bg-[#000]">
             Add
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

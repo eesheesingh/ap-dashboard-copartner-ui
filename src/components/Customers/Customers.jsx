@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
 import { Link } from 'react-router-dom';
-import BankListingPopup from './BankListingPopup';
+import { customers_data } from '../../constants/data';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const Customers = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
-  const itemsPerPage = 10; // Number of items to display per page
-  const totalData = 20; // Total number of data items
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const itemsPerPage = 10;
+  const totalData = 20;
   const totalPages = Math.ceil(totalData / itemsPerPage);
   const [isHovered, setIsHovered] = useState(false);
 
-    const handleMouseEnter = () => {
-      setIsHovered(true);
-    };
-  
-    const handleMouseLeave = () => {
-      setIsHovered(false);
-    };
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
-    const toggleBankListingPopup = () => {
-      setIsBankListingPopupOpen(!isBankListingPopupOpen);
-    };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   const handleNextPage = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
@@ -31,40 +31,61 @@ const Customers = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  const toggleFilterModal = () => {
+    setShowFilterModal(!showFilterModal);
+  };
+
   return (
     <div className="xl:p-4 xl:h-[100vh] md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-3">
-        <div className="relative">
-          {/* Third Section */}
-          <div className="flex justify-between mt-12 items-center">
-            
-            <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">CUstomers Listing</h2>
-            
-            <div className="flex items-center">
-              {/* Filter button */}
-              <button
-                className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onClick={toggleBankListingPopup}
-              >
-                {isHovered ? (
-                  <>
-                    <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
-                    Filter
-                  </>
-                ) : (
-                  <>
-                    <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
-                    Filter
-                  </>
-                )}
-              </button>
-            </div>
-
+    <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-3">
+      <div className="relative">
+        <div className="flex justify-between mt-12 items-center">
+          <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Customers Listing</h2>
+          <div className="flex items-center">
+            <button
+              className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={toggleFilterModal}
+            >
+              {isHovered ? (
+                <>
+                  <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
+                  Filter
+                </>
+              ) : (
+                <>
+                  <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
+                  Filter
+                </>
+              )}
+            </button>
           </div>
-          {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup}/>}
+        </div>
 
+        {showFilterModal && (
+          <div className="absolute top-0 right-0 bg-white p-4 shadow-md rounded-lg">
+            <div className="flex items-center">
+              <div className="relative">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholderText="Select date start"
+                />
+              </div>
+              <span className="mx-4 text-gray-500">to</span>
+              <div className="relative">
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholderText="Select date end"
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
           <div className="overflow-x-auto mt-4 scroll-container shadow-md sm:rounded-[30px] rounded-lg border border-[#ffffff3f]">
             <table>
@@ -80,27 +101,29 @@ const Customers = () => {
                 </tr>
               </thead>
               <tbody>
-                {Array.from({ length: itemsPerPage }).map((_, index) => {
-                  const dataIndex = (currentPage - 1) * itemsPerPage + index;
-                  return (
-                    <tr key={dataIndex}>
-                      <td className="text-center">Eeshee</td>
-                      <td className="text-center">9876545321</td>
-                      <td className="text-center">3</td>
-                      <td className="text-center">2</td>
-                      <td className="text-center">4</td>
-                      <td className="text-center">2</td>
+                {customers_data
+                  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                  .map((customer, index) => (
+                    <tr key={index}>
+                      <td className="text-center">{customer.name}</td>
+                      <td className="text-center">
+                        {/* Replace the first 6 digits of the mobile number with "*" */}
+                        {customer.mobileNumber.replace(/^\d{6}/, '******')}
+                      </td>
+                      <td className="text-center">{customer.service}</td>
+                      <td className="text-center">{customer.course}</td>
+                      <td className="text-center">{customer.webinar}</td>
+                      <td className="text-center">{customer.privateCall}</td>
                       <td className="text-center">
                         <Link to="/customers/singleCustomer">
                           <button className="border-transparent bg-transparent">
-                            ₹5,999
+                            {customer.earnAmount}
                             <img src={leftArrow} alt="" className="inline-block md:w-[7px] ml-10" />
                           </button>
                         </Link>
                       </td>
                     </tr>
-                  );
-                })}
+                  ))}
               </tbody>
             </table>
           </div>

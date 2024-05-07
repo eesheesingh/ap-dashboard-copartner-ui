@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { close } from '../../assets';
+import VerifyKycPopup from './VerifyKycPopup';
 
 const WithdrawalPopup = ({ isOpen, onClose }) => {
   const [panCard, setPanCard] = useState('');
+  const [verifyPopupOpen, setVerifyPopupOpen] = useState(false); // State to manage the KYC verification popup
+
 
   useEffect(() => {
     // Function to disable scrolling when the popup is open
@@ -37,9 +40,9 @@ const WithdrawalPopup = ({ isOpen, onClose }) => {
   const handleVerify = () => {
     // Implement PAN card verification logic here
     console.log('PAN Card:', panCard);
-    // Close the popup after verification
-    onClose();
-  };
+    // Open the KYC verification popup
+    setVerifyPopupOpen(true);
+  }
 
   return (
     <>
@@ -52,16 +55,12 @@ const WithdrawalPopup = ({ isOpen, onClose }) => {
               </button>
             </div>
             <div className='p-5'>
-            
               <h2 className="text-[24px] font-semibold">Pan Card Verification</h2>
-            
-            
-            <p className="text-[#c9c9c9] mt-2">Full access to in any of our products Full access to in any of </p>
-            
+              <p className="text-[#c9c9c9] mt-2">Full access to in any of our products Full access to in any of </p>
             </div>
             <input
               type="text"
-              className="border border-gray-300 bg-transparent rounded-md px-3 py-2 mt-2 w-full"
+              className="border border-[#ffffff4d] bg-transparent rounded-md px-3 py-2 mt-2 w-full"
               placeholder="PAN Card Number"
               value={panCard}
               onChange={handleChange}
@@ -75,8 +74,10 @@ const WithdrawalPopup = ({ isOpen, onClose }) => {
               </button>
             </div>
           </div>
+          
         </div>
       )}
+      {verifyPopupOpen && <VerifyKycPopup onClose={() => setVerifyPopupOpen(false)} />}
     </>
   );
 };

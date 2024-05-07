@@ -28,6 +28,10 @@
   scroll-behavior: smooth;
 }
 
+body{
+  background-color: #22262F;
+}
+
 .subheading-gradient {
   background: linear-gradient(to bottom right, #ffffff 0%, #757575 100%);
   -webkit-background-clip: text;

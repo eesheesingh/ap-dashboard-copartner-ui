@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { deleteIcon, hdfcImg, paytmImg } from '../../assets';
-import AddBankPopup from './AddBankPopup';
-import AddUpiPopup from './AddUpiPopup';
+import AddBankPopup from '../Popups/AddBankPopup';
+import AddUpiPopup from '../Popups/AddUpiPopup';
 
 const BankSetting = () => {
   const [isAddBankPopupOpen, setIsAddBankPopupOpen] = useState(false);

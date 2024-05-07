@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Navbar from './navbar';
 import { customerActive, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon } from './assets';
 import styles from './style';
+import Navbar from './navbar';
 
 const Sidebar = () => {
   const location = useLocation();
   const [activeItem, setActiveItem] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    setActiveItem(location.pathname);
+  }, [location]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -17,20 +22,23 @@ const Sidebar = () => {
     setIsHovered(false);
   };
 
-  useEffect(() => {
-    // Extract the pathname from the location object and set the activeItem state
-    setActiveItem(location.pathname);
-  }, [location]);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
       <Navbar />
       <aside
         id="logo-sidebar"
-        className="fixed top-2 left-0 z-40 w-[12rem] h-screen pt-20 transition-transform -translate-x-full bg-[#22262F] sm:translate-x-0"
+        className={`fixed top-2 left-0 md:z-40 w-[12rem] h-screen pt-20 transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-[#22262F]">
+          <button onClick={toggleSidebar} className="absolute top-2 right-2 text-white sm:hidden focus:outline-none">
+            {/* You can use any icon for the toggle button */}
+            {isSidebarOpen ? <>&#x2715;</> : <>&#9776;</>}
+          </button>
           <ul className="space-y-2 font-medium">
             <li>
               <Link
@@ -109,7 +117,6 @@ const Sidebar = () => {
           </ul>
         </div>
       </aside>
-
     </div>
   );
 };

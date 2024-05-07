@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useRef } from 'react';
-import { expertise_data } from "../../constants/data";
-import { useParams } from 'react-router-dom';
-import { call, card, cardHolder, mail, rightArrow, userImg, clipboard, tick, editBtn, editBlack } from '../../assets'; // Assuming you have imported clipboard and tick icons
+import { call, card, cardHolder, mail, userImg, clipboard, tick, editBtn, editBlack } from '../../assets'; // Assuming you have imported clipboard and tick icons
 import DocumentSetting from './DocumentSetting';
 import BankSetting from './BankSetting';
-import EditProfilePopup from './EditProfilePopup';
+import EditProfilePopup from '../Popups/EditProfilePopup';
 
 const Setting = () => {
   const [profile, setProfile] = useState({
@@ -115,7 +113,7 @@ const Setting = () => {
                     <div className='border-[#fff] border-[1px] flex flex-row gap-2 rounded-[50px] px-3 py-1'>
                       <span ref={referralLinkRef} className='overflow-hidden whitespace-nowrap overflow-ellipsis text-[#c9c9c9]'>https://www.w3schools.com/cssref/pr_text_white-space.php</span>|
                       <button onClick={copyToClipboard}>
-                        {copied ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={call} alt="Copy" className='w-5'/>) : <img src={call} alt="Copy" className='w-5'/>}
+                        {copied ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={clipboard} alt="Copy" className='w-5'/>) : <img src={clipboard} alt="Copy" className='w-5'/>}
                       </button>
                     </div>
                   </div>
@@ -127,7 +125,7 @@ const Setting = () => {
                     <div className='border-[#fff] border-[1px] flex flex-row gap-2 rounded-[50px] px-3 py-1'>
                       <span ref={referralCodeRef} className='overflow-hidden whitespace-nowrap overflow-ellipsis text-[#c9c9c9]'>YOURMOMMY</span>|
                       <button onClick={copyCodeToClipboard}>
-                        {copiedCode ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={call} alt="Copy" className='w-5'/>) : <img src={call} alt="Copy" className='w-5'/>}
+                        {copiedCode ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={clipboard} alt="Copy" className='w-5'/>) : <img src={clipboard} alt="Copy" className='w-5'/>}
                       </button>
                     </div>
                   </div>

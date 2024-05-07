@@ -1,17 +1,20 @@
 import React, { useRef, useState } from "react";
 import { graph, graph2, usersPurple, customBtn, tick, clipboard } from "../../assets";
 import DashboardTable from "./DashboardTable";
-import WithdrawalPopup from "./WithdrawalPopup";
-
-
-
+import BankListingPopup from '../Popups/BankListingPopup';
+import DashboardChart from './DashboardChart'
+import LeaderBoardAnalysisChart from './LeaderBoardAnalysisChart'
 
 const Dashboard = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
-  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("weekly");
+  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today"); // Change initial state to "today"
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
   const [copiedReferralCode, setCopiedReferralCode] = useState(false);
-  const [isWithdrawalPopupOpen, setIsWithdrawalPopupOpen] = useState(false);
+  const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
+
+  const toggleBankListingPopup = () => {
+    setIsBankListingPopupOpen(!isBankListingPopupOpen);
+  };
 
   const referralLinkRef = useRef(null);
   const referralCodeRef = useRef(null);
@@ -47,6 +50,12 @@ const Dashboard = () => {
             <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Earning Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[60px]">
               <button
+                className={`button ${activeButtonFirstSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonFirstSection("today")}
+              >
+                Today
+              </button>
+              <button
                 className={`button ${activeButtonFirstSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
                 onClick={() => setActiveButtonFirstSection("weekly")}
               >
@@ -71,7 +80,8 @@ const Dashboard = () => {
           {/* First Section Content */}
           <div className="flex mt-8">
             <div className="w-full md:w-2/3 pr-8">
-              <img src={activeButtonFirstSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" />
+            <DashboardChart activeButton={activeButtonFirstSection} />
+              {/* <img src={activeButtonFirstSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" /> */}
             </div>
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center container-bg rounded-[30px]">
               <h3 className="text-center font-semibold md:text-[30px] xl:text-[50px]">Total Earning</h3>
@@ -83,50 +93,57 @@ const Dashboard = () => {
                 </p>
               </div>
               {/* Withdrawal Button */}
-          <div className="flex justify-center">
-            <button className="bg-[#fff] transition duration-300 text-[#000] hover:bg-[#000] hover:text-[#fff] px-6 py-3 rounded" onClick={() => setIsWithdrawalPopupOpen(true)}>
-              Withdrawal
-            </button>
-          </div>
+              <div className="flex justify-center">
+                <button className="bg-[#fff] transition duration-300 text-[#000] hover:bg-[#000] hover:text-[#fff] px-6 py-3 rounded" onClick={() => toggleBankListingPopup(true)}>
+                  Withdrawal
+                </button>
+              </div>
 
-          {/* Withdrawal Popup */}
-          <WithdrawalPopup isOpen={isWithdrawalPopupOpen} onClose={() => setIsWithdrawalPopupOpen(false)} />
+              {/* Withdrawal Popup */}
+              {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup}/>}
+
             </div>
           </div>
 
           <div className="flex flex-row justify-between p-3 px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
-  <div className="flex flex-row items-center gap-3">
-    <span className="text-lg">Referral Link :</span>
-    <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-    <span ref={referralLinkRef} className="mr-1">https://www.example.com/referral</span>
-    <button onClick={copyReferralLinkToClipboard} className="flex items-center mt-[2px]">| 
-      {copiedReferralLink ? (
-        <img src={tick} alt="Copied" className="w-5" />
-      ) : (
-        <img src={clipboard} alt="Copy" className="w-5" />
-      )}
-    </button>
-    </div>
-  </div>
-  <div className="flex flex-row items-center gap-3 py-2">
-    <span className="text-lg">Referral Code :</span>
-    <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-    <span ref={referralCodeRef} className="mr-1">REFCODE123</span>
-    <button onClick={copyReferralCodeToClipboard}className="flex items-center">| 
-      {copiedReferralCode ? (
-        <img src={tick} alt="Copied" className="w-5" />
-      ) : (
-        <img src={clipboard} alt="Copy" className="w-5" />
-      )}
-    </button>
-    </div>
-  </div>
-</div>
+            <div className="flex flex-row items-center gap-3">
+              <span className="text-lg">Referral Link :</span>
+              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                <span ref={referralLinkRef} className="mr-1">https://www.example.com/referral</span>
+                <button onClick={copyReferralLinkToClipboard} className="flex items-center mt-[2px]">| 
+                  {copiedReferralLink ? (
+                    <img src={tick} alt="Copied" className="w-5" />
+                  ) : (
+                    <img src={clipboard} alt="Copy" className="w-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="flex flex-row items-center gap-3 py-2">
+              <span className="text-lg">Referral Code :</span>
+              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                <span ref={referralCodeRef} className="mr-1">REFCODE123</span>
+                <button onClick={copyReferralCodeToClipboard}className="flex items-center">| 
+                  {copiedReferralCode ? (
+                    <img src={tick} alt="Copied" className="w-5" />
+                  ) : (
+                    <img src={clipboard} alt="Copy" className="w-5" />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
 
           {/* Second Section */}
           <div className="flex justify-between mt-10">
             <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Lead Board Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[60px]">
+              <button
+                className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
+                onClick={() => setActiveButtonSecondSection("today")} // Change to set activeButtonSecondSection to "today"
+              >
+                Today
+              </button>
               <button
                 className={`button ${activeButtonSecondSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded`}
                 onClick={() => setActiveButtonSecondSection("weekly")}
@@ -152,7 +169,8 @@ const Dashboard = () => {
           {/* Second Section Content */}
           <div className="flex mt-8">
             <div className="w-full md:w-2/3 pr-8 container1">
-              <img src={activeButtonSecondSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" />
+              <LeaderBoardAnalysisChart activeButton={activeButtonSecondSection}/> {/* Change activeButton prop to activeButtonSecondSection */}
+              {/* <img src={activeButtonSecondSection === "monthly" ? graph2 : graph} alt="Graph" className="w-full rounded-lg" /> */}
             </div>
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center container-bg rounded-[30px] p-2">
               <img src={usersPurple} alt="" className="w-[150px] border-[2px] rounded-full p-4" />
