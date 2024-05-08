@@ -1,10 +1,29 @@
 // Import necessary libraries and assets
 import React, { useState } from 'react';
-import { leftArrow, rightArrow } from '../../assets';
+import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
+import { leader_listing } from '../../constants/data';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 // Define the LeaderboardTable component
 const LeaderboardTable = () => {
-  // Define state variables for pagination
+  const [isHovered, setIsHovered] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const toggleFilterModal = () => {
+    setShowFilterModal(!showFilterModal);
+  };
   const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 10;
   const totalData = 20;
@@ -41,33 +60,75 @@ const LeaderboardTable = () => {
     <div className="relative">
       {/* Third Section */}
       <div className="flex justify-between mt-10">
-        <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Customer Listing</h2>
+        <h2 className="text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
+        <div className="flex items-center">
+            <button
+              className="bg-transparent border-[1px] flex items-center text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={toggleFilterModal}
+            >
+              {isHovered ? (
+                <>
+                  <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
+                  Filter
+                </>
+              ) : (
+                <>
+                  <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
+                  Filter
+                </>
+              )}
+            </button>
+          </div>
       </div>
 
-      <div className=" mt-4 scroll-container overflow-x-auto shadow-md rounded-[20px] border border-[#ffffff3f] custom-scrollbar">
-        <table className=''>
+      {showFilterModal && (
+          <div className="absolute top-0 right-0 bg-white p-4 shadow-md rounded-lg">
+            <div className="flex items-center">
+              <div className="relative">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholderText="Select date start"
+                />
+              </div>
+              <span className="mx-4 text-gray-500">to</span>
+              <div className="relative">
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholderText="Select date end"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+      <div className="mt-4 relative">
+      <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+          <table className='md:w-full w-[110%]'>
           <thead className='text-center bg-[#29303F] sticky top-0'>
             <tr className=''>
               <th className='text-center text-[15px]'>Date</th>
               <th className='text-center text-[15px]'>Mobile Number</th>
-              <th className='text-center text-[15px]'>Subscription</th>
-              <th className='text-center text-[15px]'>Expertise </th>
-              <th className='text-center text-[15px]'>Amount</th>
+              <th className='text-center text-[15px]'>Name</th>
             </tr>
           </thead>
           <tbody>
-            {/* Iterate through the data and render table rows */}
-            {[...Array(totalData).keys()].slice(startIndex, endIndex).map((index) => (
-              <tr key={index}>
-                <td className='text-center'>26/01/2024</td>
-                {/* Render masked mobile number */}
-                <td className='text-center'>{maskMobileNumber("9876545321")}</td>
-                <td className='text-center'>Service</td>
-                <td className='text-center'>Rohit Sharma</td>
-                <td className='text-center'>₹5,999</td>
-              </tr>
-            ))}
-          </tbody>
+  {/* Iterate through the leader_listing data and render table rows */}
+  {leader_listing.slice(startIndex, endIndex).map((leader, index) => (
+    <tr key={index}>
+      <td className='text-center'>{leader.date}</td>
+      {/* Render masked mobile number */}
+      <td className='text-center'>{maskMobileNumber(leader.mobileNumber)}</td>
+      
+      <td className='text-center'>{leader.name}</td>
+    </tr>
+  ))}
+</tbody>
         </table>
         
       </div>
@@ -91,6 +152,7 @@ const LeaderboardTable = () => {
           <img src={leftArrow} className='w-4' alt="Next" />
         </button>
       </div>
+    </div>
     </div>
   );
 };

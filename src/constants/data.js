@@ -1,4 +1,5 @@
 import { call, card, leftArrow, userImg } from "../assets";
+import Subscription from "../components/LeaderBoard/Leader";
 
 
 
@@ -29,6 +30,262 @@ export const expertise_data = [
       ],
     },
 ]
+
+export const leader_listing= [
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+];
+
+export const customers_listing = [
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    subscription: "Service",
+    expertise: "Rohit SHarma",
+    earnAmount: "₹5,999"
+  },
+];
 
 
 export const customers_data = [

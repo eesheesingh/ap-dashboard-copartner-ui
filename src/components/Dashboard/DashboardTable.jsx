@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { leftArrow, rightArrow } from '../../assets';
+import { customers_listing } from '../../constants/data';
 
 const DashboardTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const dataPerPage = 10;
-  const totalData = 20;
+  const totalData = customers_listing.length; // Use the length of customers_data array for total data count
 
   const totalPages = Math.ceil(totalData / dataPerPage);
 
@@ -30,57 +31,59 @@ const DashboardTable = () => {
 
   return (
     <div className="relative">
-      {/* Third Section */}
+      {/* Heading */}
       <div className="flex justify-between mt-10">
-        <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Customer Listing</h2>
+        <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
       </div>
 
-      <div className=" mt-4 scroll-container overflow-x-auto shadow-md rounded-[20px] border border-[#ffffff3f] custom-scrollbar">
-        <table className=''>
-          <thead className='text-center bg-[#29303F] sticky top-0'>
-            <tr className=''>
-              <th className='text-center text-[15px]'>Date</th>
-              <th className='text-center text-[15px]'>Mobile Number</th>
-              <th className='text-center text-[15px]'>Subscription</th>
-              <th className='text-center text-[15px]'>Expertise </th>
-              <th className='text-center text-[15px]'>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...Array(totalData).keys()].slice(startIndex, endIndex).map((index) => (
-              <tr key={index}>
-                <td className='text-center'>26/01/2024</td>
-                <td className='text-center'>{hideFirstSixDigits("9876545321")}</td>
-                {/* Use hideFirstSixDigits function to hide the first six digits */}
-                <td className='text-center'>Service</td>
-                <td className='text-center'>Rohit Sharma</td>
-                <td className='text-center'>₹5,999</td>
+      {/* Table */}
+      <div className="mt-4 relative">
+      <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+          <table className='md:w-full w-[150%]'>
+            <thead className='text-center bg-[#29303F] sticky top-0'>
+              <tr className=''>
+                <th className='text-center text-[15px]'>Date</th>
+                <th className='text-center text-[15px]'>Mobile Number</th>
+                <th className='text-center text-[15px]'>Subscription</th>
+                <th className='text-center text-[15px]'>Expertise</th>
+                <th className='text-center text-[15px]'>Amount</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        
-      </div>
-      <div className="flex justify-end mt-4">
-        <span className="mx-2 text-[#fff]">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={goToPreviousPage}
-            className="mx-2 rounded-md text-gray-800"
-            disabled={currentPage === 1}
-          >
-            <img src={rightArrow} alt="Previous" />
-          </button>
-         
-          <button
-            onClick={goToNextPage}
-            className="mx-2 rounded-md  text-gray-800"
-            disabled={currentPage === totalPages}
-          >
-            <img src={leftArrow} className='w-4' alt="Next" />
-          </button>
+            </thead>
+            <tbody>
+              {customers_listing.slice(startIndex, endIndex).map((customer, index) => (
+                <tr key={index}>
+                  <td className='text-center'>{customer.date}</td>
+                  <td className='text-center'>{hideFirstSixDigits(customer.mobileNumber)}</td>
+                  <td className='text-center'>{customer.subscription}</td>
+                  <td className='text-center'>{customer.expertise}</td>
+                  <td className='text-center'>{customer.earnAmount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        <span className="mx-2 text-[#fff]">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={goToPreviousPage}
+          className="mx-2 rounded-md text-gray-800"
+          disabled={currentPage === 1}
+        >
+          <img src={leftArrow} alt="Previous" className="w-4 transform rotate-180" />
+        </button>
+        <button
+          onClick={goToNextPage}
+          className="mx-2 rounded-md text-gray-800"
+          disabled={currentPage === totalPages}
+        >
+          <img src={leftArrow} alt="Next" className="w-4" />
+        </button>
+      </div>
     </div>
   );
 };

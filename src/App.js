@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import styles from "./style";
-// import Navbar from "./Navbar";
-import Sidebar from "./sidebar.jsx";
+import Navbar from "./navbar.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
 import Leader from './components/LeaderBoard/Leader.jsx'
 import Customers from './components/Customers/Customers.jsx'
@@ -13,8 +12,8 @@ import Marketing from "./components/Marketing/Marketing.jsx";
 function App() {
   return (
     <Router>
-      <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
-        <Sidebar />
+      <div className={`bg-gradient ${styles.boxWidth} ${styles.paddingX}`}>
+        <Navbar />
         <div className="flex">
           <div className="flex-grow">
           <Routes>
