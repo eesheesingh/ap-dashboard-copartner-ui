@@ -9,6 +9,8 @@ import SingleCustomer from "./components/Customers/SingleCustomer.jsx";
 import Wallet from "./components/SettingPage/wallet.jsx";
 import Setting from "./components/SettingPage/Setting.jsx";
 import Marketing from "./components/Marketing/Marketing.jsx";
+import DashboardPage from "./components/Dashboard/DashboardPage.jsx";
+
 function App() {
   return (
     <Router>
@@ -17,7 +19,7 @@ function App() {
         <div className="flex">
           <div className="flex-grow">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<DashboardPage />} />
             <Route path="/leaderBoard" element={<Leader />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/wallet" element={<Wallet />} />

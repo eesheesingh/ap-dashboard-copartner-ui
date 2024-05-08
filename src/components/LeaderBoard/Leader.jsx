@@ -5,7 +5,7 @@ import LeaderBoardAnalysisChart from "../Dashboard/LeaderBoardAnalysisChart";
 import LeaderBoardChartMob from '../Dashboard/LeaderBoardChartMob'
 
 
-const Subscription = () => {
+const Leader = () => {
   const [activeButtonLeaderSection, setActiveButtonLeaderSection] = useState("today");
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today"); // Change initial state to "today"
 
@@ -78,4 +78,4 @@ const Subscription = () => {
   );
 };
 
-export default Subscription;
+export default Leader;

@@ -8,7 +8,7 @@ import LeaderBoardChartMob from './LeaderBoardChartMob.jsx'
 import DashboardChartMob from "./DashboardChartMonb.jsx"
 
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today"); // Change initial state to "today"
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
@@ -43,15 +43,11 @@ const Dashboard = () => {
       }, 3000);
     }
   };
-
   return (
-    
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[90px]">
-        <div className="text-white text-center5">
-          {/* First Section */}
-          <div className="flex md:flex-row flex-col justify-between mt-2">
-            <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
+    <div className="d:p-4 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-20">
+      <div className="text-white text-center">
+      <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[60px] flex w-full md:justify-end justify-center ">
               {/* <button
                 className={`button ${activeButtonFirstSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] md:border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded mb-2 md:mb-0`}
@@ -114,7 +110,7 @@ const Dashboard = () => {
           {/* Referral Link with concatenation for mobile view */}
 <div className="flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
   <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
-    <span className="md:text-lg text-sm">Referral Link :</span>
+    <span className="md:text-lg text-sm">Referral Link</span>
     <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
       <span ref={referralLinkRef} className="mr-1 md:block hidden">https://www.example.com/referral</span>
       <span ref={referralLinkRef} className="mr-1 md:hidden md:text-lg text-sm">https://www.example.com/...</span> {/* Render shortened link in mobile view */}
@@ -128,7 +124,7 @@ const Dashboard = () => {
     </div>
   </div>
   <div className="flex flex-row md:flex-row items-center gap-3 py-2 w-full md:w-auto mt-2 md:mt-0">
-              <span className="md:text-lg text-sm">Referral Code :</span>
+              <span className="md:text-lg text-sm">Referral Code</span>
               <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
                 <span ref={referralCodeRef} className="mr-1 md:text-lg text-sm">REFCODE123</span>
                 <button onClick={copyReferralCodeToClipboard}className="flex items-center">| 
@@ -201,11 +197,10 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div><DashboardTable /></div>
       </div>
+      
     </div>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default DashboardPage
