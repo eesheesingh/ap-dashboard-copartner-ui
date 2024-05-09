@@ -10,14 +10,48 @@ const Sidebar = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEarningPopupOpen, setIsEarningPopupOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
 
   useEffect(() => {
     setActiveItem(location.pathname);
+
+
     // Close sidebar on route change if it's in mobile responsive mode
-    if (isSidebarOpen) {
-      setIsSidebarOpen(false);
+    if (isSidebarOpen && isMobileView) {
+      setIsSidebarOpen(true);
     }
-  }, [location]);
+
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [location, isMobileView, isSidebarOpen]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+      if (scrollTop > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -35,11 +69,21 @@ const Sidebar = () => {
     setIsHovered(false);
   };
 
+  
+
+  const handleMenuItemClick = () => {
+    // Close sidebar if it's in mobile responsive mode
+    if (isMobileView) {
+      setIsSidebarOpen(false);
+    }
+    scrollToTop(0)
+  };
+
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
       <nav className="fixed left-0 top-0 z-50 w-full bg-[#22262F]">
         <div className="px-3 py-4 lg:px-5 lg:pr-[4rem] lg:pl-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center md:justify-between justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
               <button
                 onClick={toggleSidebar}
@@ -60,36 +104,43 @@ const Sidebar = () => {
                   ></path>
                 </svg>
               </button>
-              <a href="https://flowbite.com" className="flex ms-2 md:me-24">
+              <a href="/" className="md:flex hidden ms-2 md:me-24">
                 <img src={logo} className="md:h-10 me-3" alt="FlowBite Logo" />
               </a>
             </div>
+            <a href="/" className="flex ms-2 md:me-24 md:hidden">
+                <img src={logo} className="h-10" alt="FlowBite Logo" />
+              </a>
             <div className="flex items-center">
-              <div className="flex items-center ms-3 gap-4">
-                <button className="bg-[#fff] text-[#000] md:text-[15px] px-8 py-3 rounded-md font-semibold" onClick={toggleEarningPopup}>
-                  Earning Calculator
-                </button>
-                {/* Search field */}
-                <div className="relative">
-                  <img
-                    src={searchIcon}
-                    alt=""
-                    className="cursor-pointer absolute top-1/2 left-4 transform -translate-y-1/2 w-[19px] h-[19px]"
-                  />
+              <div className="items-center ms-3 gap-4 flex">
+              {!isMobileView && (
+                  <button className="bg-[#fff] text-[#000] md:text-[15px] px-8 py-3 rounded-md font-semibold" onClick={toggleEarningPopup}>
+                    Earning Calculator
+                  </button>
+                )}
+                {!isMobileView && (
+                  <div className="relative">
+                    <img
+                      src={searchIcon}
+                      alt=""
+                      className="cursor-pointer absolute top-1/2 left-4 transform -translate-y-1/2 w-[19px] h-[19px]"
+                    />
                   <input
                     type="text"
                     placeholder="Search for something"
                     className="pl-10 pr-4 bg-[#2E323C] w-[252px] h-[55px] text-white rounded-[10px]"
                   />
                 </div>
-                {/* Notification Icon */}
-                <div className="flex items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px]">
-                  <img
-                    src={notification}
-                    alt="Notification Icon"
-                    className="w-[21px] h-[21px] cursor-pointer"
-                  />
-                </div>
+                )}
+               {!isMobileView && (
+                  <div className="flex items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px]">
+                    <img
+                      src={notification}
+                      alt="Notification Icon"
+                      className="w-[21px] h-[21px] cursor-pointer"
+                    />
+                  </div>
+                )}
                 <div>
                   <button type="button" className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                     <span className="sr-only">Open user menu</span>
@@ -103,12 +154,36 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
+          <div className='flex md:hidden gap-2 justify-between mt-2'>
+            
+                  <div className="relative w-full">
+                    <img
+                      src={searchIcon}
+                      alt=""
+                      className="cursor-pointer absolute top-1/2 left-4 transform -translate-y-1/2 w-[19px] h-[19px]"
+                    />
+                  <input
+                    type="text"
+                    placeholder="Search for something"
+                    className="pl-[3rem] pr-4 bg-[#2E323C] w-full h-[55px] text-white rounded-[10px]"
+                  />
+                </div>
+                <div className='flex items-center justify-center'>
+            <div className="flex items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px]">
+                    <img
+                      src={notification}
+                      alt="Notification Icon"
+                      className="w-[21px] h-[21px] cursor-pointer"
+                    />
+                  </div>
+                  </div>
+          </div>
         </div>
       </nav>
       {isEarningPopupOpen && <EarningPopup onClose={toggleEarningPopup} />}
       <aside
         id="logo-sidebar"
-        className={`fixed top-2 left-0 z-40  w-[12rem] h-screen pt-20 transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
+        className={`fixed top-2 left-0 z-40 w-[12rem] h-screen md:pt-[90px] pt-[150px] transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-[#22262F]">
@@ -120,6 +195,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/' ? 'btn-active' : ''}`}
               >
                 <img src={dashboardIcon} alt="dashboard" className="w-4 mr-1" />
@@ -129,6 +205,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/leaderBoard"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/leaderBoard' ? 'btn-active' : ''}`}
               >
                 <img src={leaderActive} alt="leader" className="w-4 mr-1" />
@@ -138,6 +215,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/customers"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
               >
                 <img src={customerActive} alt="customer" className="w-6 mr-1" />
@@ -147,6 +225,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/marketing-planning"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/marketing-planning' ? 'btn-active' : ''}`}
               >
                 <img src={marketingIcon} alt="wallet" className="w-6 mr-1" />
@@ -156,6 +235,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/wallet"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/wallet' ? 'btn-active' : ''}`}
               >
                 <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
@@ -165,6 +245,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/setting"
+                onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/setting' ? 'btn-active' : ''}`}
               >
                 <img src={settingIcon} alt="setting" className="w-6 mr-1" />
@@ -172,11 +253,21 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
+            <div
+                href="#"
+                className="md:hidden items-center text-white rounded-lg group flex"
+              >
+            <button className="bg-[#fff] text-[#000] md:text-[15px] w-full px-5 py-2 rounded-lg font-semibold" onClick={toggleEarningPopup}>
+                    Earning Calculator
+                  </button>
+                  </div>
+            </li>
+            <li>
               <a
                 href="#"
-                className="flex items-center p-2 py-4 text-white rounded-lg group"
+                className="flex items-center text-white rounded-lg group"
               >
-                <button className="flex items-center  p-3 bg-[#fff] text-[#000] rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-300">
+                <button className="flex items-center justify-center w-full py-2 px-3 bg-[#fff] text-[#000] rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-300">
                 {isHovered ? (
                   <>
                     Logout
@@ -191,6 +282,9 @@ const Sidebar = () => {
                 </button>
               </a>
             </li>
+            <div className='md:hidden'>
+            {isEarningPopupOpen && <EarningPopup onClose={toggleEarningPopup} />}
+            </div>
           </ul>
         </div>
       </aside>

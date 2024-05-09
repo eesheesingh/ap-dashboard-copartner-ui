@@ -42,7 +42,7 @@ const BankListingPopup = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative md:w-[1000px] xl:w-[1084px] xl:max-w-[800px]">
+      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative md:w-[1000px] xl:w-[1084px] w-[350px] xl:max-w-[800px]">
         <div className="absolute top-1 right-2">
           <button onClick={onClose}>
             <img src={close} alt="Close" className="w-10 h-10" />
@@ -61,13 +61,13 @@ const BankListingPopup = ({ onClose }) => {
             </button>
           </div>
           {/* Render Bank Details Here */}
-          <div className="flex flex-row gap-3 flex-wrap">
+          <div className="flex flex-row gap-3 md:justify-start justify-center flex-wrap mt-2">
             {bankDetails.map((detail, index) => (
-              <div key={index} className="sampleBank p-1 w-[310px] flex items-center justify-start flex-row bg-[#0000003d] border-[#ffffff1d] border-[1px] rounded-xl">
-                <img src={hdfcImg} alt="" />
-                <div className="flex flex-col p-2 text-left">
-                  <span className="text-lg">{detail.bankName}</span>
-                  <span className="text-[#c9c9c9]">{detail.accountNumber}</span>
+              <div key={index} className="sampleBank md:p-1 md:pr-0 pr-4 md:w-[310px] flex items-center justify-start flex-row bg-[#0000003d] border-[#ffffff1d] border-[1px] rounded-xl">
+                <img src={hdfcImg} alt=""/>
+                <div className="flex flex-col md:p-2 pr-2 text-left">
+                  <span className="md:text-lg text-[12px]">{detail.bankName}</span>
+                  <span className="text-[#c9c9c9] md:text-[15px] text-[10px]">{detail.accountNumber}</span>
                 </div>
               </div>
             ))}
@@ -85,12 +85,12 @@ const BankListingPopup = ({ onClose }) => {
           </div>
         </div>
         {/* Render UPI Details Here */}
-        <div className="flex flex-row gap-3 flex-wrap">
+        <div className="flex flex-row md:justify-start justify-center gap-3 flex-wrap mt-2">
           {upiDetails.map((detail, index) => (
-            <div key={index} className="sampleBank p-1 w-[310px] flex items-center justify-start flex-row bg-[#0000003d] border-[#ffffff1d] border-[1px] rounded-xl">
+            <div key={index} className="sampleBank p-1 md:w-[310px] flex items-center justify-start flex-row bg-[#0000003d] border-[#ffffff1d] border-[1px] rounded-xl">
               <img src={paytmImg} alt="" />
               <div className="flex flex-col p-2">
-                <span className="text-lg">{detail.UpiID}</span>
+                <span className="md:text-lg text-[12px]">{detail.UpiID}</span>
                 {/* Optionally, you can display more details */}
               </div>
               <button

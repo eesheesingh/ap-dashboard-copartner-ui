@@ -10,28 +10,29 @@ import Wallet from "./components/SettingPage/wallet.jsx";
 import Setting from "./components/SettingPage/Setting.jsx";
 import Marketing from "./components/Marketing/Marketing.jsx";
 import DashboardPage from "./components/Dashboard/DashboardPage.jsx";
+import CustomersPage from "./components/Customers/CustomersPage.jsx";
+import WalletPage from "./components/SettingPage/WalletPage.jsx";
 
 function App() {
   return (
     <Router>
       <div className={`bg-gradient ${styles.boxWidth} ${styles.paddingX}`}>
         <Navbar />
-        <div className="flex">
+        
           <div className="flex-grow">
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/leaderBoard" element={<Leader />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/customers" element={<CustomersPage />} />
+            <Route path="/wallet" element={<WalletPage />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/marketing-planning" element={<Marketing />} />
-
 
             <Route path="/customers/singleCustomer" element={<SingleCustomer />} />
             </Routes>
           </div>
         </div>
-      </div>
+      
     </Router>
   );
 }

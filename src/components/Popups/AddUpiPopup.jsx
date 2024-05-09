@@ -42,13 +42,13 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative w-[400px]">
+      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative md:w-[400px] w-[350px]">
         <div className="absolute top-1 right-2">
           <button onClick={onClose}>
             <img src={close} alt="Close" className="w-10 h-10" />
           </button>
         </div>
-        <h2 className="text-[40px] subheading-color font-semibold mb-4">Add Bank Details</h2>
+        <h2 className="md:text-[40px] text-[30px] subheading-color font-semibold mb-4">Add Bank Details</h2>
         <div className='grid grid-cols-2 gap-4'>
           <div className="relative col-span-2">
             <input type="text" id="UpiID" required className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " value={UpiDetails.UpiID} onChange={handleChange} />
@@ -65,7 +65,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
             onChange={handleAcknowledgmentChange}
             className="mr-2 mt-2"
           />
-          <label htmlFor="acknowledgment" className="text-gray-400 text-md text-left">
+          <label htmlFor="acknowledgment" className="text-gray-400 md:text-md text-sm text-left">
             I acknowledge that the bank/payment details provided are accurate and authorize Hailgro Tech Solutions Pvt. Ltd. to process transactions accordingly.
           </label>
         </div>

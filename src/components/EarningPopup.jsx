@@ -27,20 +27,20 @@ const EarningPopup = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative text-[#fff]">
+      <div className="bg-[#2E374B] p-4 rounded-[20px] shadow-lg relative text-[#fff] md:w-[400px] w-[350px]">
         <div className="flex flex-row gap-5 items-center mb-4">
-          <h2 className="text-[30px] font-semibold">Earning Calculator</h2>
-          <div className="">
+          <h2 className="text-[24px] font-semibold">Earning Calculator</h2> {/* Adjusted font size */}
+          <div className="text-sm"> {/* Adjusted font size */}
             Full access to in any of our products<br />
             Full access to in any of
           </div>
           <button onClick={onClose} className="absolute top-3 right-1">
-            <img src={close} alt="Close" className="w-10 h-10" />
+            <img src={close} alt="Close" className="w-8 h-8" /> {/* Adjusted image size */}
           </button>
         </div>
 
         {/* Range Slider */}
-        <div className="relative flex justify-center mt-10">
+        <div className="relative flex justify-center mt-8"> {/* Adjusted margin top */}
           <input
             type="range"
             min="0"
@@ -58,27 +58,29 @@ const EarningPopup = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-start mt-8">
-          <div className="flex flex-col p-4 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px] mb-4 mr-4">
-            <span className="text-[30px] font-bold subheading-color">1st Year Earning</span>
-            <span className="font-bold text-[46px] text-[#fff]">1,60,000</span>
-            <p>Lorem ipsum Dolor</p>
+        <div className="flex flex-wrap justify-start mt-6"> {/* Adjusted margin top */}
+          <div className="flex flex-col p-2 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px] mb-2 mr-2"> {/* Adjusted padding and margin */}
+            <span className="md:text-[20px] font-bold subheading-color">1st Year Earning</span> {/* Adjusted font size */}
+            <span className="font-bold md:text-[30px] text-[20px] text-[#fff]">1,60,000</span> {/* Adjusted font size */}
+            <p className="text-sm">Lorem ipsum Dolor</p> {/* Adjusted font size */}
           </div>
 
-          <div className="flex flex-col p-4 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px] mb-4 mr-4">
-            <span className="text-[30px] font-bold subheading-color">2nd Year Earning</span>
-            <span className="font-bold text-[46px] text-[#fff]">2,60,000</span>
-            <p>Lorem ipsum Dolor</p>
+          <div className="flex flex-col p-2 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px] mb-2 mr-2"> {/* Adjusted padding and margin */}
+            <span className="md:text-[20px] font-bold subheading-color">2nd Year Earning</span> {/* Adjusted font size */}
+            <span className="font-bold md:text-[30px] text-[20px] text-[#fff]">2,60,000</span> {/* Adjusted font size */}
+            <p className="text-sm">Lorem ipsum Dolor</p> {/* Adjusted font size */}
+          </div>
+
+          <div className="flex flex-col p-2 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px]"> {/* Adjusted padding and margin */}
+            <span className="md:text-[20px] font-bold subheading-color">3rd Year Earning</span> {/* Adjusted font size */}
+            <span className="font-bold md:text-[30px] text-[20px] text-[#fff]">3,60,000</span> {/* Adjusted font size */}
+            <p className="text-sm">Lorem ipsum Dolor</p> {/* Adjusted font size */}
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-start mt-1">
-          <div className="flex flex-col p-4 hover:bg-[#00000047] hover:border-[#ffffff40] hover:border-[1px] rounded-[10px]">
-            <span className="text-[30px] font-bold subheading-color">3rd Year Earning</span>
-            <span className="font-bold text-[46px] text-[#fff]">3,60,000</span>
-            <p>Lorem ipsum Dolor</p>
-          </div>
-        </div>
+        {/* <div className="flex flex-wrap justify-start mt-2">
+         
+        </div> */}
       </div>
     </div>
   );

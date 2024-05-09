@@ -448,7 +448,10 @@ body{
 
 }
 
-
+.imageContainer {
+  max-width: 100%;
+  height: auto;
+}
 
 
 

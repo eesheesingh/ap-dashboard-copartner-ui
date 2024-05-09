@@ -33,7 +33,7 @@ export const expertise_data = [
 
 export const leader_listing= [
   {
-    date: "16/12/2024",
+    date: "17/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -51,7 +51,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "17/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -69,7 +69,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "18/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -78,7 +78,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "20/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -87,7 +87,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "20/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -96,7 +96,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "20/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -105,7 +105,7 @@ export const leader_listing= [
   },
 
   {
-    date: "16/12/2024",
+    date: "20/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     subscription: "Service",
@@ -290,7 +290,29 @@ export const customers_listing = [
 
 export const customers_data = [
   {
-    date: "16/12/2024",
+    date: "13/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "13/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "19/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     service: 3,
@@ -343,30 +365,8 @@ export const customers_data = [
     privateCall: 2,
     earnAmount: "₹5,999"
   },
-
   {
-    date: "16/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-
-  {
-    date: "16/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-  {
-    date: "17/12/2024",
+    date: "14/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     service: 3,
@@ -388,51 +388,7 @@ export const customers_data = [
   },
 
   {
-    date: "17/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-
-  {
-    date: "16/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-
-  {
-    date: "17/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-
-  {
-    date: "16/12/2024",
-    name: "Eeshee",
-    mobileNumber: "9876545321",
-    service: 3,
-    course: 2,
-    webinar: 4,
-    privateCall: 2,
-    earnAmount: "₹5,999"
-  },
-
-  {
-    date: "16/12/2024",
+    date: "14/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     service: 3,
@@ -455,6 +411,50 @@ export const customers_data = [
 
   {
     date: "17/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "14/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "16/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "14/12/2024",
+    name: "Eeshee",
+    mobileNumber: "9876545321",
+    service: 3,
+    course: 2,
+    webinar: 4,
+    privateCall: 2,
+    earnAmount: "₹5,999"
+  },
+
+  {
+    date: "14/12/2024",
     name: "Eeshee",
     mobileNumber: "9876545321",
     service: 3,

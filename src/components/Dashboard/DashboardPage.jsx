@@ -44,11 +44,12 @@ const DashboardPage = () => {
     }
   };
   return (
-    <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-    <div className="d:p-4 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-20">
+    <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
+    <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[90px]">
       <div className="text-white text-center">
-      <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[60px] flex w-full md:justify-end justify-center ">
+      <div className="flex md:flex-row flex-col justify-between mt-10">
+            <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
+            <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-center">
               {/* <button
                 className={`button ${activeButtonFirstSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] md:border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonFirstSection("today")}
@@ -68,7 +69,7 @@ const DashboardPage = () => {
                 Monthly
               </button>
               <button
-                className={`button ${activeButtonFirstSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"}md:text-[18px] text-[13px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
+                className={`button ${activeButtonFirstSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonFirstSection("custom")}
               >
                 Custom
@@ -106,6 +107,8 @@ const DashboardPage = () => {
               {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup}/>}
             </div>
           </div>
+          </div>
+          </div>
 
           {/* Referral Link with concatenation for mobile view */}
 <div className="flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
@@ -141,7 +144,7 @@ const DashboardPage = () => {
           {/* Second Section */}
           <div className="flex md:flex-row flex-col justify-between mt-10 ">
             <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Lead Board Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[60px] flex w-full md:justify-end justify-center">
+            <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-center">
               <button
                 className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonSecondSection("today")} // Change to set activeButtonSecondSection to "today"
@@ -197,9 +200,9 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
+          <div><DashboardTable /></div>
+
       </div>
-      
-    </div>
   )
 }
 

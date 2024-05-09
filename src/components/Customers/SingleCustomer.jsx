@@ -29,7 +29,7 @@ const SingleCustomer = () => {
 
   return (
     <div className="xl:p-4 md:h-[100vh] xl:h-[100vh] md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-3">
+      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-3 mt-[6rem]">
         <div className="relative">
           {/* Third Section */}
           <div className="flex justify-between mt-10 items-center">
@@ -66,8 +66,8 @@ const SingleCustomer = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto mt-4 scroll-container shadow-md sm:rounded-[30px] rounded-lg border border-[#ffffff3f]">
-            <table>
+          <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+            <table className="md:w-full w-[200%] table-fixed">
               <thead className="text-center bg-[#29303F] sticky top-0">
                 <tr>
                   <th className="text-center text-[15px]">DATE</th>

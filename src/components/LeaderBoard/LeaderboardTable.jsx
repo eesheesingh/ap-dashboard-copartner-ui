@@ -63,7 +63,7 @@ const LeaderboardTable = () => {
         <h2 className="text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
         <div className="flex items-center">
             <button
-              className="bg-transparent border-[1px] flex items-center text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+              className="bg-transparent border-[1px] flex justify-center items-center text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onClick={toggleFilterModal}

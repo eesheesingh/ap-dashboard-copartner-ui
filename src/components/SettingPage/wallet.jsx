@@ -9,11 +9,11 @@ const Wallet = () => {
   const [isWithdrawalPopupOpen, setIsWithdrawalPopupOpen] = useState(false);
 
   return (
-    <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        <div className="text-white text-center">
+    <div className="xl:py-1 md:p-4 sm:ml-[10rem] text-white">
+    <div className="md:p-4 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-20">
+      <div className="text-white text-center">
           {/* First Section */}
-          <div className="flex justify-between mt-2">
+          <div className="flex md:flex-row flex-col justify-between mt-2">
             <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Earning Analysis</h2>
             <div className="flex items-center space-x-4 md:mr-1 xl:mr-[60px]">
             <button
@@ -43,7 +43,7 @@ const Wallet = () => {
               </button>
             </div>
           </div>
-          <div className="flex mt-8 gap-3 justify-center">
+          <div className="flex md:flex-row flex-col mt-8 gap-3 justify-center">
             <div className="w-full xl:w-[59%] md:w-2/3 justify-center items-center container-bg rounded-[30px]">
               <div className='flex flex-row xl:p-7 md:p-4 justify-between items-center'>
                 <h3 className="text-center font-semibold md:text-[30px] xl:text-[50px]">Total Earning</h3>
@@ -106,7 +106,7 @@ const Wallet = () => {
             <WithdrawalPopup isOpen={isWithdrawalPopupOpen} onClose={() => setIsWithdrawalPopupOpen(false)} />
           </div>
         </div>
-        <WalletTable />
+        {/* <WalletTable /> */}
       </div>
     </div>
   );

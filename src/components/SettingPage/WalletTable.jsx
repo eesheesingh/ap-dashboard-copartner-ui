@@ -61,7 +61,7 @@ const [showFilterModal, setShowFilterModal] = useState(false);
     <div className="relative">
       {/* Tab Section */}
       <div className="flex justify-between mt-6 items-center">
-        <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Transaction History</h2>
+        <h2 className="text-left md:text-[22px] text-[22px] xl:text-[40px] font-semibold">Transaction History</h2>
         <div className="flex items-center">
           {/* Filter button */}
           {/* Filter button */}
@@ -111,7 +111,7 @@ const [showFilterModal, setShowFilterModal] = useState(false);
         </div>
       </div>
 
-      <div className="flex space-x-4 mt-4">
+      <div className="flex md:justify-start justify-center space-x-4 mt-4">
         <button
           className={` px-4 py-2 rounded-lg focus:outline-none ${
             activeTab === 'transactions' ? 'bg-white text-black' : 'bg-[transparent] border-solid border-[1px] text-white'
@@ -133,9 +133,9 @@ const [showFilterModal, setShowFilterModal] = useState(false);
       {/* Transaction Data */}
       {activeTab === 'transactions' && (
         <>
-          <div className="overflow-x-auto mt-4 scroll-container shadow-md sm:rounded-[30px] rounded-lg border border-[#ffffff3f]">
-            <table className="w-full">
-              <thead className="text-center bg-[#29303F] sticky top-0">
+           <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+            <table className="md:w-full w-[250%] table-fixed">
+                <thead className="text-center bg-[#29303F] sticky top-0">
                 <tr>
                   <th className="text-center text-[15px]">TRANSACTION ID</th>
                   <th className="text-center text-[15px]">Date</th>
@@ -190,9 +190,9 @@ const [showFilterModal, setShowFilterModal] = useState(false);
       {/* Withdrawal Data */}
       {activeTab === 'withdrawals' && (
         <div className="mt-4">
-          <div className="overflow-x-auto mt-4 scroll-container shadow-md sm:rounded-[30px] rounded-lg border border-[#ffffff3f]">
-            <table className="w-full">
-              <thead className="text-center bg-[#29303F] sticky top-0">
+          <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+            <table className="md:w-full w-[250%] table-fixed">
+                <thead className="text-center bg-[#29303F] sticky top-0">
                 <tr>
                   <th className="text-center text-[15px]">WALLET ID</th>
                   <th className="text-center text-[15px]">Date</th>

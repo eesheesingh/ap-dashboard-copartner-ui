@@ -52,13 +52,13 @@ const Dashboard = () => {
           {/* First Section */}
           <div className="flex md:flex-row flex-col justify-between mt-2">
             <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[60px] flex w-full md:justify-end justify-center ">
-              {/* <button
+            <div className="space-x-4 md:mr-1 xl:mr-[30px] flex w-full md:justify-end justify-center">
+              <button
                 className={`button ${activeButtonFirstSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] md:border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonFirstSection("today")}
               >
                 Today
-              </button> */}
+              </button>
               <button
                 className={`button ${activeButtonFirstSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonFirstSection("weekly")}

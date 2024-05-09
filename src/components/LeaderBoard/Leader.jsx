@@ -6,17 +6,16 @@ import LeaderBoardChartMob from '../Dashboard/LeaderBoardChartMob'
 
 
 const Leader = () => {
-  const [activeButtonLeaderSection, setActiveButtonLeaderSection] = useState("today");
-  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today"); // Change initial state to "today"
+  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
 
   return (
-    <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
+      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-10 mt-[90px]">
         <div className="text-white text-center">
           {/* Second Section */}
           <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">
             <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Lead Board Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[60px] flex w-full md:justify-end justify-center md:flex-nowrap flex-wrap">
+            <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-center md:flex-nowrap flex-wrap">
               <button
                 className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
                 onClick={() => setActiveButtonSecondSection("today")} // Change to set activeButtonSecondSection to "today"
@@ -55,7 +54,7 @@ const Leader = () => {
             <div className="w-full md:w-1/3 flex md:flex-col justify-center items-center container-bg rounded-[30px] p-2 md:mt-0 mt-3">
               <img src={usersPurple} alt="" className="md:w-[150px] w-[100px] border-[2px] rounded-full p-4" />
               <div className="px-4">
-                <h3 className="text-left md:text-[3rem] text-[2rem] xl:text-[4rem] font-bold text-gradient">Leader Board</h3>
+                <h3 className="text-left md:text-[3rem] text-[1.7rem] xl:text-[4rem] font-bold text-gradient">Leader Board</h3>
                 <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
                   <span>Total Visit:</span>
                   <span className="font-semibold text-[#247673]">100</span>

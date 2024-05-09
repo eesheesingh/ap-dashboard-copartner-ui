@@ -36,16 +36,16 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
     <>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-[#2E374B] p-8 rounded-[20px] shadow-lg relative w-[1084px]">
+          <div className="bg-[#2E374B] p-8 rounded-[20px] shadow-lg relative md:w-[1084px] w-[350px]">
             <div className="absolute top-2 right-2">
               <button onClick={onClose}>
                 <img src={close} alt="Close" className="w-10 h-10" />
               </button>
             </div>
-            <h2 className="text-[40px] subheading-color font-semibold mb-4">Profile Edit</h2>
+            <h2 className="md:text-[40px] text-[30px] subheading-color font-semibold mb-4">Profile Edit</h2>
             {/* File Upload */}
-            <div className="mb-4 w-1/2">
-              <div className='text-lg mb-2'>Upload Profile Image</div>
+            <div className="mb-4 md:w-1/2 w-full">
+              <div className='md:text-lg text-md mb-2'>Upload Profile Image</div>
               <label htmlFor="fileUpload" className="cursor-pointer block bg-transparent border-[2px] border-dashed border-[#ffffff66] text-[#c9c9c9] px-[2rem] py-[4rem] rounded-md text-center mb-2">
                 Select
                 <input type="file" id="fileUpload" className="hidden" onChange={handleFileChange} />

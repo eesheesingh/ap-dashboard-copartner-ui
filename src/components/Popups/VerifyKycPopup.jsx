@@ -15,7 +15,7 @@ const VerifyKycPopup = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-[#2E374B] p-8 rounded-[20px] shadow-lg relative md:w-[716px]">
+      <div className="bg-[#2E374B] md:p-8 p-2 rounded-[20px] shadow-lg relative md:w-[716px] w-[350px]">
         <div className="absolute top-2 right-2">
           <button onClick={onClose}>
             <img src={close} alt="Close" className="w-10 h-10" />

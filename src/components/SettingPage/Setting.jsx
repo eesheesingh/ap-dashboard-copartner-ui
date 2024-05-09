@@ -4,6 +4,7 @@ import { call, card, cardHolder, mail, userImg, clipboard, tick, editBtn, editBl
 import DocumentSetting from './DocumentSetting';
 import BankSetting from './BankSetting';
 import EditProfilePopup from '../Popups/EditProfilePopup';
+import ProfileCardMob from './ProfileCardMob';
 
 const Setting = () => {
   const [profile, setProfile] = useState({
@@ -69,9 +70,9 @@ const Setting = () => {
 
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 px-10 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
-        <div>
-          <div className='container-bg rounded-[20px] p-3 px-10'>
+      <div className="md:p-4 xl:p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[9rem]">
+        <div className="text-white text-left">
+          <div className='container-bg rounded-[20px] p-3 px-10 md:block hidden'>
             <div className='profileCard w-[1048] flex items-center'>
               <div className='w-2/3'>
                 <span className='text-gradient text-[70px] font-bold'>{profile.name}</span>
@@ -133,7 +134,7 @@ const Setting = () => {
               </div>
 
               <div className='rightImgCol flex justify-center w-[1/2] relative userBack'>
-                <img src={profile.imageURL || userImg} alt="" className='w-[60%] maskImage' />
+                <img src={profile.imageURL || userImg} alt="" className='w-[50%] maskImage' />
                 <button className="absolute flex bottom-0 right-0 bg-[#ffffff43] hover:bg-[#fff] items-center text-white hover:text-[#000] px-5 py-1 border-[1px] rounded-[50px] transition duration-300"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -154,8 +155,8 @@ const Setting = () => {
               </div>
             </div>
 
-            <div className='Manager py-5 text-nowrap'>
-              <div className='text-[20px]'>Your Relationship Manager</div>
+            <div className='Manager py-2 text-nowrap'>
+              <div className='text-[30px]'>Your Relationship Manager</div>
               <div className='flex flex-row pt-3 justify-between'>
                 <div className='flex flex-row items-center justify-center gap-3'>
                   <span className='text-lg'>Name :</span>
@@ -172,6 +173,9 @@ const Setting = () => {
               </div>
             </div>
           </div>
+          <div className='md:hidden'>
+          <ProfileCardMob />
+        </div>
 
           <div className='my-5'>
           <DocumentSetting />
@@ -181,6 +185,7 @@ const Setting = () => {
           <BankSetting />
           </div>
         </div>
+        
       </div>
       <EditProfilePopup 
   isOpen={isEditProfileOpen} 
