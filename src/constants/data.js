@@ -287,6 +287,13 @@ export const customers_listing = [
   },
 ];
 
+export const customerData = [
+{ id: 1, name: 'Customer A', price: "1000" },
+{ id: 2, name: 'Customer B', price: "1500" },
+{ id: 3, name: 'Customer C', price: "1100" },
+{ id: 4, name: 'Customer D', price: "100" },
+]
+
 
 export const customers_data = [
   {
@@ -297,7 +304,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹3999"
   },
 
   {
@@ -308,7 +315,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -319,7 +326,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹3999"
   },
 
   {
@@ -330,7 +337,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -341,7 +348,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹3999"
   },
 
   {
@@ -352,7 +359,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -363,7 +370,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹2999"
   },
   {
     date: "14/12/2024",
@@ -373,7 +380,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -384,7 +391,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹2999"
   },
 
   {
@@ -395,7 +402,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -406,7 +413,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -417,7 +424,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -428,7 +435,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -439,7 +446,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -450,7 +457,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 
   {
@@ -461,7 +468,7 @@ export const customers_data = [
     course: 2,
     webinar: 4,
     privateCall: 2,
-    earnAmount: "₹5,999"
+    price: "₹5999"
   },
 ];
 
@@ -470,7 +477,15 @@ export const transaction_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "28/01/2024",
+    bank: "HDFC Bank",
+    accountNumber: "Ankurkumar@Phonepay",
+    amount: "₹1,999",
+  },
+  {
+    id: 1,
+    transactionId: "#9876546321",
+    date: "28/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -486,15 +501,7 @@ export const transaction_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
-    bank: "HDFC Bank",
-    accountNumber: "Ankurkumar@Phonepay",
-    amount: "₹1,999",
-  },
-  {
-    id: 1,
-    transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "28/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -527,14 +534,14 @@ export const transaction_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "21/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
   }, {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "28/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -550,7 +557,7 @@ export const transaction_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "21/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -558,7 +565,7 @@ export const transaction_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "21/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -585,7 +592,25 @@ export const wallet_data = [
   {
     id: 1,
     transactionId: "#9876546321",
+    date: "27/01/2024",
+    bank: "HDFC Bank",
+    accountNumber: "Ankurkumar@Phonepay",
+    amount: "₹1,999",
+    status: "PENDING"
+  },
+  {
+    id: 1,
+    transactionId: "#9876546321",
     date: "26/01/2024",
+    bank: "HDFC Bank",
+    accountNumber: "Ankurkumar@Phonepay",
+    amount: "₹1,999",
+    status: ""
+  },
+  {
+    id: 1,
+    transactionId: "#9876546321",
+    date: "28/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",
@@ -612,25 +637,7 @@ export const wallet_data = [
   {
     id: 1,
     transactionId: "#9876546321",
-    date: "26/01/2024",
-    bank: "HDFC Bank",
-    accountNumber: "Ankurkumar@Phonepay",
-    amount: "₹1,999",
-    status: ""
-  },
-  {
-    id: 1,
-    transactionId: "#9876546321",
-    date: "26/01/2024",
-    bank: "HDFC Bank",
-    accountNumber: "Ankurkumar@Phonepay",
-    amount: "₹1,999",
-    status: "PENDING"
-  },
-  {
-    id: 1,
-    transactionId: "#9876546321",
-    date: "26/01/2024",
+    date: "29/01/2024",
     bank: "HDFC Bank",
     accountNumber: "Ankurkumar@Phonepay",
     amount: "₹1,999",

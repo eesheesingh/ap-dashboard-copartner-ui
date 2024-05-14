@@ -1,159 +1,184 @@
-import React, { useState } from "react";
-import { filterBlack, filterBtn, leftArrow, rightArrow } from "../../assets";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Link } from "react-router-dom";
-import { customers_data } from "../../constants/data";
+import React, { useState } from 'react';
+import { customers_data } from '../../constants/data';
+import { filterBlack, filterBtn, rightArrow } from '../../assets';
+import { Link } from 'react-router-dom';
 
 const CustomersPage = () => {
-    const [isHovered, setIsHovered] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [showFilterModal, setShowFilterModal] = useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const itemsPerPage = 10;
-    const totalData = 20;
-    const totalPages = Math.ceil(totalData / itemsPerPage);
+  const [customers, setCustomers] = useState(customers_data);
+  const [isHovered, setIsHovered] = useState(false);
+  const [sortBy, setSortBy] = useState('none');
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
 
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
 
-    const handleMouseLeave = () => {
-        setIsHovered(false);
-    };
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
+  const handleSort = (type) => {
+    if (type === sortBy) {
+      setSortBy(type + '_reverse');
+      setCustomers([...customers].reverse());
+    } else {
+      setSortBy(type);
+      setCustomers([...customers].sort((a, b) => {
+        let aValue = a[type];
+        let bValue = b[type];
+        // Parse string values to numbers if applicable
+        if (typeof aValue === 'string') {
+          aValue = parseFloat(aValue.replace(/[^\d.-]/g, ''));
+        }
+        if (typeof bValue === 'string') {
+          bValue = parseFloat(bValue.replace(/[^\d.-]/g, ''));
+        }
+        if (type === 'price') {
+          return aValue - bValue;
+        }
+        return 0;
+      }));
+    }
+  };
 
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+  };
 
-    const toggleFilterModal = () => {
-        setShowFilterModal(!showFilterModal);
-    };
+  const handleFilterClick = () => {
+    setShowFilterModal(!showFilterModal);
+  };
 
-    return (
-        <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-            <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-8 mt-[90px]">
-                <div className="text-white text-center">
-                    {/* Second Section */}
-                    <div className="flex items-center justify-between mt-10">
-                        <h2 className="text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
-                        <div className="flex items-center">
-                            <button
-                                className="bg-transparent border-[1px] flex justify-center items-center text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                                onClick={toggleFilterModal}
-                            >
-                                {isHovered ? (
-                                    <>
-                                        <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
-                                        Filter
-                                    </>
-                                ) : (
-                                    <>
-                                        <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
-                                        Filter
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    </div>
+  const handleClearFilter = () => {
+    // Reset the filter settings
+    setSortBy('none');
+    setSelectedOption('');
+    setShowFilterModal(false);
+    // Reset customers data to original
+    setCustomers(customers_data);
+  };
 
-                    {showFilterModal && (
-                        <div className="absolute top-0 right-0 bg-white p-4 shadow-md rounded-lg">
-                            <div className="flex items-center">
-                                <div className="relative">
-                                    <DatePicker
-                                        selected={startDate}
-                                        onChange={(date) => setStartDate(date)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholderText="Select date start"
-                                    />
-                                </div>
-                                <span className="mx-4 text-gray-500">to</span>
-                                <div className="relative">
-                                    <DatePicker
-                                        selected={endDate}
-                                        onChange={(date) => setEndDate(date)}
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholderText="Select date end"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
+  const handleApplyFilter = () => {
+    setShowFilterModal(false);
+    // Apply selected option
+    handleSort(selectedOption);
+  };
 
-                    <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
-                        <table className="md:w-full w-[250%] table-fixed">
-                            <thead className="text-center bg-[#29303F] sticky top-0">
-                                <tr>
-                                    <th className="md:text-[15px] text-[12px]">NAME</th>
-                                    <th className="md:text-[15px] text-[12px]">MOBILE NUMBER</th>
-                                    <th className="md:text-[15px] text-[12px]">SERVICE</th>
-                                    <th className="md:text-[15px] text-[12px]">COURSE</th>
-                                    <th className="md:text-[15px] text-[12px]">WEBINAR</th>
-                                    <th className="md:text-[15px] text-[12px]">PRIVATE CALL</th>
-                                    <th className="md:text-[15px] text-[12px]">EARN AMOUNT</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {customers_data
-                                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                                    .map((customer, index) => (
-                                        <tr key={index}>
-                                            <td className="text-center">{customer.name}</td>
-                                            <td className="text-center">
-                                                {customer.mobileNumber.replace(/^\d{6}/, '******')}
-                                            </td>
-                                            <td className="text-center">{customer.service}</td>
-                                            <td className="text-center">{customer.course}</td>
-                                            <td className="text-center">{customer.webinar}</td>
-                                            <td className="text-center">{customer.privateCall}</td>
-                                            <td className="text-center">
-                                                <Link to="/customers/singleCustomer">
-                                                    <button className="border-transparent bg-transparent">
-                                                        {customer.earnAmount}
-                                                        <img src={leftArrow} alt="" className="inline-block md:w-[7px] w-[5px] md:ml-10 ml-5" />
-                                                    </button>
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))}
-                            </tbody>
-                        </table>
-                    </div>
+  // Pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentCustomers = customers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(customers.length / itemsPerPage);
 
-                    <div className="flex justify-end p-4 items-center">
-                        <div className="text-white">
-                            Page {currentPage} of {totalPages}
-                        </div>
-                        <div className="flex">
-                            <button
-                                className="bg-transparent text-white px-1 py-3 hover:bg-[#fff4] rounded-[50px] transition duration-300 mr-2"
-                                onClick={handlePrevPage}
-                                disabled={currentPage === 1}
-                            >
-                                <img src={rightArrow} alt="Prev" className="w-[12px]" />
-                            </button>
-                            <button
-                                className="bg-transparent text-white px-1 py-3 hover:bg-[#fff4] rounded-[50px] transition duration-300"
-                                onClick={handleNextPage}
-                                disabled={currentPage === totalPages}
-                            >
-                                <img src={leftArrow} alt="Next" className="w-[12px]" />
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  const paginate = (pageNumber) => {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
+  return (
+    <div className="relative xl:p-4 md:p-4 sm:ml-[8rem] text-white">
+      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[10rem]">
+        <div className='flex justify-between items-center'>
+          <span className='md:text-[30px] text-[20px] font-semibold'>Withdrawals Listing</span>
+          <button
+            className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+            onClick={handleFilterClick}
+            onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+          >
+           {isHovered ? (
+                <>
+                  <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
+                  Filter
+                </>
+              ) : (
+                <>
+                  <img src={filterBtn} alt="" className="inline-block w-4 mr-1" />
+                  Filter
+                </>
+              )}
+          </button>
         </div>
-    
-);
+        {showFilterModal && (
+          <div className="absolute right-0 mt-5 mr-4 z-10">
+            <div className="bg-gradient rounded-[30px] p-8">
+              <h2 className="text-lg font-semibold mb-4">Filter Options</h2>
+              <div className="flex flex-col">
+                <label className="inline-flex items-center mt-2">
+                  <input
+                    type="radio"
+                    className="form-radio h-5 w-5 text-blue-600"
+                    value="price"
+                    checked={selectedOption === 'price'}
+                    onChange={() => handleOptionChange('price')}
+                  />
+                  <span className="ml-2">Low To High</span>
+                </label>
+                <label className="inline-flex items-center mt-2">
+                  <input
+                    type="radio"
+                    className="form-radio h-5 w-5 text-blue-600"
+                    value="price_reverse"
+                    checked={selectedOption === 'price_reverse'}
+                    onChange={() => handleOptionChange('price_reverse')}
+                  />
+                  <span className="ml-2">High To Low</span>
+                </label>
+              </div>
+              <div className="flex justify-end mt-4">
+                <button className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg mr-2" onClick={handleClearFilter}>Clear</button>
+                <button className="bg-[#fff] text-[#000] px-4 py-2 rounded-lg" onClick={handleApplyFilter}>Apply</button>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">      
+          <table className='md:w-full w-[200%]'>
+            <thead>
+              <tr className='uppercase'>
+                <th className="text-center text-[15px]">Name</th>
+                <th className="text-center text-[15px]">Mobile Number</th>
+                <th className="text-center text-[15px]">Service</th>
+                <th className="text-center text-[15px]">Course</th>
+                <th className="text-center text-[15px]">Earn Amount</th> 
+              </tr>
+            </thead>
+            <tbody>
+              {customers.map(customer => (
+                <tr key={customer.id} className='text-center'>
+                  <td className="border px-4 py-2">{customer.name}</td>
+                  <td className="border px-4 py-2">{customer.mobileNumber}</td>
+                  <td className="border px-4 py-2">{customer.service}</td>
+                  <td className="border px-4 py-2">{customer.course}</td>
+                  <Link to="/customers/singleCustomer">
+                  <td className="border px-4 py-2 flex justify-center items-center">
+                    {customer.price}
+                    <img src={rightArrow} alt="" className='w-2 h-3 ml-3' />
+                  </td>
+                  </Link>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+          {/* Pagination */}
+      {/* <div className="flex justify-end items-center gap-2 mt-4">
+        <span className='mr-2 text-sm text-gray-500'>{`Page ${currentPage} of ${totalPages}`}</span>
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          &lt;
+        </button>
+        <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          &gt;
+        </button>
+      </div> */}
+      </div>
+    </div>
+  );
 };
 
 export default CustomersPage;

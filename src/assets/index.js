@@ -21,10 +21,10 @@ import graph2 from './tab2graph.png'
 import customBtn from ".//customButn.png"
 import loginBtn from './loginBtn.png'
 import filterBtn from "./filterBtn.png"
-import leftArrow from "./leftArrow.png"
+import rightArrow from "./leftArrow.png"
 import filterBlack from './filterBlack.png'
 import loginBlack from './LoginBlack.png'
-import rightArrow from "./rightArrow.png"
+import leftArrow from "./rightArrow.png"
 import graph3 from './graph2.png'
 import graph4 from "./graph4.png"
 import download from './downloadBtn.png'

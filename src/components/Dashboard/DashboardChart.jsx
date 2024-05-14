@@ -41,6 +41,23 @@ const DashboardChart = ({ activeButton }) => {
     }
   };
 
+    // Custom tooltip component
+    const CustomTooltip = ({ active, payload, label }) => {
+      if (active && payload && payload.length) {
+        return (
+          <div className="custom-tooltip rounded-[10px] p-2 bg-gradient border border-[#ffffff31]">
+            {payload.map((entry, index) => (
+              <p key={`tooltip-${index}`} style={{ color: entry.color }}>
+                {`${entry.name} : ${entry.value}`}
+              </p>
+            ))}
+          </div>
+        );
+      }
+  
+      return null;
+    };
+
   return (
     <div style={{ width: '100%', height: '400px', backgroundColor: '#2b2d42', borderRadius: '30px', padding: '15px' }}>
       <ResponsiveContainer>
@@ -51,7 +68,7 @@ const DashboardChart = ({ activeButton }) => {
           <CartesianGrid strokeDasharray="3 3" stroke="#3a3e5c" />
           <XAxis dataKey="name" stroke="#fff" />
           <YAxis stroke="#fff" />
-          <Tooltip wrapperStyle={{ backgroundColor: '#3a3e5c', border: 'none', borderRadius: '5px', padding: '5px' }} />
+          <Tooltip content={<CustomTooltip />} />
           <Legend wrapperStyle={{ color: '#fff' }} />
           <Line type="bump" dataKey="earnings" stroke="#64dfdf" strokeWidth={4} activeDot={{ r: 8 }} />
         </LineChart>

@@ -18,8 +18,8 @@ const WalletPage = () => {
     <div className="md:p-4 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[8rem]">
       <div className="text-white text-center">
       <div className="flex md:flex-row flex-col justify-between mt-2">
-            <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
-            <div className="space-x-4 md:mr-1 xl:mr-[20px] flex w-full md:justify-end justify-center">
+            <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
+            <div className="space-x-4 md:mr-1 xl:mr-[20px] flex w-full md:justify-end justify-start">
             {/* <button
                 className={`button ${activeButtonFirstSection === 'today' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-1 px-2 md:px-6 rounded`}
                 onClick={() => setActiveButtonFirstSection('today')}
@@ -54,7 +54,7 @@ const WalletPage = () => {
               <div className="flex md:flex-row flex-col mt-8 gap-3 md:justify-center">
             <div className="w-full xl:w-[59%] md:w-2/3 container-bg rounded-[30px]">
               <div className='flex md:flex-row flex-col xl:p-7 md:p-4 justify-between items-center'>
-                <h3 className="text-center font-semibold md:text-[30px] text-[28px] xl:text-[50px]">Total Earning</h3>
+                <h3 className="text-left font-semibold md:text-[30px] text-[28px] xl:text-[50px]">Total Earning</h3>
                 <div className="flex flex-row items-center justify-between gap-5 ">
                   <span className='md:text-[20px] text-[16px]'>
                     Withdrawal Balance: 200
@@ -83,7 +83,7 @@ const WalletPage = () => {
                       <span className='text-gradient xl:text-[100px] md:text-[95px] text-[50px] font-bold text-left'>
                         ₹100
                       </span>
-                      <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>With Cobalt, managing your business. <span className='text-[#fff]'>Say no to spreadsheets.</span></p>
+                      <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>Thank you for your first payment! Your wallet balance is now updated !</p>
                     </div>
                   </div>
                   <div className='walletBox border-[1px] border-[#ffffff4c] xl:w-1/2 md:w-1/2 rounded-[30px] p-4'>
@@ -101,7 +101,7 @@ const WalletPage = () => {
                       <span className='text-gradient xl:text-[100px] md:text-[95px] text-[50px] font-bold text-left'>
                         ₹100
                       </span>
-                      <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>With Cobalt, managing your business. <span className='text-[#fff]'>Say no to spreadsheets.</span></p>
+                      <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>Thank you for your payment! Your wallet balance is now updated !</p>
                     </div>
                   </div>
                 </div>

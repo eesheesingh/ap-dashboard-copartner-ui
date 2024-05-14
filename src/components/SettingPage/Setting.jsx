@@ -191,7 +191,7 @@ const Setting = () => {
   isOpen={isEditProfileOpen} 
   onClose={() => setIsEditProfileOpen(false)} 
   onUpdateProfile={updateProfile}   
-  initialProfile={{ name: profile.name, email: profile.email, mobile: profile.number, file: profile.file}} // Pass mobile as part of initialProfile
+  initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file}} // Pass mobile as part of initialProfile
 />
 
 

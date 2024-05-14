@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { leader_listing } from '../../constants/data';
-import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
+import { transaction_data } from '../../constants/data';
+import { filterBlack, filterBtn, invoiceBtn, leftArrow, rightArrow } from '../../assets';
 
-const LeaderboardTable = () => {
+const TransactionTable = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [isFilterClicked, setIsFilterClicked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const filterRef = useRef(null);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -19,24 +21,41 @@ const LeaderboardTable = () => {
     setIsHovered(false);
   };
 
-  const handleFilterButtonClick = () => {
-    setIsFilterClicked(!isFilterClicked);
-    setCurrentPage(1); // Reset current page when filter button is clicked
-  };
-
   const handleFilterChange = ({ startDate, endDate }) => {
     setStartDate(startDate);
     setEndDate(endDate);
-    setCurrentPage(1); // Reset current page when filter criteria change
+    setCurrentPage(1);
+    closeFilterModal();
+  };
+
+  const openFilterModal = () => {
+    setIsFilterOpen(true);
+  };
+
+  const closeFilterModal = () => {
+    setIsFilterOpen(false);
   };
 
   const handleClearDates = () => {
     setStartDate(null);
     setEndDate(null);
-    setCurrentPage(1); // Reset current page when dates are cleared
+    setCurrentPage(1);
   };
 
-  const filteredData = leader_listing.filter((item) => {
+  const handleClickOutside = (event) => {
+    if (filterRef.current && !filterRef.current.contains(event.target)) {
+      closeFilterModal();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const filteredData = transaction_data.filter((item) => {
     const itemDate = new Date(item.date.split('/').reverse().join('-'));
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
@@ -45,31 +64,29 @@ const LeaderboardTable = () => {
     } else if (endDate) {
       return itemDate <= endDate;
     }
-    return true; // If neither start nor end date is specified, show all data
+    return true;
   });
 
-  // Pagination
-  const dataPerPage = 10;
-  const totalPages = Math.ceil(filteredData.length / dataPerPage);
-  const indexOfLastData = currentPage * dataPerPage;
-  const indexOfFirstData = indexOfLastData - dataPerPage;
-  const currentData = filteredData.slice(indexOfFirstData, indexOfLastData);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
+    if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
   };
 
   return (
-    <div className="table-responsive mt-5 relative">
+    <div className='mt-4'>
       <div className='flex justify-between items-center'>
-        <span className='md:text-[30px] text-[20px] font-semibold'>Customers Listing</span>
+        <span className='md:text-[30px] text-[20px] font-semibold'>Transaction History</span>
         <button
           className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
+          onClick={openFilterModal}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          onClick={handleFilterButtonClick}
         >
           {isHovered ? (
             <>
@@ -84,17 +101,17 @@ const LeaderboardTable = () => {
           )}
         </button>
       </div>
-      {isFilterClicked && (
-        <div className="absolute right-0 mt-5 mr-4 z-10">
-          <div className="bg-[#000] rounded-[30px] p-4 flex flex-col gap-3">          
+      {isFilterOpen && (
+        <div ref={filterRef} className="absolute right-0 mt-5 mr-4 z-10">
+          <div className="bg-[#000] rounded-[30px] p-4 flex flex-col gap-3">
             <DatePicker
               selected={startDate}
-              onChange={(date) => handleFilterChange({ startDate: date, endDate })}
+              onChange={(date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
               endDate={endDate}
-              placeholderText="From Date"
-              className="bg-transparent text-white border-b border-white" // Apply custom styles here
+              placeholderText="Start Date"
+              className="bg-transparent text-white border-b border-white"
               renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                 <div className="flex justify-center">
                   <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
@@ -114,13 +131,13 @@ const LeaderboardTable = () => {
             />
             <DatePicker
               selected={endDate}
-              onChange={(date) => handleFilterChange({ startDate, endDate: date })}
+              onChange={(date) => setEndDate(date)}
               selectsEnd
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
-              placeholderText="To Date"
-              className="bg-transparent text-white border-b border-white" // Apply custom styles here
+              placeholderText="End Date"
+              className="bg-transparent text-white border-b border-white"
               renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                 <div className="flex justify-center">
                   <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
@@ -144,45 +161,47 @@ const LeaderboardTable = () => {
           </div>
         </div>
       )}
+
       <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">      
-        <table className='md:w-full w-[105%]'>
+        <table className='md:w-full w-[200%]'>
           <thead>
-            <tr className='uppercase'>
-              <th>Date</th>
-              <th>Mobile Number</th>
-              <th>Name</th>
+            <tr>
+              <th className="text-center text-[15px]">TRANSACTION ID</th>
+              <th className="text-center text-[15px]">Date</th>
+              <th className="text-center text-[15px]">Bank</th>
+              <th className="text-center text-[15px]">Account Number</th>
+              <th className="text-center text-[15px]">Amount</th>
+              <th className="text-center text-[15px]">Invoice</th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index} className='text-center'>
-                <td>{item.date}</td>
-                <td>{item.mobileNumber.replace(/^\d{6}/, '******')}</td>
-                <td>{item.name}</td>
+            {currentItems.map((transaction, index) => (
+              <tr key={index}>
+                <td className="text-center">{transaction.transactionId}</td>
+                <td className="text-center">{transaction.date}</td>
+                <td className="text-center">{transaction.bank}</td>
+                <td className="text-center">{transaction.accountNumber}</td>
+                <td className="text-center">{transaction.amount}</td>
+                <td className="text-center flex justify-center">
+                  <img src={invoiceBtn} alt="" className="w-5" />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {totalPages > 1 && (
-        <div className="flex justify-end mt-4">
-          <div className="pagination flex items-center">
-            <span className="mr-2 text-sm text-gray-500">{`Page ${currentPage} of ${totalPages}`}</span>
-            <span className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button onClick={() => paginate(currentPage - 1)} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
-                <img src={leftArrow} alt="Left Arrow" className="w-4 h-4 " />
-              </button>
-            </span>
-            <span className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-              <button onClick={() => paginate(currentPage + 1)} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
-                <img src={rightArrow} alt="Right Arrow" className="w-4 h-4" />
-              </button>
-            </span>
-          </div>
-        </div>
-      )}
+
+      <div className="flex justify-end items-center gap-2 mt-4">
+        <span className='mr-2 text-sm text-gray-500'>{`Page ${currentPage} of ${totalPages}`}</span>
+        <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          <img src={leftArrow} alt="Previous" className="w-4 h-4" />
+        </button>
+        <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          <img src={rightArrow} alt="Next" className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 };
 
-export default LeaderboardTable;
+export default TransactionTable;

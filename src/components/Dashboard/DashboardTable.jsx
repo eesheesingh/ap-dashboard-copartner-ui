@@ -33,7 +33,7 @@ const DashboardTable = () => {
     <div className="relative">
       {/* Heading */}
       <div className="flex justify-between mt-10">
-        <h2 className="md:text-left text-center md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
+        <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
       </div>
 
       {/* Table */}
@@ -65,25 +65,18 @@ const DashboardTable = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
-        <span className="mx-2 text-[#fff]">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={goToPreviousPage}
-          className="mx-2 rounded-md text-gray-800"
-          disabled={currentPage === 1}
-        >
-          <img src={leftArrow} alt="Previous" className="w-4 transform rotate-180" />
+      <div className="flex justify-end mt-4">
+        <div className="flex justify-end items-center gap-2 mt-4">
+        <span className='mr-2 text-sm text-gray-500'>{`Page ${currentPage} of ${totalPages}`}</span>
+        <button onClick={goToPreviousPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          <img src={leftArrow} alt="Previous" className="w-5 h-6" />
         </button>
-        <button
-          onClick={goToNextPage}
-          className="mx-2 rounded-md text-gray-800"
-          disabled={currentPage === totalPages}
-        >
-          <img src={leftArrow} alt="Next" className="w-4" />
+        <button onClick={goToNextPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
+          <img src={rightArrow} alt="Next" className="w-5 h-6" />
         </button>
       </div>
+      </div>
+      
     </div>
   );
 };
