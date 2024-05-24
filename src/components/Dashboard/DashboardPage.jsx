@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   graph,
   graph2,
@@ -13,15 +13,55 @@ import DashboardChart from "./DashboardChart";
 import LeaderBoardAnalysisChart from "./LeaderBoardAnalysisChart";
 import LeaderBoardChartMob from "./LeaderBoardChartMob.jsx";
 import DashboardChartMob from "./DashboardChartMonb.jsx";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const DashboardPage = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] =
     useState("weekly");
   const [activeButtonSecondSection, setActiveButtonSecondSection] =
-    useState("today"); // Change initial state to "today"
+    useState("today");
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
   const [copiedReferralCode, setCopiedReferralCode] = useState(false);
   const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
+  const [referralCode, setReferralCode] = useState("");
+  const [affiliateData, setAffiliateData] = useState(null);
+  const [totalVisits, setTotalVisits] = useState(0);
+  const [paidUsers, setPaidUsers] = useState(0);
+  const [notInterested, setNotInterested] = useState(0);
+  const [walletBalance, setWalletBalance] = useState(null);
+  const [referralLink, setReferralLink] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const fetchWalletBalance = async (affiliateId) => {
+    try {
+      const response = await fetch(`https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${affiliateId}?userType=AP`);
+      const result = await response.json();
+      if (result.isSuccess) {
+        setWalletBalance(result.data.walletBalance);
+      } else {
+        console.error('Error fetching wallet balance:', result.displayMessage);
+      }
+    } catch (error) {
+      console.error('Error fetching wallet balance:', error);
+    }
+  };
+
+  const generateReferralLink = async (affiliateId) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/GenerateReferralLink/${affiliateId}`);
+      const result = await response.json();
+      if (result.isSuccess) {
+        setReferralLink(result.data);
+      } else {
+        console.error('Failed to generate referral link');
+      }
+    } catch (error) {
+      console.error('Error fetching referral link:', error);
+    }
+    setLoading(false);
+  };
 
   const toggleBankListingPopup = () => {
     setIsBankListingPopupOpen(!isBankListingPopupOpen);
@@ -30,14 +70,31 @@ const DashboardPage = () => {
   const referralLinkRef = useRef(null);
   const referralCodeRef = useRef(null);
 
+  useEffect(() => {
+    const fetchAffiliateData = async () => {
+      try {
+        const storedStackIdData = localStorage.getItem("stackIdData");
+        if (storedStackIdData) {
+          const data = JSON.parse(storedStackIdData);
+          setAffiliateData(data);
+          setReferralCode(data.referralCode || '');
+          fetchWalletBalance(data.id);
+          generateReferralLink(data.id);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchAffiliateData();
+  }, []);
+
   const copyReferralLinkToClipboard = () => {
     if (referralLinkRef.current) {
-      const fullLink = referralLinkRef.current.innerText;
-      navigator.clipboard.writeText(fullLink);
-      setCopiedReferralLink(true);
-      setTimeout(() => {
-        setCopiedReferralLink(false);
-      }, 3000);
+      navigator.clipboard.writeText(referralLinkRef.current.innerText).then(() => {
+        setCopiedReferralLink(true);
+        setTimeout(() => setCopiedReferralLink(false), 2000);
+      });
     }
   };
 
@@ -51,21 +108,94 @@ const DashboardPage = () => {
       }, 3000);
     }
   };
+
+  const [customStartDate, setCustomStartDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null);
+  const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
+
+  const handleCustomButtonClick = () => {
+    setActiveButtonSecondSection("custom");
+    setIsCustomPickerVisible(!isCustomPickerVisible);
+  };
+
+  const handleDateChange = (start, end) => {
+    setCustomStartDate(start);
+    setCustomEndDate(end);
+    setIsCustomPickerVisible(false);
+  };
+
+  const handleClearDates = () => {
+    setCustomStartDate(null);
+    setCustomEndDate(null);
+  };
+
+  const [customEarnStartDate, setCustomEarnStartDate] = useState(null);
+  const [customEarnEndDate, setCustomEarnEndDate] = useState(null);
+  const [isCustomEarnPickerVisible, setIsCustomEarnPickerVisible] = useState(false);
+
+  const handleCustomEarnButtonClick = () => {
+    setActiveButtonSecondSection("custom");
+    setIsCustomEarnPickerVisible(!isCustomEarnPickerVisible);
+  };
+
+  const handleEarnDateChange = (start, end) => {
+    setCustomEarnStartDate(start);
+    setCustomEarnEndDate(end);
+    setIsCustomEarnPickerVisible(false);
+  };
+
+  const handleEarnClearDates = () => {
+    setCustomEarnStartDate(null);
+    setCustomEarnEndDate(null);
+  };
+
+  const handleDataUpdate = (data) => {
+    setTotalVisits(data.totalVisits);
+    setPaidUsers(data.paidUsers);
+    setNotInterested(data.notInterested);
+  };
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
-      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[90px]">
+      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
-          <div className="flex md:flex-row flex-col justify-between mt-10 items-center">
+          <div className="flex md:hidden flex-col md:flex-row mt-[4rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-center">
+            <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
+              <span className="md:text-lg text-sm">Referral Link</span>
+              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                {referralLink ? (
+                  <>
+                    <span ref={referralLinkRef} className="mr-1 md:block truncate-link">
+                      {referralLink}
+                    </span>
+                    <button
+                      onClick={copyReferralLinkToClipboard}
+                      className="flex items-center mt-[2px]"
+                    >
+                      |
+                      {copiedReferralLink ? (
+                        <img src={tick} alt="Copied" className="w-5" />
+                      ) : (
+                        <img src={clipboard} alt="Copy" className="w-5" />
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={generateReferralLink}
+                    className="flex items-center mt-[2px]"
+                    disabled={loading}>
+                    {loading ? 'Just a sec...' : 'View Link'}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex md:flex-row flex-col justify-between md:mt-10 mt-[1rem] items-center">
             <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">
               Earning Analysis
             </h2>
             <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start">
-              {/* <button
-                className={`button ${activeButtonFirstSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] text-[13px] md:border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-6 rounded mb-2 md:mb-0`}
-                onClick={() => setActiveButtonFirstSection("today")}
-              >
-                Today
-              </button> */}
               <button
                 className={`button ${
                   activeButtonFirstSection === "weekly"
@@ -92,11 +222,71 @@ const DashboardPage = () => {
                     ? "bg-[#fff] text-[#000]"
                     : "bg-transparent"
                 } md:text-[18px] text-[13px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
-                onClick={() => setActiveButtonFirstSection("custom")}
+                onClick={handleCustomEarnButtonClick}
               >
                 Custom
-                <img src={customBtn} alt="" className="inline-block w-5 ml-1" />
               </button>
+              {isCustomEarnPickerVisible && (
+                <div className="absolute top-[10.5rem] md:right-[3.5rem] mt-2 z-10 bg-[#2b2d42] p-4 rounded-lg shadow-lg flex flex-col gap-3">
+                  <DatePicker
+                    selected={customEarnStartDate}
+                    onChange={(date) => setCustomEarnStartDate(date)}
+                    selectsStart
+                    startDate={customEarnStartDate}
+                    endDate={customEarnEndDate}
+                    placeholderText="Start Date"
+                    className="bg-transparent text-white border-b border-white mt-2"
+                    renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                      <div className="flex justify-between items-center">
+                        <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                        <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                          {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                            <option key={year} value={year}>{year}</option>
+                          ))}
+                        </select>
+                        <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                          {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                            <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                          ))}
+                        </select>
+                        <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                      </div>
+                    )}
+                  />
+                  <DatePicker
+                    selected={customEarnEndDate}
+                    onChange={(date) => handleEarnDateChange(customEarnStartDate, date)}
+                    selectsEnd
+                    startDate={customEarnStartDate}
+                    endDate={customEarnEndDate}
+                    minDate={customEarnStartDate}
+                    placeholderText="End Date"
+                    className="bg-transparent text-white border-b border-white"
+                    renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                      <div className="flex justify-between items-center">
+                        <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                        <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                          {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                            <option key={year} value={year}>{year}</option>
+                          ))}
+                        </select>
+                        <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                          {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                            <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                          ))}
+                        </select>
+                        <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                      </div>
+                    )}
+                  />
+                  <button
+                    onClick={handleEarnClearDates}
+                    className="bg-[#fff] text-[#000] px-4 py-1 rounded-md focus:outline-none"
+                  >
+                    Clear
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -106,7 +296,7 @@ const DashboardPage = () => {
               <DashboardChart activeButton={activeButtonFirstSection} />
             </div>
 
-            <div className="w-full md:w-2/3 pr-0 md:pr-8 md:hidden">
+            <div className="w-full md:w-2/3 pr-0 mt-2 md:hidden">
               <DashboardChartMob activeButton={activeButtonFirstSection} />
             </div>
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center container-bg rounded-[30px] p-3 md:max-h-full min-h-[100px]">
@@ -114,14 +304,13 @@ const DashboardPage = () => {
                 Total Earning
               </h3>
               <h1 className="md:text-[75px] text-[60px] xl:text-[85px] text-gradient font-bold">
-                ₹100
+                {walletBalance !== null ? `₹${walletBalance.toFixed(2)}` : 'Loading...'}
               </h1>
               <div className="md:px-[40px] mb-4 xl:text-[20px] md:text-[14px]">
                 <p className="text-center md:text-[1.3rem] text-[#c9c9c9]">
-                Total funds available in your wallet.
+                  Total funds available in your wallet.
                 </p>
               </div>
-              {/* Withdrawal Button */}
               <div className="flex justify-center">
                 <button
                   className="bg-[#fff] transition duration-300 text-[#000] hover:bg-[#000] hover:text-[#fff] px-6 py-3 rounded"
@@ -130,124 +319,149 @@ const DashboardPage = () => {
                   Withdrawal
                 </button>
               </div>
-
-              {/* Withdrawal Popup */}
               {isBankListingPopupOpen && (
-                <BankListingPopup onClose={toggleBankListingPopup} />
+                <BankListingPopup onClose={() => toggleBankListingPopup(false)} />
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Referral Link with concatenation for mobile view */}
-      <div className="flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+      <div className="md:flex flex-col hidden md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
         <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
           <span className="md:text-lg text-sm">Referral Link</span>
           <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-            <span ref={referralLinkRef} className="mr-1 md:block hidden">
-              https://www.example.com/referral
-            </span>
-            <span
-              ref={referralLinkRef}
-              className="mr-1 md:hidden md:text-lg text-sm"
-            >
-              https://www.example.com/...
-            </span>{" "}
-            {/* Render shortened link in mobile view */}
-            <button
-              onClick={copyReferralLinkToClipboard}
-              className="flex items-center mt-[2px]"
-            >
-              |
-              {copiedReferralLink ? (
-                <img src={tick} alt="Copied" className="w-5" />
-              ) : (
-                <img src={clipboard} alt="Copy" className="w-5" />
-              )}
-            </button>
-          </div>
-        </div>
-        <div className="flex flex-row md:flex-row items-center gap-3 py-2 w-full md:w-auto mt-2 md:mt-0">
-          <span className="md:text-lg text-sm">Referral Code</span>
-          <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-            <span ref={referralCodeRef} className="mr-1 md:text-lg text-sm">
-              REFCODE123
-            </span>
-            <button
-              onClick={copyReferralCodeToClipboard}
-              className="flex items-center"
-            >
-              |
-              {copiedReferralCode ? (
-                <img src={tick} alt="Copied" className="w-5" />
-              ) : (
-                <img src={clipboard} alt="Copy" className="w-5" />
-              )}
-            </button>
+            {referralLink ? (
+              <>
+                <span ref={referralLinkRef} className="mr-1 md:block">
+                  {referralLink}
+                </span>
+                <button
+                  onClick={copyReferralLinkToClipboard}
+                  className="flex items-center mt-[2px]"
+                >
+                  |
+                  {copiedReferralLink ? (
+                    <img src={tick} alt="Copied" className="w-5" />
+                  ) : (
+                    <img src={clipboard} alt="Copy" className="w-5" />
+                  )}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={generateReferralLink}
+                className="flex items-center mt-[2px]"
+                disabled={loading}
+              >
+                {loading ? 'Just a sec...' : 'View Link'}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Second Section */}
-      <div className="flex md:flex-row flex-col justify-between items-center mt-10 ">
+      <div className="flex md:flex-row flex-col justify-between items-center mt-10">
         <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">
           Lead Board Analysis
         </h2>
         <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start">
           <button
-            className={`button ${
-              activeButtonSecondSection === "today"
-                ? "bg-[#fff] text-[#000]"
-                : "bg-transparent"
-            } md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
-            onClick={() => setActiveButtonSecondSection("today")} // Change to set activeButtonSecondSection to "today"
+            className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
+            onClick={() => setActiveButtonSecondSection("today")}
           >
             Today
           </button>
           <button
-            className={`button ${
-              activeButtonSecondSection === "weekly"
-                ? "bg-[#fff] text-[#000]"
-                : "bg-transparent"
-            } md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
+            className={`button ${activeButtonSecondSection === "weekly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
             onClick={() => setActiveButtonSecondSection("weekly")}
           >
             Weekly
           </button>
           <button
-            className={`button ${
-              activeButtonSecondSection === "monthly"
-                ? "bg-[#fff] text-[#000]"
-                : "bg-transparent"
-            } md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
+            className={`button ${activeButtonSecondSection === "monthly" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
             onClick={() => setActiveButtonSecondSection("monthly")}
           >
             Monthly
           </button>
-          <button
-            className={`button ${
-              activeButtonSecondSection === "custom"
-                ? "bg-[#fff] text-[#000]"
-                : "bg-transparent"
-            } md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
-            onClick={() => setActiveButtonSecondSection("custom")}
-          >
-            Custom
-            <img src={customBtn} alt="" className="inline-block w-5 ml-1" />
-          </button>
+          <div className="relative inline-block">
+            <button
+              className={`button ${activeButtonSecondSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}
+              onClick={handleCustomButtonClick}
+            >
+              Custom
+            </button>
+            {isCustomPickerVisible && (
+              <div className="absolute top-full right-0 mt-2 z-10 bg-[#2b2d42] p-4 rounded-lg shadow-lg flex flex-col gap-3">
+                <DatePicker
+                  selected={customStartDate}
+                  onChange={(date) => setCustomStartDate(date)}
+                  selectsStart
+                  startDate={customStartDate}
+                  endDate={customEndDate}
+                  placeholderText="Start Date"
+                  className="bg-transparent text-white border-b border-white mb-2"
+                  renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                    <div className="flex justify-between items-center">
+                      <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                      <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                        {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                      <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                        {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                          <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                        ))}
+                      </select>
+                      <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                    </div>
+                  )}
+                />
+                <DatePicker
+                  selected={customEndDate}
+                  onChange={(date) => handleDateChange(customStartDate, date)}
+                  selectsEnd
+                  startDate={customStartDate}
+                  endDate={customEndDate}
+                  minDate={customStartDate}
+                  placeholderText="End Date"
+                  className="bg-transparent text-white border-b border-white"
+                  renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                    <div className="flex justify-between items-center">
+                      <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                      <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                        {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                      <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                        {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                          <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                        ))}
+                      </select>
+                      <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                    </div>
+                  )}
+                />
+                <button
+                  onClick={handleClearDates}
+                  className="bg-[#fff] text-[#000] px-4 py-1 rounded-md focus:outline-none"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Second Section Content */}
       <div className="flex flex-col md:flex-row md:mt-8">
         <div className="w-full md:w-2/3 pr-0 md:pr-8 md:flex hidden">
-          <LeaderBoardAnalysisChart activeButton={activeButtonSecondSection} />{" "}
-          {/* Change activeButton prop to activeButtonSecondSection */}
+          <LeaderBoardAnalysisChart onDataUpdate={handleDataUpdate} activeButton={activeButtonSecondSection} customStartDate={customStartDate} customEndDate={customEndDate} />
         </div>
-        <div className="w-full md:w-2/3 pr-0 md:pr-8 md:hidden">
-          <LeaderBoardChartMob activeButton={activeButtonSecondSection} />{" "}
-          {/* Change activeButton prop to activeButtonSecondSection */}
+        <div className="w-full md:w-2/3 pr-0 mt-2 md:hidden">
+          <LeaderBoardChartMob onDataUpdate={handleDataUpdate} activeButton={activeButtonSecondSection} customStartDate={customStartDate} customEndDate={customEndDate} />
         </div>
         <div className="w-full md:w-1/3 flex md:flex-col justify-center items-center container-bg rounded-[30px] p-2 md:mt-0 mt-3">
           <img
@@ -261,22 +475,20 @@ const DashboardPage = () => {
             </h3>
             <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
               <span>Total Visit:</span>
-              <span className="font-semibold text-[#247673]">100</span>
+              <span className="font-semibold text-[#247673]">{totalVisits}</span>
             </div>
             <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
               <span>Paid Users:</span>
-              <span className="font-semibold text-[#25A2DE]">+40</span>
+              <span className="font-semibold text-[#25A2DE]">{paidUsers}</span>
             </div>
             <div className="flex flex-row justify-between md:text-xl xl:text-2xl">
               <span>Not Interested:</span>
-              <span className="font-semibold text-[#D0667A]">60</span>
+              <span className="font-semibold text-[#D0667A]">{notInterested}</span>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <DashboardTable />
-      </div>
+      <DashboardTable />
     </div>
   );
 };

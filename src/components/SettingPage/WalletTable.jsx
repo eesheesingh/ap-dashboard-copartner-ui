@@ -63,9 +63,9 @@ const [showFilterModal, setShowFilterModal] = useState(false);
   return (
     <div className="relative">
       {/* Tab Section */}
-      <div className="flex md:justify-start justify-center space-x-4 mt-">
+      <div className="flex md:justify-start justify-start space-x-4 mt-">
         <button
-          className={` px-4 py-2 rounded-lg focus:outline-none ${
+          className={`px-4 py-2 rounded-lg focus:outline-none ${
             activeTab === 'transactions' ? 'bg-white text-black' : 'bg-[transparent] border-solid border-[1px] text-white'
           }`}
           onClick={() => handleTabChange('transactions')}
@@ -78,7 +78,7 @@ const [showFilterModal, setShowFilterModal] = useState(false);
           }`}
           onClick={() => handleTabChange('withdrawals')}
         >
-          Withdrawals
+          Withdrawal Request
         </button>
       </div>
 

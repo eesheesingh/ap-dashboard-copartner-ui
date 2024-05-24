@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { close } from '../../assets';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AddBankPopup = ({ onClose, addBankDetails }) => {
   const [bankDetails, setBankDetails] = useState({
@@ -22,7 +26,7 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
     setAcknowledged(!acknowledged); // Toggle acknowledgment state
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Check if acknowledgment is given
     if (!acknowledged) {
       setError('Please acknowledge that the bank/payment details provided are accurate.');
@@ -35,9 +39,47 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
       return;
     }
 
-    // If all fields are filled and acknowledgment is given, submit the form
-    addBankDetails({ ...bankDetails });
-    onClose();
+    // Check if account numbers match
+    if (accountNumber !== confirmAccountNumber) {
+      setError('Account numbers do not match.');
+      return;
+    }
+
+    try {
+      const affiliatePartnerData = localStorage.getItem('stackIdData');
+      if (!affiliatePartnerData) {
+        setError('Affiliate Partner data not found in localStorage');
+        return;
+      }
+
+      const parsedData = JSON.parse(affiliatePartnerData);
+      const affiliatePartnerId = parsedData.id;
+
+      // Prepare data for API request
+      const data = {
+        paymentMode: 'bank',
+        affiliatePartnerId,
+        accountHolderName,
+        accountNumber,
+        ifscCode,
+        bankName,
+        upI_ID: '', // Assuming upI_ID is not used in this case
+      };
+
+      const response = await axios.post('https://copartners.in:5135/api/Withdrawal/PostBankUPIDetails', data);
+
+      if (response.data.isSuccess) {
+        addBankDetails({ ...bankDetails });
+        onClose();
+        toast.success('Bank Added Successfully', {
+          position: "top-right"
+        });
+      } else {
+        setError(response.data.displayMessage || 'Failed to add bank details.');
+      }
+    } catch (err) {
+      setError('An error occurred while adding bank details. Please try again.');
+    }
   };
 
   return (

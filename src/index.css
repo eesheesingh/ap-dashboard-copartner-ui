@@ -13,6 +13,21 @@
 }
 }
 
+.truncate-link {
+  max-width: 150px; /* Adjust the width as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .truncate-link {
+    max-width: none;
+    white-space: normal;
+  }
+}
+
+
 
 :root {
   --black-gradient: linear-gradient(

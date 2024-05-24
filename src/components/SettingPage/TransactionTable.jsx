@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { transaction_data } from '../../constants/data';
+import axios from 'axios';
 import { filterBlack, filterBtn, invoiceBtn, leftArrow, rightArrow } from '../../assets';
 
 const TransactionTable = () => {
@@ -11,7 +11,44 @@ const TransactionTable = () => {
   const [itemsPerPage] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
   const filterRef = useRef(null);
+
+  const fetchTransactions = async (page) => {
+    setLoading(true);
+    try {
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id;
+        const response = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${affiliateId}?userType=AP&page=${page}&pageSize=${itemsPerPage}`);
+        if (response.data.isSuccess) {
+          const filteredData = response.data.data.filter((item) => item.requestAction === 'A');
+          const transactionsWithDetails = await Promise.all(filteredData.map(async (transaction) => {
+            const detailsResponse = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${transaction.withdrawalModeId}`);
+            const details = detailsResponse.data.data || {};
+            return {
+              ...transaction,
+              bankName: details.bankName || 'N/A',
+              accountNumber: details.accountNumber || details.upI_ID || 'N/A',
+            };
+          }));
+          setTransactions(transactionsWithDetails);
+          setTotalPages(Math.ceil(response.data.totalCount / itemsPerPage));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions(currentPage);
+  }, [currentPage]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -55,8 +92,8 @@ const TransactionTable = () => {
     };
   }, []);
 
-  const filteredData = transaction_data.filter((item) => {
-    const itemDate = new Date(item.date.split('/').reverse().join('-'));
+  const filteredData = transactions.filter((item) => {
+    const itemDate = new Date(item.transactionDate);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -70,7 +107,6 @@ const TransactionTable = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -175,18 +211,24 @@ const TransactionTable = () => {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((transaction, index) => (
-              <tr key={index}>
-                <td className="text-center">{transaction.transactionId}</td>
-                <td className="text-center">{transaction.date}</td>
-                <td className="text-center">{transaction.bank}</td>
-                <td className="text-center">{transaction.accountNumber}</td>
-                <td className="text-center">{transaction.amount}</td>
-                <td className="text-center flex justify-center">
-                  <img src={invoiceBtn} alt="" className="w-5" />
-                </td>
+            {loading ? (
+              <tr>
+                <td colSpan="6" className="text-center p-4">Loading...</td>
               </tr>
-            ))}
+            ) : (
+              currentItems.map((transaction, index) => (
+                <tr key={index}>
+                  <td className="text-center">{transaction.transactionId}</td>
+                  <td className="text-center">{transaction.transactionDate ? new Date(transaction.transactionDate).toLocaleDateString() : 'N/A'}</td>
+                  <td className="text-center">{transaction.bankName}</td>
+                  <td className="text-center">{transaction.accountNumber}</td>
+                  <td className="text-center">{transaction.amount}</td>
+                  <td className="text-center flex justify-center">
+                    <img src={invoiceBtn} alt="" className="w-5" />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

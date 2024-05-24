@@ -1,20 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { leftArrow, rightArrow } from '../../assets';
-import { customers_listing } from '../../constants/data';
 
 const DashboardTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
   const dataPerPage = 10;
-  const totalData = customers_listing.length; // Use the length of customers_data array for total data count
 
-  const totalPages = Math.ceil(totalData / dataPerPage);
-
-  const startIndex = (currentPage - 1) * dataPerPage;
-  const endIndex = Math.min(startIndex + dataPerPage, totalData);
-
-  const onPageChange = (page) => {
-    setCurrentPage(page);
+  const fetchData = async (page) => {
+    setLoading(true);
+    try {
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id; // Use the ID from stackIdData
+        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${dataPerPage}`);
+        const result = await response.json();
+        const filteredData = result.data.filter(item => item.subscription !== '0');
+        setData(filteredData);
+        setTotalPages(Math.ceil(result.totalCount / dataPerPage));
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
 
   const goToPreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -24,9 +40,8 @@ const DashboardTable = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  // Function to replace the first six digits of the mobile number with "*"
   const hideFirstSixDigits = (mobileNumber) => {
-    return mobileNumber.replace(/^(\d{6})/, '******');
+    return mobileNumber ? mobileNumber.replace(/^(\d{6})/, '******') : 'N/A';
   };
 
   return (
@@ -38,45 +53,50 @@ const DashboardTable = () => {
 
       {/* Table */}
       <div className="mt-4 relative">
-      <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
-          <table className='md:w-full w-[150%]'>
-            <thead className='text-center bg-[#29303F] sticky top-0'>
-              <tr className=''>
-                <th className='text-center text-[15px]'>Date</th>
-                <th className='text-center text-[15px]'>Mobile Number</th>
-                <th className='text-center text-[15px]'>Subscription</th>
-                <th className='text-center text-[15px]'>Expertise</th>
-                <th className='text-center text-[15px]'>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {customers_listing.slice(startIndex, endIndex).map((customer, index) => (
-                <tr key={index}>
-                  <td className='text-center'>{customer.date}</td>
-                  <td className='text-center'>{hideFirstSixDigits(customer.mobileNumber)}</td>
-                  <td className='text-center'>{customer.subscription}</td>
-                  <td className='text-center'>{customer.expertise}</td>
-                  <td className='text-center'>{customer.earnAmount}</td>
+        <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
+          {loading ? (
+            <div className="text-center p-4">Loading...</div>
+          ) : (
+            <table className='md:w-full w-[150%]'>
+              <thead className='text-center bg-[#29303F] sticky top-0'>
+                <tr className='uppercase'>
+                  <th className='text-center text-[15px]'>Date</th>
+                  <th className='text-center text-[15px]'>Mobile Number</th>
+                  <th className='text-center text-[15px]'>Subscription</th>
+                  <th className='text-center text-[15px]'>Experts</th>
+                  <th className='text-center text-[15px]'>Amount</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {data.map((customer, index) => (
+                  <tr key={index}>
+                    <td className='text-center'>{new Date(customer.date).toLocaleDateString() || 'N/A'}</td>
+                    <td className='text-center'>{hideFirstSixDigits(customer.userMobileNo)}</td>
+                    <td className='text-center'>{customer.subscription || 'N/A'}</td>
+                    <td className='text-center'>{customer.raName || 'N/A'}</td>
+                    <td className='text-center'>₹{customer.amount !== null ? customer.amount : 'N/A'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-end mt-4">
-        <div className="flex justify-end items-center gap-2 mt-4">
-        <span className='mr-2 text-sm text-gray-500'>{`Page ${currentPage} of ${totalPages}`}</span>
-        <button onClick={goToPreviousPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
-          <img src={leftArrow} alt="Previous" className="w-5 h-6" />
-        </button>
-        <button onClick={goToNextPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]">
-          <img src={rightArrow} alt="Next" className="w-5 h-6" />
-        </button>
-      </div>
-      </div>
-      
+      {totalPages > 1 && (
+        <div className="flex justify-end mt-4">
+          <div className="flex justify-end items-center gap-2 mt-4">
+            <span className='mr-2 text-sm text-gray-500'>{`Page ${currentPage} of ${totalPages}`}</span>
+            <button onClick={goToPreviousPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]" disabled={currentPage === 1}>
+              <img src={leftArrow} alt="Previous" className="w-5 h-6" />
+            </button>
+            <button onClick={goToNextPage} className="page-link border border-[#ffffff4a] p-2 rounded-[50%]" disabled={currentPage === totalPages}>
+              <img src={rightArrow} alt="Next" className="w-5 h-6" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

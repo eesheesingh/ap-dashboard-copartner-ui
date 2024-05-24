@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { wallet_data } from '../../constants/data';
-import { filterBlack, filterBtn, invoiceBtn, leftArrow, rightArrow } from '../../assets';
+import axios from 'axios';
+import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
 import RejectPopup from '../Popups/RejectPopup';
 
 const WithdrawalsTable = () => {
@@ -12,8 +12,46 @@ const WithdrawalsTable = () => {
   const [itemsPerPage] = useState(10);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [withdrawals, setWithdrawals] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
   const filterRef = useRef(null);
   const [rejectPopupOpen, setRejectPopupOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+
+  const fetchWithdrawals = async (page) => {
+    setLoading(true);
+    try {
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id;
+        const response = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${affiliateId}?userType=AP&page=${page}&pageSize=${itemsPerPage}`);
+        if (response.data.isSuccess) {
+          const sortedData = response.data.data.sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+          const withdrawalsWithDetails = await Promise.all(sortedData.map(async (withdrawal) => {
+            const detailsResponse = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawal.withdrawalModeId}`);
+            const details = detailsResponse.data.data || {};
+            return {
+              ...withdrawal,
+              bankName: details.bankName || 'N/A',
+              accountNumber: details.accountNumber || details.upI_ID || 'N/A',
+            };
+          }));
+          setWithdrawals(withdrawalsWithDetails);
+          setTotalPages(Math.ceil(response.data.totalCount / itemsPerPage));
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching withdrawals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWithdrawals(currentPage);
+  }, [currentPage]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -23,9 +61,8 @@ const WithdrawalsTable = () => {
     setIsHovered(false);
   };
 
-  const handleVerify = () => {
-    // Implement PAN card verification logic here
-    // Open the KYC verification popup
+  const handleReject = (reason) => {
+    setRejectReason(reason);
     setRejectPopupOpen(true);
   };
 
@@ -63,8 +100,9 @@ const WithdrawalsTable = () => {
     };
   }, []);
 
-  const filteredData = wallet_data.filter((item) => {
-    const itemDate = new Date(item.date.split('/').reverse().join('-'));
+  const filteredData = withdrawals.filter((item) => {
+    if (item.requestAction === 'A') return false;
+    const itemDate = new Date(item.transactionDate);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -78,7 +116,6 @@ const WithdrawalsTable = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
@@ -96,7 +133,7 @@ const WithdrawalsTable = () => {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-           {isHovered ? (
+          {isHovered ? (
             <>
               <img src={filterBlack} alt="" className="inline-block w-[12px] mr-[8px]" />
               Filter
@@ -170,40 +207,46 @@ const WithdrawalsTable = () => {
         </div>
       )}
 
-      <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">      
+      <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
         <table className='md:w-full w-[200%]'>
           <thead>
-            <tr>
-              <th className="text-center text-[15px]">WALLET ID</th>
+            <tr className='uppercase'>
               <th className="text-center text-[15px]">Date</th>
-              <th className="text-center text-[15px]">Bank</th>
-              <th className="text-center text-[15px]">Account Number</th>
+              <th className="text-center text-[15px]">Status</th>
               <th className="text-center text-[15px]">Amount</th>
-              <th className="text-center text-[15px]">Status</th> 
+              <th className="text-center text-[15px]">WITHDRAWAL Request ID</th>
+              <th className="text-center text-[15px]">Account Number</th>
+              <th className="text-center text-[15px]">Bank</th>
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((withdrawal, index) => (
-              <tr key={index}>
-                <td className="text-center">{withdrawal.walletId}</td>
-                <td className="text-center">{withdrawal.date}</td>
-                <td className="text-center">{withdrawal.bank}</td>
-                <td className="text-center">{withdrawal.accountNumber}</td>
-                <td className="text-center">{withdrawal.amount}</td>
-                <td className="text-center text-[#f5b53f] font-semibold">
-                  {withdrawal.status === '' ? (
-                    <button
-                      className="text-[#fff] bg-red-500 px-3 py-1 rounded-lg focus:outline-none"
-                      onClick={handleVerify}
-                    >
-                      Reject
-                    </button>
-                  ) : (
-                      withdrawal.status 
-                  )}
-                </td>
+            {loading ? (
+              <tr>
+                <td colSpan="6" className="text-center p-4">Loading...</td>
               </tr>
-            ))}
+            ) : (
+              currentItems.map((withdrawal, index) => (
+                <tr key={index}>
+                  <td className="text-center">{withdrawal.transactionDate ? new Date(withdrawal.transactionDate).toLocaleDateString() : 'N/A'}</td>
+                  <td className="text-center text-[#f5b53f] font-semibold">
+                    {withdrawal.requestAction === 'P' ? (
+                      'Pending'
+                    ) : (
+                      <button
+                        className="text-[#fff] bg-red-500 px-3 py-1 rounded-lg focus:outline-none"
+                        onClick={() => handleReject(withdrawal.rejectReason)}
+                      >
+                        Reject
+                      </button>
+                    )}
+                  </td>
+                  <td className="text-center">{withdrawal.amount}</td>
+                  <td className="text-center">{withdrawal.transactionId || 'N/A'}</td>
+                  <td className="text-center">{withdrawal.accountNumber || 'N/A'}</td>
+                  <td className="text-center">{withdrawal.bankName || 'N/A'}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -219,7 +262,7 @@ const WithdrawalsTable = () => {
       </div>
 
       {rejectPopupOpen && (
-        <RejectPopup onClose={() => setRejectPopupOpen(false)} />
+        <RejectPopup onClose={() => setRejectPopupOpen(false)} reason={rejectReason} />
       )}
     </div>
   );

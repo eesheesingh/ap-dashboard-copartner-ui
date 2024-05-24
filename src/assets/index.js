@@ -54,7 +54,13 @@ import banner3 from "./banner3.png"
 import banner4 from "./banner5.jpg"
 import banner5 from "./banner6.jpg"
 import banner6 from "./banner3.png"
+import signupBg from "./signInBck.png"
+import notify from "./Back.png"
+import address from './Point On Map.png'
+import state from "./Map Point Wave.png"
 export {
+    signupBg,
+    notify,
     availableIcon,
     chatIcon,
     logo,
@@ -111,4 +117,6 @@ banner6,
     deleteIcon,
     iciciBank,
 kotakBank,
+address,
+state,
 }

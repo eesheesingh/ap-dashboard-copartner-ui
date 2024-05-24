@@ -1,43 +1,74 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { close } from '../../assets';
 
 const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
-  const [UpiDetails, setAddUpiDetails] = useState({
+  const [UpiDetails, setUpiDetails] = useState({
     UpiID: '',
   });
+
   const [acknowledged, setAcknowledged] = useState(false); // State to track acknowledgment
   const [error, setError] = useState('');
-  const handleAcknowledgmentChange = () => {
-    setAcknowledged(!acknowledged); // Toggle acknowledgment state
-  };
-
 
   // Set initial UPI ID when the component mounts
   useEffect(() => {
-    setAddUpiDetails({ UpiID: initialUpiID || '' });
+    setUpiDetails({ UpiID: initialUpiID || '' });
   }, [initialUpiID]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-    setAddUpiDetails({ ...UpiDetails, [id]: value });
+    setUpiDetails({ ...UpiDetails, [id]: value });
   };
 
-  const handleSubmit = () => {
+  const handleAcknowledgmentChange = () => {
+    setAcknowledged(!acknowledged); // Toggle acknowledgment state
+  };
+
+  const handleSubmit = async () => {
     // Check acknowledgment
     if (!acknowledged) {
       setError('Please acknowledge that the bank/payment details provided are accurate.');
       return;
     }
-  
+
     // Check if any field is empty
     if (!UpiDetails.UpiID) {
-      setError('All fields are required to be filled');
+      setError('UPI ID is required.');
       return;
     }
-  
-    // If acknowledgment is given and UPI ID is provided, submit the form
-    addUpiDetails({ ...UpiDetails });
-    onClose();
+
+    try {
+      const affiliatePartnerData = localStorage.getItem('stackIdData');
+      if (!affiliatePartnerData) {
+        setError('Affiliate Partner data not found in localStorage');
+        return;
+      }
+
+      const parsedData = JSON.parse(affiliatePartnerData);
+      const affiliatePartnerId = parsedData.id;
+
+      // Prepare data for API request
+      const data = {
+        paymentMode: 'upi',
+        affiliatePartnerId,
+        accountHolderName: '', // Not required for UPI, but included for completeness
+        accountNumber: '', // Not required for UPI, but included for completeness
+        ifscCode: '', // Not required for UPI, but included for completeness
+        bankName: '', // Not required for UPI, but included for completeness
+        upI_ID: UpiDetails.UpiID,
+      };
+
+      const response = await axios.post('https://copartners.in:5135/api/Withdrawal/PostBankUPIDetails', data);
+
+      if (response.data.isSuccess) {
+        addUpiDetails({ ...UpiDetails });
+        onClose();
+      } else {
+        setError(response.data.displayMessage || 'Failed to add UPI details.');
+      }
+    } catch (err) {
+      setError('An error occurred while adding UPI details. Please try again.');
+    }
   };
 
   return (
@@ -48,7 +79,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
             <img src={close} alt="Close" className="w-10 h-10" />
           </button>
         </div>
-        <h2 className="md:text-[40px] text-[30px] subheading-color font-semibold mb-4">Add Bank Details</h2>
+        <h2 className="md:text-[40px] text-[30px] subheading-color font-semibold mb-4">Add UPI Details</h2>
         <div className='grid grid-cols-2 gap-4'>
           <div className="relative col-span-2">
             <input type="text" id="UpiID" required className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " value={UpiDetails.UpiID} onChange={handleChange} />

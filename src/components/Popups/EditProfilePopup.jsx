@@ -5,16 +5,24 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
+  const [gst, setGst] = useState('');
+  const [pancard, setPancard] = useState('');
+  const [address, setAddress] = useState('');
+  const [state, setState] = useState('');
   const [file, setFile] = useState(null);
-  const [imageURL, setImageURL] = useState(null); // URL for the uploaded image
+  const [imageURL, setImageURL] = useState(null);
 
   useEffect(() => {
     if (initialProfile) {
       setName(initialProfile.name);
       setEmail(initialProfile.email);
-      setMobile(initialProfile.mobile); // Set the mobile number value
+      setMobile(initialProfile.mobile);
+      setAddress(initialProfile.address);
+      setState(initialProfile.state);
+      setGst(initialProfile.gst);
+      setPancard(initialProfile.pan);
       if (initialProfile.imageURL) {
-        setImageURL(initialProfile.imageURL); // Set the image URL if available
+        setImageURL(initialProfile.imageURL);
       }
     }
   }, [initialProfile]);
@@ -22,14 +30,52 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-    setImageURL(URL.createObjectURL(selectedFile)); // Create URL for the uploaded file
-
+    setImageURL(URL.createObjectURL(selectedFile));
   };
 
-  const handleSave = () => {
-    onUpdateProfile({ name, email, mobile, imageURL  /* Add other details here */ });
-    console.log("Saved Mobile Number:", mobile); // Log the saved mobile number
-    onClose();
+  const handleSave = async () => {
+    try {
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id;
+
+        const patchOperations = [];
+
+        if (name !== initialProfile.name) {
+          patchOperations.push({ op: 'replace', path: '/name', value: name });
+        }
+        if (email !== initialProfile.email) {
+          patchOperations.push({ op: 'replace', path: '/email', value: email });
+        }
+        if (mobile !== initialProfile.mobile) {
+          patchOperations.push({ op: 'replace', path: '/mobileNumber', value: mobile });
+        }
+
+        if (patchOperations.length > 0) {
+          const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/${affiliateId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json', 'X-HTTP-Method-Override': 'PATCH' 
+            },
+            body: JSON.stringify(patchOperations)
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            localStorage.setItem("stackIdData", JSON.stringify(result.data));
+            onUpdateProfile(result.data);
+            console.log("Saved Mobile Number:", mobile);
+          } else {
+            console.error('Error updating profile:', response.statusText);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      onClose();
+    }
   };
 
   return (
@@ -58,7 +104,7 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
                 <label htmlFor="name" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Name</label>
               </div>
               <div className="relative">
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} id="mailID" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <input type="text" value={email} disabled onChange={(e) => setEmail(e.target.value)} id="mailID" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-[#ffffffb6] dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
                 <label htmlFor="mailID" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Mail ID</label>
               </div>
               <div className="relative">
@@ -66,20 +112,27 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
                 <label htmlFor="mobileNumber" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Mobile Number</label>
               </div>
               <div className="relative">
-                <input type="text" id="gstNumber" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <input type="text" inputMode='gstNumber' disabled value={gst} onChange={(e) => setMobile(e.target.value)} id="gstNumber" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-[#ffffffb6] dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
                 <label htmlFor="gstNumber" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">GST Number</label>
               </div>
               <div className="relative">
-                <input type="text" id="panCard" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <input type="text" inputMode='panCard' disabled value={pancard} onChange={(e) => setMobile(e.target.value)} id="panCard" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-[#ffffffb6] dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
                 <label htmlFor="panCard" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">PAN Card</label>
               </div>
+              <div className="relative">
+                <input type="text" inputMode='address' value={address} onChange={(e) => setAddress(e.target.value)} id="address" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text:white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <label htmlFor="address" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff] peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Address</label>
+              </div>
+              <div className="relative">
+                <input type="text" inputMode='state' value={state} onChange={(e) => setState(e.target.value)} id="state" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text:white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <label htmlFor="state" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff] peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">State</label>
+              </div>
             </div>
-            <div className='flex justify-center mt-5'> {/* Centered horizontally */}
-            <button className='text-center px-7 py-3 rounded-md transition duration-300 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#fff]' onClick={handleSave}>Save</button>
+            <div className='flex justify-center mt-5'>
+              <button onClick={handleSave} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">Save</button>
+            </div>
           </div>
         </div>
-      </div>
-        
       )}
     </>
   );

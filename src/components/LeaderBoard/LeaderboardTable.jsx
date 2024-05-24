@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { leader_listing } from '../../constants/data';
 import { filterBlack, filterBtn, leftArrow, rightArrow } from '../../assets';
 
 const LeaderboardTable = () => {
@@ -10,6 +9,8 @@ const LeaderboardTable = () => {
   const [isFilterClicked, setIsFilterClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -36,8 +37,30 @@ const LeaderboardTable = () => {
     setCurrentPage(1); // Reset current page when dates are cleared
   };
 
-  const filteredData = leader_listing.filter((item) => {
-    const itemDate = new Date(item.date.split('/').reverse().join('-'));
+  const fetchData = async (page) => {
+    setLoading(true);
+    try {
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id; // Use the ID from stackIdData
+        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=10`);
+        const result = await response.json();
+        setCustomers(result.data);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
+  }, [currentPage]);
+
+  const filteredData = customers.filter((item) => {
+    const itemDate = new Date(item.date.split('T')[0]);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -150,17 +173,21 @@ const LeaderboardTable = () => {
             <tr className='uppercase'>
               <th>Date</th>
               <th>Mobile Number</th>
-              <th>Name</th>
+              <th>Subscription</th>
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item, index) => (
-              <tr key={index} className='text-center'>
-                <td>{item.date}</td>
-                <td>{item.mobileNumber.replace(/^\d{6}/, '******')}</td>
-                <td>{item.name}</td>
-              </tr>
-            ))}
+            {loading ? (
+              <tr><td colSpan="4" className="text-center p-4">Loading...</td></tr>
+            ) : (
+              currentData.map((item, index) => (
+                <tr key={index} className='text-center'>
+                  <td>{item.date.split('T')[0]}</td>
+                  <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
+                  <td>{item.subscription === "0" ? "UnPaid" : "Paid"}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
