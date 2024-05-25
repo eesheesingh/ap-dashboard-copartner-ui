@@ -10,7 +10,7 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = localStorage.getItem('userId'); // Get the user ID from local storage
+      const userId = localStorage.getItem('stackIdData'); // Get the user ID from local storage
       if (!userId) {
         alert('User ID not found in local storage.');
         return;

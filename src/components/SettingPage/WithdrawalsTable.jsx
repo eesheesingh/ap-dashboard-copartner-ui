@@ -242,7 +242,7 @@ const WithdrawalsTable = () => {
                     )}
                   </td>
                   <td className="text-center">{withdrawal.amount}</td>
-                  <td className="text-center">{withdrawal.transactionId || 'N/A'}</td>
+                  <td className="text-center">{withdrawal.id || 'N/A'}</td>
                   <td className="text-center">{withdrawal.accountNumber || 'N/A'}</td>
                   <td className="text-center">{withdrawal.bankName || 'N/A'}</td>
                 </tr>

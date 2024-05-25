@@ -302,13 +302,13 @@ const BankListingPopup = ({ onClose }) => {
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         </div>
 
-        <div className="mt-4 flex justify-end">
+        <div className="mt-4 flex justify-center">
           <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-[#fff] text-[#000] hover:bg-[#000] hover:text-[#fff] transition duration-300 font-bold py-2 px-7 rounded focus:outline-none focus:shadow-outline"
             onClick={handleVerify}
             disabled={withdrawalBalance === 0}
           >
-            Verify
+            Withdrawal
           </button>
         </div>
 

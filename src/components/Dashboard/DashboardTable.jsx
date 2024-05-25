@@ -40,9 +40,9 @@ const DashboardTable = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const hideFirstSixDigits = (mobileNumber) => {
-    return mobileNumber ? mobileNumber.replace(/^(\d{6})/, '******') : 'N/A';
-  };
+  // const hideFirstSixDigits = (mobileNumber) => {
+  //   return mobileNumber ? mobileNumber.replace(/^(\d{6})/, '******') : 'N/A';
+  // };
 
   return (
     <div className="relative">
@@ -71,7 +71,7 @@ const DashboardTable = () => {
                 {data.map((customer, index) => (
                   <tr key={index}>
                     <td className='text-center'>{new Date(customer.date).toLocaleDateString() || 'N/A'}</td>
-                    <td className='text-center'>{hideFirstSixDigits(customer.userMobileNo)}</td>
+                    <td className='text-center'>{(customer.userMobileNo) || 'N/A'}</td>
                     <td className='text-center'>{customer.subscription || 'N/A'}</td>
                     <td className='text-center'>{customer.raName || 'N/A'}</td>
                     <td className='text-center'>₹{customer.amount !== null ? customer.amount : 'N/A'}</td>
