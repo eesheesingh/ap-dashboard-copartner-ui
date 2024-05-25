@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { close, tick } from '../../assets';
 import AddBankPopup from './AddBankPopup';
 import AddUpiPopup from './AddUpiPopup';
-import VerifyKycPopup from './VerifyKycPopup'; // Import the VerifyKycPopup component
+import VerifyKycPopup from './VerifyKycPopup';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,21 +20,53 @@ const BankListingPopup = ({ onClose }) => {
   const [notifications, setNotifications] = useState([]);
   const [isKycVerified, setIsKycVerified] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedStackIdData = localStorage.getItem("stackIdData");
+        if (storedStackIdData) {
+          const data = JSON.parse(storedStackIdData);
+          const affiliateId = data.id;
+
+          const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/${affiliateId}`);
+          if (response.ok) {
+            const result = await response.json();
+            setIsKycVerified(result.data.isKyc);
+          } else {
+            console.error('Failed to fetch KYC status.');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching KYC status:', error);
+      }
+    };
+
+    fetchData();
+    fetchWalletBalance();
+    fetchBankAndUpiData();
+  }, []);
+
   const fetchWalletBalance = async () => {
     try {
-      const response = await fetch('https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/705716b5-a1e8-411a-5e97-08dc770b4aef?userType=AP');
-      const result = await response.json();
-      if (result.isSuccess) {
-        setWithdrawalBalance(result.data.withdrawalBalance);
-      } else {
-        console.error('Error fetching wallet balance:', result.displayMessage);
+      const storedStackIdData = localStorage.getItem("stackIdData");
+      if (storedStackIdData) {
+        const data = JSON.parse(storedStackIdData);
+        const affiliateId = data.id;
+
+        const response = await fetch(`https://copartners.in:5135/api/Wallet/GetWalletWithdrawalBalance/${affiliateId}?userType=AP`);
+        const result = await response.json();
+        if (result.isSuccess) {
+          setWithdrawalBalance(result.data.withdrawalBalance);
+        } else {
+          console.error('Error fetching wallet balance:', result.displayMessage);
+        }
       }
     } catch (error) {
       console.error('Error fetching wallet balance:', error);
     }
   };
 
-  const fetchData = async () => {
+  const fetchBankAndUpiData = async () => {
     const affiliatePartnerData = localStorage.getItem('stackIdData');
     if (!affiliatePartnerData) {
       setError('Affiliate Partner data not found in localStorage');
@@ -83,19 +115,23 @@ const BankListingPopup = ({ onClose }) => {
     }
   };
 
-  useEffect(() => {
-    fetchWalletBalance();
-    fetchData();
-  }, []);
-
   const handleVerify = async () => {
-    if (!amount) {
-      setError('Please enter an amount.');
+    setError('');
+
+    const amountValue = parseFloat(amount);
+
+    if (!amount || isNaN(amountValue) || amountValue <= 0) {
+      setError('Please enter a valid amount.');
       return;
     }
 
     if (!selectedItem) {
       setError('Please select a bank or UPI.');
+      return;
+    }
+
+    if (amountValue > withdrawalBalance) {
+      setError('Insufficient balance.');
       return;
     }
 
@@ -107,7 +143,7 @@ const BankListingPopup = ({ onClose }) => {
     try {
       const response = await axios.post('https://copartners.in:5135/api/Withdrawal', {
         withdrawalBy: "AP",
-        amount: parseFloat(amount),
+        amount: amountValue,
         withdrawalModeId: selectedItem.id,
       });
 
@@ -249,26 +285,28 @@ const BankListingPopup = ({ onClose }) => {
             ))}
           </div>
           <div className="flex flex-row justify-center items-center mb-6 gap-3 mt-6">
-          <label className="block text-white text-sm font-bold mb-2" htmlFor="amount">
+            <label className="block text-white text-sm font-bold mb-2" htmlFor="amount">
               Withdrawal Amount
             </label>
-          <input
-            type="text"
-            name="amount"
-            id="amount"
-            placeholder={`${withdrawalBalance !== null ? `₹${withdrawalBalance.toFixed(2)}` : 'Loading...'}`}
-            className="text-[#fff] border bg-transparent rounded-md md:px-3 px-3 md:py-2 py-1 text-center"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-        </div>
-        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
+            <input
+              type="text"
+              name="amount"
+              id="amount"
+              placeholder={`${withdrawalBalance !== null ? `₹${withdrawalBalance.toFixed(2)}` : 'Loading...'}`}
+              className="text-[#fff] border bg-transparent rounded-md md:px-3 px-3 md:py-2 py-1 text-center"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              disabled={withdrawalBalance === 0}
+            />
+          </div>
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         </div>
 
         <div className="mt-4 flex justify-end">
           <button
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={handleVerify}
+            disabled={withdrawalBalance === 0}
           >
             Verify
           </button>
@@ -276,7 +314,7 @@ const BankListingPopup = ({ onClose }) => {
 
         {isAddBankPopupOpen && <AddBankPopup onClose={toggleAddBankPopup} addBankDetails={addBankDetails} />}
         {isAddUpiPopupOpen && <AddUpiPopup onClose={toggleAddUpiPopup} addUpiDetails={addUpiDetails} />}
-        {verifyPopupOpen && <VerifyKycPopup onClose={() => setVerifyPopupOpen(false)} onVideoUpload={handleVideoUpload} />} {/* Pass handleVideoUpload */}
+        {verifyPopupOpen && <VerifyKycPopup onClose={() => setVerifyPopupOpen(false)} onVideoUpload={handleVideoUpload} />}
       </div>
       <ToastContainer />
     </div>

@@ -33,6 +33,31 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
     setImageURL(URL.createObjectURL(selectedFile));
   };
 
+  const uploadImage = async () => {
+    if (!file) return null;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('https://copartners.in:5134/api/AWSStorage?prefix=affiliatePartnerImagePath', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok && data.isSuccess) {
+        return data.data.presignedUrl;
+      } else {
+        console.error('Error uploading image:', data.displayMessage);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
+
   const handleSave = async () => {
     try {
       const storedStackIdData = localStorage.getItem("stackIdData");
@@ -40,6 +65,7 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
         const data = JSON.parse(storedStackIdData);
         const affiliateId = data.id;
 
+        const imageUrl = await uploadImage();
         const patchOperations = [];
 
         if (name !== initialProfile.name) {
@@ -51,12 +77,21 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
         if (mobile !== initialProfile.mobile) {
           patchOperations.push({ op: 'replace', path: '/mobileNumber', value: mobile });
         }
+        if (address !== initialProfile.address) {
+          patchOperations.push({ op: 'replace', path: '/address', value: address });
+        }
+        if (state !== initialProfile.state) {
+          patchOperations.push({ op: 'replace', path: '/state', value: state });
+        }
+        if (imageUrl) {
+          patchOperations.push({ op: 'replace', path: '/affiliatePartnerImagePath', value: imageUrl });
+        }
 
         if (patchOperations.length > 0) {
-          const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/${affiliateId}`, {
+          const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner?Id=${affiliateId}`, {
             method: 'PATCH',
             headers: {
-              'Content-Type': 'application/json', 'X-HTTP-Method-Override': 'PATCH' 
+              'Content-Type': 'application/json', 'X-HTTP-Method-Override': 'PATCH' 
             },
             body: JSON.stringify(patchOperations)
           });
@@ -65,7 +100,6 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
             const result = await response.json();
             localStorage.setItem("stackIdData", JSON.stringify(result.data));
             onUpdateProfile(result.data);
-            console.log("Saved Mobile Number:", mobile);
           } else {
             console.error('Error updating profile:', response.statusText);
           }
@@ -75,6 +109,7 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
       console.error('Error updating profile:', error);
     } finally {
       onClose();
+      window.location.reload();
     }
   };
 
@@ -108,7 +143,7 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
                 <label htmlFor="mailID" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Mail ID</label>
               </div>
               <div className="relative">
-                <input type="number" inputMode='numeric' value={mobile} onChange={(e) => setMobile(e.target.value)} id="mobileNumber" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
+                <input type="number" inputMode='numeric' value={mobile} onChange={(e) => setMobile(e.target.value)} id="mobileNumber" className="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-[15px] border-1 border-[1px] appearance-none dark:text:white dark:border-gray-600 dark:focus:border-[#ffffff46] focus:outline-none focus:ring-0 focus:border-[#ffffff41] peer" placeholder=" " />
                 <label htmlFor="mobileNumber" className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-transparent dark:bg-[#2E374B] px-2 peer-focus:bg-[#282F3E] peer-focus:px-2 peer-focus:text-[#fff] peer-focus:dark:text-[#fff]  peer-focus:rounded-md peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Mobile Number</label>
               </div>
               <div className="relative">

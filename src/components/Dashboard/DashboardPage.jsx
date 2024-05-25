@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  graph,
-  graph2,
   usersPurple,
-  customBtn,
   tick,
   clipboard,
 } from "../../assets";
@@ -17,10 +14,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const DashboardPage = () => {
-  const [activeButtonFirstSection, setActiveButtonFirstSection] =
-    useState("weekly");
-  const [activeButtonSecondSection, setActiveButtonSecondSection] =
-    useState("today");
+  const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
+  const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
   const [copiedReferralCode, setCopiedReferralCode] = useState(false);
   const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
@@ -127,6 +122,7 @@ const DashboardPage = () => {
   const handleClearDates = () => {
     setCustomStartDate(null);
     setCustomEndDate(null);
+    setIsCustomPickerVisible(false); // Close the picker when dates are cleared
   };
 
   const [customEarnStartDate, setCustomEarnStartDate] = useState(null);
@@ -134,7 +130,7 @@ const DashboardPage = () => {
   const [isCustomEarnPickerVisible, setIsCustomEarnPickerVisible] = useState(false);
 
   const handleCustomEarnButtonClick = () => {
-    setActiveButtonSecondSection("custom");
+    setActiveButtonFirstSection("custom");
     setIsCustomEarnPickerVisible(!isCustomEarnPickerVisible);
   };
 
@@ -147,6 +143,7 @@ const DashboardPage = () => {
   const handleEarnClearDates = () => {
     setCustomEarnStartDate(null);
     setCustomEarnEndDate(null);
+    setIsCustomEarnPickerVisible(false); // Close the picker when dates are cleared
   };
 
   const handleDataUpdate = (data) => {
@@ -293,11 +290,11 @@ const DashboardPage = () => {
           {/* First Section Content */}
           <div className="flex flex-col md:flex-row md:mt-8 md:gap-0 gap-3">
             <div className="w-full md:w-2/3 pr-0 md:pr-8 md:flex hidden">
-              <DashboardChart activeButton={activeButtonFirstSection} />
+              <DashboardChart activeButton={activeButtonFirstSection} customStartDate={customEarnStartDate} customEndDate={customEarnEndDate} />
             </div>
 
             <div className="w-full md:w-2/3 pr-0 mt-2 md:hidden">
-              <DashboardChartMob activeButton={activeButtonFirstSection} />
+              <DashboardChartMob activeButton={activeButtonFirstSection} customStartDate={customEarnStartDate} customEndDate={customEarnEndDate} />
             </div>
             <div className="w-full md:w-1/3 flex flex-col justify-center items-center container-bg rounded-[30px] p-3 md:max-h-full min-h-[100px]">
               <h3 className="text-center font-semibold md:text-[30px] text-[25px] xl:text-[50px]">

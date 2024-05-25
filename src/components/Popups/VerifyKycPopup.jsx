@@ -1,19 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { close } from '../../assets';
 
 const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
+  const [userData, setUserData] = useState({});
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [videoURL, setVideoURL] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
 
-  const handleCheckboxChange1 = () => {
-    setIsChecked1(!isChecked1);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = localStorage.getItem('userId'); // Get the user ID from local storage
+      if (!userId) {
+        alert('User ID not found in local storage.');
+        return;
+      }
 
-  const handleCheckboxChange2 = () => {
-    setIsChecked2(!isChecked2);
-  };
+      try {
+        const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner?Id=${userId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserData(data.data[0]);
+        } else {
+          alert('Failed to fetch user data.');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleCheckboxChange1 = () => setIsChecked1(!isChecked1);
+  const handleCheckboxChange2 = () => setIsChecked2(!isChecked2);
 
   const handleVideoUpload = (e) => {
     const file = e.target.files[0];
@@ -21,6 +41,7 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
       const url = URL.createObjectURL(file);
       setVideoURL(url);
       setVideoFile(file);
+
       const videoElement = document.createElement('video');
       videoElement.src = url;
       videoElement.onloadedmetadata = () => {
@@ -46,19 +67,19 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
       try {
         const formData = new FormData();
         formData.append("file", videoFile, videoFile.name);
-        
+
         const uploadResponse = await fetch(
-          `/api/AWSStorage?prefix=${videoFile.name}`,
+          `https://copartners.in:5134/api/AWSStorage?prefix=${videoFile.name}`,
           {
             method: "POST",
             body: formData,
           }
         );
-        
+
         if (!uploadResponse.ok) {
           throw new Error("Failed to upload file");
         }
-        
+
         const uploadData = await uploadResponse.json();
         const presignedURL = uploadData.data.presignedUrl;
         console.log("File uploaded successfully. Presigned URL:", presignedURL);
@@ -69,20 +90,30 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
             op: 'replace',
             value: presignedURL,
           },
+          {
+            path: 'isKyc',
+            op: 'replace',
+            value: true,
+          }
         ];
 
-        const response = await fetch('https://copartners.in:5133/api/AffiliatePartner/705716b5-a1e8-411a-5e97-08dc770b4aef', {
+        const userId = localStorage.getItem('userId'); // Get the user ID from local storage
+        const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner?Id=${userId}`, {
           method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json-patch+json', // Make sure the Content-Type is correct
           },
           body: JSON.stringify(patchData),
         });
 
         if (response.ok) {
+          const responseData = await response.json();
+          console.log("Server response:", responseData);
           alert('KYC video uploaded successfully and KYC status updated.');
           onClose();
         } else {
+          const errorText = await response.text();
+          console.error('Failed to update KYC status. Server response:', errorText);
           alert('Failed to update KYC status.');
         }
       } catch (error) {
@@ -96,7 +127,7 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-[#2E374B] md:p-8 p-2 rounded-[20px] shadow-lg relative md:w-[716px] w-[350px]">
+      <div className="bg-[#2E374B] md:p-8 p-2 rounded-[20px] shadow-lg relative md:w-[716px] w-[350px] max-h-screen overflow-y-auto">
         <div className="absolute top-2 right-2">
           <button onClick={onClose}>
             <img src={close} alt="Close" className="w-10 h-10" />

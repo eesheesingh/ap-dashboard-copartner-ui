@@ -167,18 +167,6 @@ const Setting = () => {
                       </div>
                     </div>
 
-                  {/* <div className='referralLink flex flex-row gap-3 items-center'>
-                    <span className='whitespace-nowrap overflow-ellipsis text-[#c9c9c9] text-lg'>
-                      Referral Link:
-                    </span>
-                    <div className='border-[#fff] border-[1px] flex flex-row gap-2 rounded-[50px] px-3 py-1'>
-                      <span ref={referralLinkRef} className='overflow-hidden whitespace-nowrap overflow-ellipsis text-[#c9c9c9]'>https://www.example.com/referral</span>|
-                      <button onClick={copyToClipboard}>
-                        {copied ? (showTick ? <img src={tick} alt="Copied" className='w-5' /> : <img src={clipboard} alt="Copy" className='w-5'/>) : <img src={clipboard} alt="Copy" className='w-5'/>}
-                      </button>
-                    </div>
-                  </div> */}
-
                   <div className='referralLink flex flex-row gap-3 items-center'>
                     <span className='whitespace-nowrap overflow-ellipsis text-[#c9c9c9] text-lg'>
                       Referral Code:
@@ -194,7 +182,11 @@ const Setting = () => {
               </div>
 
               <div className='rightImgCol flex justify-end w-[1/3] relative userBack'>
-                <img src={profile.imageURL || userImg} alt="" className='w-full maskImage' />
+                <img 
+                  src={profile.imageURL || userImg} 
+                  alt="" 
+                  className='w-[300px] h-[300px] object-cover maskImage' 
+                />
                 <button className="absolute flex bottom-0 right-0 bg-[#ffffff43] hover:bg-[#fff] items-center text-white hover:text-[#000] px-5 py-1 border-[1px] rounded-[50px] transition duration-300"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}

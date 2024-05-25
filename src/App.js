@@ -10,6 +10,7 @@ import WalletPage from "./components/SettingPage/WalletPage.jsx";
 import Setting from "./components/SettingPage/Setting.jsx";
 import Marketing from "./components/Marketing/Marketing.jsx";
 import LoginPage from "./components/Login/LoginPage.jsx";
+import ResetPassword from "./components/Login/ResetPassword.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route
           path="*"
           element={
@@ -36,18 +38,16 @@ const MainLayout = () => {
       <Navbar />
       <div className={`bg-gradient ${styles.boxWidth} ${styles.paddingX}`}>
         <div className="flex-grow">
-        <Routes>
-  <Route path="/" element={<DashboardPage />} />
-  <Route path="/leaderBoard" element={<Leader />} />
-  <Route path="/customers" element={<CustomersPage />} />
-  <Route path="/wallet" element={<WalletPage />} />
-  <Route path="/setting" element={<Setting />} />
-  <Route path="/marketing-planning" element={<Marketing />} />
-  <Route path="/customers/:id" element={<SingleCustomer />} />
-  <Route path="*" element={<Navigate to="/" />} />
-  
-</Routes>
-
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/leaderBoard" element={<Leader />} />
+            <Route path="/customers" element={<CustomersPage />} />
+            <Route path="/wallet" element={<WalletPage />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/marketing-planning" element={<Marketing />} />
+            <Route path="/customers/:id" element={<SingleCustomer />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
         </div>
       </div>
     </>

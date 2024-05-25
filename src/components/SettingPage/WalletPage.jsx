@@ -89,7 +89,7 @@ const WalletPage = () => {
                       </span>
                     </div>
                     <div className='flex flex-col items-start px-2'>
-                      <span className='text-gradient xl:text-[100px] md:text-[95px] text-[50px] font-bold text-left'>
+                      <span className='text-gradient xl:text-[100px] md:text-[50px] text-[50px] font-bold text-left'>
                         {walletBalance !== null ? `₹${formatBalance(walletBalance)}` : 'Loading...'}
                       </span>
                       <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>Congratulations on your Earnings</p>
@@ -107,7 +107,7 @@ const WalletPage = () => {
                       </div>
                     </div>
                     <div className='flex flex-col items-start px-2'>
-                      <span className='text-gradient xl:text-[100px] md:text-[95px] text-[50px] font-bold text-left'>
+                      <span className='text-gradient xl:text-[100px] md:text-[50px] text-[50px] font-bold text-left'>
                         {withdrawalBalance !== null ? `₹${formatBalance(withdrawalBalance)}` : 'Loading...'}
                       </span>
                       <p className='text-[#c9c9c9] text-left md:text-[18px] text-[15px]'>Current Balance available in your Wallet</p>

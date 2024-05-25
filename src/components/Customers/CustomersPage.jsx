@@ -28,7 +28,6 @@ const CustomersPage = () => {
         const result = await response.json();
         const filteredCustomers = result.data.filter(customer => customer.subscription !== "0");
         setCustomers(filteredCustomers);
-        console.log("",filteredCustomers);
         setTotalPages(Math.ceil(filteredCustomers.length / itemsPerPage));
       }
     } catch (error) {
@@ -101,8 +100,8 @@ const CustomersPage = () => {
 
   const filteredData = customers.filter((item) => {
     const itemDate = new Date(item.date.split('T')[0]);
-    const matchesSearchQuery = item.raName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.amount.toString().includes(searchQuery);
+    const matchesSearchQuery = (item.raName && item.raName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (item.amount && item.amount.toString().includes(searchQuery));
     
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate && matchesSearchQuery;
@@ -126,6 +125,8 @@ const CustomersPage = () => {
         <div className='flex justify-between items-center'>
           <span className='md:text-[30px] text-[20px] font-semibold'>Paid Users Listing</span>
           <div className='flex gap-5'>
+            {/* Commented out search */}
+            
             <div className="relative md:flex hidden">
               <img
                 src={searchIcon}
@@ -140,6 +141,7 @@ const CustomersPage = () => {
                 className="pl-[3rem] pr-4 bg-[#2E323C] w-full h-[55px] text-white rounded-[10px]"
               />
             </div>
+           
             <button
               className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
               onClick={handleFilterClick}
@@ -160,6 +162,8 @@ const CustomersPage = () => {
             </button>
           </div>
         </div>
+        {/* Commented out mobile search */}
+        
         <div className="relative md:hidden mt-2">
           <img
             src={searchIcon}
@@ -174,6 +178,7 @@ const CustomersPage = () => {
             className="pl-[3rem] pr-4 bg-[#2E323C] w-full h-[55px] text-white rounded-[10px]"
           />
         </div>
+       
         {showFilterModal && (
           <div className="absolute right-0 mt-5 mr-4 z-10">
             <div className="bg-gradient rounded-[30px] p-8">

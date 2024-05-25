@@ -28,7 +28,9 @@ const WithdrawalsTable = () => {
         const affiliateId = data.id;
         const response = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetWithdrawalByUserId/${affiliateId}?userType=AP&page=${page}&pageSize=${itemsPerPage}`);
         if (response.data.isSuccess) {
-          const sortedData = response.data.data.sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+          const sortedData = response.data.data
+            .filter(withdrawal => withdrawal.requestAction !== 'A')
+            .sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
           const withdrawalsWithDetails = await Promise.all(sortedData.map(async (withdrawal) => {
             const detailsResponse = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawal.withdrawalModeId}`);
             const details = detailsResponse.data.data || {};
@@ -39,7 +41,7 @@ const WithdrawalsTable = () => {
             };
           }));
           setWithdrawals(withdrawalsWithDetails);
-          setTotalPages(Math.ceil(response.data.totalCount / itemsPerPage));
+          setTotalPages(Math.ceil(withdrawalsWithDetails.length / itemsPerPage));
         }
       }
     } catch (error) {
@@ -101,7 +103,6 @@ const WithdrawalsTable = () => {
   }, []);
 
   const filteredData = withdrawals.filter((item) => {
-    if (item.requestAction === 'A') return false;
     const itemDate = new Date(item.transactionDate);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;

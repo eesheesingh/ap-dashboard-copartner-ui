@@ -1,29 +1,114 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { parseISO, getDay, getMonth, format, isWithinInterval } from 'date-fns';
 
-const LeaderBoardAnalysisChart = ({ activeButton }) => {
-  // Dummy data for leader board analysis
-  const totalVisitData = [
-    { name: 'Today', totalVisit: 100, paidUsers: 50, usersLeft: 10 },
-    { name: 'Week', totalVisit: 500, paidUsers: 300, usersLeft: 50 },
-    { name: 'Month', totalVisit: 1500, paidUsers: 1200, usersLeft: 200 },
-  ];
+const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onDataUpdate }) => {
+  const [data, setData] = useState([]);
+  const [error, setError] = useState('');
 
-  // Function to select data based on active button
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedStackIdData = localStorage.getItem("stackIdData");
+        if (storedStackIdData) {
+          const stackIdData = JSON.parse(storedStackIdData);
+          const affiliateId = stackIdData.id;
+
+          const response = await axios.get(
+            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
+          );
+
+          if (response.data.isSuccess) {
+            const apiData = response.data.data;
+
+            // Group data by day of the week and month
+            const dailyData = [];
+            const weeklyData = Array(7).fill().map((_, index) => ({
+              name: format(new Date(2024, 0, 1 + index), 'EEEE'), // Generate day names starting from Monday
+              totalVisit: 0,
+              paidUsers: 0,
+              usersLeft: 0,
+            }));
+            const monthlyData = Array(12).fill().map((_, index) => ({
+              name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names
+              totalVisit: 0,
+              paidUsers: 0,
+              usersLeft: 0,
+            }));
+
+            apiData.forEach((item) => {
+              const date = parseISO(item.date);
+              const dayOfWeek = getDay(date);
+              const month = getMonth(date);
+              const dayLabel = format(date, 'yyyy-MM-dd');
+
+              const totalVisit = 1;
+              const paidUser = item.subscription !== '0' ? 1 : 0;
+              const notInterested = totalVisit - paidUser;
+
+              // Daily data
+              if (!dailyData[dayLabel]) {
+                dailyData[dayLabel] = { name: dayLabel, totalVisit: 0, paidUsers: 0, usersLeft: 0 };
+              }
+              dailyData[dayLabel].totalVisit += totalVisit;
+              dailyData[dayLabel].paidUsers += paidUser;
+              dailyData[dayLabel].usersLeft += notInterested;
+
+              // Weekly data
+              weeklyData[dayOfWeek].totalVisit += totalVisit;
+              weeklyData[dayOfWeek].paidUsers += paidUser;
+              weeklyData[dayOfWeek].usersLeft += notInterested;
+
+              // Monthly data
+              monthlyData[month].totalVisit += totalVisit;
+              monthlyData[month].paidUsers += paidUser;
+              monthlyData[month].usersLeft += notInterested;
+            });
+
+            setData({
+              daily: Object.values(dailyData),
+              weekly: weeklyData,
+              monthly: monthlyData,
+            });
+          } else {
+            setError(response.data.displayMessage);
+          }
+        }
+      } catch (error) {
+        setError('Error fetching data');
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const selectedData = selectData();
+    const totalVisits = selectedData.reduce((sum, item) => sum + item.totalVisit, 0);
+    const paidUsers = selectedData.reduce((sum, item) => sum + item.paidUsers, 0);
+    const notInterested = selectedData.reduce((sum, item) => sum + item.usersLeft, 0);
+    onDataUpdate({ totalVisits, paidUsers, notInterested });
+  }, [data, activeButton, customStartDate, customEndDate]);
+
   const selectData = () => {
     switch (activeButton) {
       case 'today':
-        return totalVisitData.slice(0, 1);
+        return data.daily?.slice(-1) || [];
       case 'weekly':
-        return totalVisitData.slice(0, 2);
+        return data.weekly || [];
       case 'monthly':
-        return totalVisitData;
+        return data.monthly || [];
+      case 'custom':
+        if (customStartDate && customEndDate) {
+          return data.daily?.filter(d => isWithinInterval(new Date(d.name), { start: customStartDate, end: customEndDate })) || [];
+        }
+        return [];
       default:
         return [];
     }
   };
 
-  // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -40,13 +125,13 @@ const LeaderBoardAnalysisChart = ({ activeButton }) => {
     return null;
   };
 
-
   return (
     <div style={{ width: '100%', backgroundColor: '#2b2d42', borderRadius: '30px', paddingRight:'20px'}}>
+      {error && <div className="text-red-500">{error}</div>}
       <ResponsiveContainer width="100%" height={200}>
         <BarChart
           data={selectData()}
-          margin={{ top: 20, }}
+          margin={{ top: 20 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#3a3e5c" />
           <XAxis dataKey="name" stroke="#fff" />
@@ -61,4 +146,4 @@ const LeaderBoardAnalysisChart = ({ activeButton }) => {
   );
 };
 
-export default LeaderBoardAnalysisChart;
+export default LeaderBoardChartMob;

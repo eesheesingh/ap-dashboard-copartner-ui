@@ -10,64 +10,70 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          'https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/705716b5-a1e8-411a-5e97-08dc770b4aef?page=1&pageSize=10'
-        );
+        const storedStackIdData = localStorage.getItem("stackIdData");
+        if (storedStackIdData) {
+          const stackIdData = JSON.parse(storedStackIdData);
+          const affiliateId = stackIdData.id;
 
-        if (response.data.isSuccess) {
-          const apiData = response.data.data;
+          const response = await axios.get(
+            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
+          );
 
-          // Group data by day of the week and month
-          const dailyData = [];
-          const weeklyData = Array(7).fill().map((_, index) => ({
-            name: format(new Date(2024, 0, 1 + index), 'EEEE'), // Generate day names starting from Monday
-            totalVisit: 0,
-            paidUsers: 0,
-            usersLeft: 0,
-          }));
-          const monthlyData = Array(12).fill().map((_, index) => ({
-            name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names
-            totalVisit: 0,
-            paidUsers: 0,
-            usersLeft: 0,
-          }));
+          if (response.data.isSuccess) {
+            const apiData = response.data.data;
 
-          apiData.forEach((item) => {
-            const date = parseISO(item.date);
-            const dayOfWeek = getDay(date);
-            const month = getMonth(date);
-            const dayLabel = format(date, 'yyyy-MM-dd');
+            // Group data by day of the week and month
+            const dailyData = [];
+            const weeklyData = Array(7).fill().map((_, index) => ({
+              name: format(new Date(2024, 0, 1 + index), 'EEEE'), // Generate day names starting from Monday
+              totalVisit: 0,
+              paidUsers: 0,
+              usersLeft: 0,
+            }));
+            const monthlyData = Array(12).fill().map((_, index) => ({
+              name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names
+              totalVisit: 0,
+              paidUsers: 0,
+              usersLeft: 0,
+            }));
 
-            const totalVisit = 1;
-            const paidUser = item.subscription !== '0' ? 1 : 0;
-            const notInterested = totalVisit - paidUser;
+            apiData.forEach((item) => {
+              const date = parseISO(item.date);
+              const dayOfWeek = getDay(date);
+              const month = getMonth(date);
+              const dayLabel = format(date, 'yyyy-MM-dd');
 
-            // Daily data
-            if (!dailyData[dayLabel]) {
-              dailyData[dayLabel] = { name: dayLabel, totalVisit: 0, paidUsers: 0, usersLeft: 0 };
-            }
-            dailyData[dayLabel].totalVisit += totalVisit;
-            dailyData[dayLabel].paidUsers += paidUser;
-            dailyData[dayLabel].usersLeft += notInterested;
+              const totalVisit = 1;
+              const paidUser = item.subscription !== '0' ? 1 : 0;
+              const notInterested = totalVisit - paidUser;
 
-            // Weekly data
-            weeklyData[dayOfWeek].totalVisit += totalVisit;
-            weeklyData[dayOfWeek].paidUsers += paidUser;
-            weeklyData[dayOfWeek].usersLeft += notInterested;
+              // Daily data
+              if (!dailyData[dayLabel]) {
+                dailyData[dayLabel] = { name: dayLabel, totalVisit: 0, paidUsers: 0, usersLeft: 0 };
+              }
+              dailyData[dayLabel].totalVisit += totalVisit;
+              dailyData[dayLabel].paidUsers += paidUser;
+              dailyData[dayLabel].usersLeft += notInterested;
 
-            // Monthly data
-            monthlyData[month].totalVisit += totalVisit;
-            monthlyData[month].paidUsers += paidUser;
-            monthlyData[month].usersLeft += notInterested;
-          });
+              // Weekly data
+              weeklyData[dayOfWeek].totalVisit += totalVisit;
+              weeklyData[dayOfWeek].paidUsers += paidUser;
+              weeklyData[dayOfWeek].usersLeft += notInterested;
 
-          setData({
-            daily: Object.values(dailyData),
-            weekly: weeklyData,
-            monthly: monthlyData,
-          });
-        } else {
-          setError(response.data.displayMessage);
+              // Monthly data
+              monthlyData[month].totalVisit += totalVisit;
+              monthlyData[month].paidUsers += paidUser;
+              monthlyData[month].usersLeft += notInterested;
+            });
+
+            setData({
+              daily: Object.values(dailyData),
+              weekly: weeklyData,
+              monthly: monthlyData,
+            });
+          } else {
+            setError(response.data.displayMessage);
+          }
         }
       } catch (error) {
         setError('Error fetching data');

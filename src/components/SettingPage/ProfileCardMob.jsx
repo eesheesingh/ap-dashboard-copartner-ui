@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { call, card, cardHolder, mail, userImg, clipboard, tick, editBtn, editBlack } from "../../assets";
+import { call, card, cardHolder, mail, userImg, clipboard, tick, editBtn, editBlack, address, state } from "../../assets";
 import EditProfilePopup from "../Popups/EditProfilePopup";
 
 const ProfileCardMob = () => {
@@ -9,6 +9,8 @@ const ProfileCardMob = () => {
     mobile: '',
     gst: '',
     pan: '',
+    address: '',
+    state: '',
     referralCode: '',
     imageURL: ''
   });
@@ -36,7 +38,9 @@ const ProfileCardMob = () => {
             gst: data.gst || '',
             pan: data.pan || '',
             referralCode: data.referralCode || '',
-            imageURL: data.affiliatePartnerImagePath || ''
+            imageURL: data.affiliatePartnerImagePath || '',
+            address: '5b/1 Woodlands Apartments, Near Antila, Grant Road, Mumbai, 400026', // Example address
+            state: 'Maharashtra' // Example state
           });
 
           if (data.relationshipManagerId) {
@@ -109,6 +113,7 @@ const ProfileCardMob = () => {
 
   const updateProfile = (updatedProfile) => {
     setProfile({ ...profile, ...updatedProfile });
+    localStorage.setItem("stackIdData", JSON.stringify(updatedProfile));
   };
 
   return (
@@ -140,6 +145,18 @@ const ProfileCardMob = () => {
                 <span className="flex items-center gap-3 text-[#c9c9c9] flex-nowrap">
                   <img src={card} alt="" className="w-5" />
                   {profile.pan || 'PAN Card Number'}
+                </span>
+              </div>
+              <div className="flex flex-row flex-nowrap">
+                <span className="flex items-center gap-3 text-[#c9c9c9] flex-nowrap">
+                  <img src={address} alt="" className="w-5 mt-1" />
+                  {profile.address}
+                </span>
+              </div>
+              <div className="flex flex-row flex-nowrap">
+                <span className="flex items-center gap-3 text-[#c9c9c9] flex-nowrap">
+                  <img src={state} alt="" className="w-5" />
+                  {profile.state}
                 </span>
               </div>
             </div>
@@ -177,11 +194,6 @@ const ProfileCardMob = () => {
 
       <div className='referralLink flex flex-row gap-1 items-center mt-2'>
         <span className='text-[#c9c9c9] text-lg'>
-          Referral Link:
-        </span>
-      </div>
-      <div className='referralLink flex flex-row gap-1 items-center mt-2'>
-        <span className='whitespace-nowrap overflow-ellipsis text-[#c9c9c9] text-lg'>
           Referral Code:
         </span>
         <div className='border-[#fff] border-[1px] flex flex-row gap-2 rounded-[50px] px-3 py-1'>
@@ -213,12 +225,12 @@ const ProfileCardMob = () => {
       )}
 
       {isEditProfileOpen && (
-         <EditProfilePopup 
-         isOpen={isEditProfileOpen} 
-         onClose={() => setIsEditProfileOpen(false)} 
-         onUpdateProfile={updateProfile}   
-         initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL }}
-       />
+        <EditProfilePopup 
+          isOpen={isEditProfileOpen} 
+          onClose={() => setIsEditProfileOpen(false)} 
+          onUpdateProfile={updateProfile}   
+          initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL, pan: profile.pan, state: profile.state, gst: profile.gst }}
+        />
       )}
     </div>
   );
