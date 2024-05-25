@@ -300,7 +300,7 @@ const DashboardPage = () => {
               <h3 className="text-center font-semibold md:text-[30px] text-[25px] xl:text-[50px]">
                 Total Earning
               </h3>
-              <h1 className="md:text-[75px] text-[60px] xl:text-[85px] text-gradient font-bold">
+              <h1 className="md:text-[60px] text-[60px] xl:text-[85px] text-gradient font-bold">
                 {walletBalance !== null ? `₹${walletBalance.toFixed(2)}` : 'Loading...'}
               </h1>
               <div className="md:px-[40px] mb-4 xl:text-[20px] md:text-[14px]">

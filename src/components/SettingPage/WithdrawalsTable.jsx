@@ -30,7 +30,7 @@ const WithdrawalsTable = () => {
         if (response.data.isSuccess) {
           const sortedData = response.data.data
             .filter(withdrawal => withdrawal.requestAction !== 'A')
-            .sort((a, b) => new Date(b.transactionDate) - new Date(a.transactionDate));
+            .sort((a, b) => new Date(b.withdrawalRequestDate) - new Date(a.withdrawalRequestDate));
           const withdrawalsWithDetails = await Promise.all(sortedData.map(async (withdrawal) => {
             const detailsResponse = await axios.get(`https://copartners.in:5135/api/Withdrawal/GetBankUPIById/${withdrawal.withdrawalModeId}`);
             const details = detailsResponse.data.data || {};
@@ -103,7 +103,7 @@ const WithdrawalsTable = () => {
   }, []);
 
   const filteredData = withdrawals.filter((item) => {
-    const itemDate = new Date(item.transactionDate);
+    const itemDate = new Date(item.withdrawalRequestDate);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -228,7 +228,7 @@ const WithdrawalsTable = () => {
             ) : (
               currentItems.map((withdrawal, index) => (
                 <tr key={index}>
-                  <td className="text-center">{withdrawal.transactionDate ? new Date(withdrawal.transactionDate).toLocaleDateString() : 'N/A'}</td>
+                  <td className="text-center">{withdrawal.withdrawalRequestDate ? new Date(withdrawal.withdrawalRequestDate).toLocaleDateString() : 'N/A'}</td>
                   <td className="text-center text-[#f5b53f] font-semibold">
                     {withdrawal.requestAction === 'P' ? (
                       'Pending'
@@ -242,7 +242,7 @@ const WithdrawalsTable = () => {
                     )}
                   </td>
                   <td className="text-center">{withdrawal.amount}</td>
-                  <td className="text-center">{withdrawal.id || 'N/A'}</td>
+                  <td className="text-center">{withdrawal.id ? withdrawal.id.substring(0, 5) : 'N/A'}</td>
                   <td className="text-center">{withdrawal.accountNumber || 'N/A'}</td>
                   <td className="text-center">{withdrawal.bankName || 'N/A'}</td>
                 </tr>

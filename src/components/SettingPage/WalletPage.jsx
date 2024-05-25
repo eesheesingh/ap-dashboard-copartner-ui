@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { customBtn } from '../../assets';
 import WalletTable from './WalletTable';
 import WalletChart from './WalletChart';
@@ -10,6 +12,11 @@ const WalletPage = () => {
   const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
   const [withdrawalBalance, setWithdrawalBalance] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
+  const [customStartDate, setCustomStartDate] = useState(null);
+  const [customEndDate, setCustomEndDate] = useState(null);
+  const [isCustomPickerVisible, setIsCustomPickerVisible] = useState(false);
+
+  const customPickerRef = useRef(null);
 
   const fetchWalletBalance = async () => {
     try {
@@ -43,6 +50,35 @@ const WalletPage = () => {
     return balance % 1 === 0 ? balance.toFixed(0) : balance.toFixed(2);
   };
 
+  const handleCustomButtonClick = () => {
+    setActiveButtonFirstSection("custom");
+    setIsCustomPickerVisible(!isCustomPickerVisible);
+  };
+
+  const handleDateChange = (start, end) => {
+    setCustomStartDate(start);
+    setCustomEndDate(end);
+    setIsCustomPickerVisible(false);
+  };
+
+  const handleClearDates = () => {
+    setCustomStartDate(null);
+    setCustomEndDate(null);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (customPickerRef.current && !customPickerRef.current.contains(event.target)) {
+        setIsCustomPickerVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [customPickerRef]);
+
   return (
     <div className="xl:pt-3 md:p-4 sm:ml-[10rem] text-white">
       <div className="md:p-1 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[70px]">
@@ -62,16 +98,78 @@ const WalletPage = () => {
               >
                 Monthly
               </button>
-              <button
-                className={`button ${activeButtonFirstSection === 'custom' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-1 px-2 md:px-6 rounded flex items-center`}
-                onClick={() => setActiveButtonFirstSection('custom')}
-              >
-                Custom
-                <img src={customBtn} alt="" className="inline-block w-5 ml-1" />
-              </button>
+              <div className="relative inline-block">
+                <button
+                  className={`button ${activeButtonFirstSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-1 px-2 md:px-6 rounded flex items-center`}
+                  onClick={handleCustomButtonClick}
+                >
+                  Custom
+                </button>
+                {isCustomPickerVisible && (
+                  <div ref={customPickerRef} className="absolute top-full right-0 mt-2 z-10 bg-[#2b2d42] p-4 rounded-lg shadow-lg flex flex-col gap-3">
+                    <DatePicker
+                      selected={customStartDate}
+                      onChange={(date) => setCustomStartDate(date)}
+                      selectsStart
+                      startDate={customStartDate}
+                      endDate={customEndDate}
+                      placeholderText="Start Date"
+                      className="bg-transparent text-white border-b border-white mb-2"
+                      renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                        <div className="flex justify-between items-center">
+                          <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                          <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                            {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                              <option key={year} value={year}>{year}</option>
+                            ))}
+                          </select>
+                          <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                            {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                              <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                            ))}
+                          </select>
+                          <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                        </div>
+                      )}
+                    />
+                    <DatePicker
+                      selected={customEndDate}
+                      onChange={(date) => handleDateChange(customStartDate, date)}
+                      selectsEnd
+                      startDate={customStartDate}
+                      endDate={customEndDate}
+                      minDate={customStartDate}
+                      placeholderText="End Date"
+                      className="bg-transparent text-white border-b border-white"
+                      renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                        <div className="flex justify-between items-center">
+                          <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
+                          <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                            {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                              <option key={year} value={year}>{year}</option>
+                            ))}
+                          </select>
+                          <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                            {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                              <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                            ))}
+                          </select>
+                          <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>{'>'}</button>
+                        </div>
+                      )}
+                    />
+                    <button
+                      onClick={handleClearDates}
+                      className="bg-[#fff] text-[#000] px-4 py-1 rounded-md focus:outline-none"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="w-full flex justify-center md:w-[40%] cursor-pointer md:hidden mt-2" >
-              <WalletChartMob activeButton={activeButtonFirstSection}/>
+            <div className="w-full flex justify-center md:w-[40%] cursor-pointer md:hidden mt-2">
+              <WalletChartMob activeButton={activeButtonFirstSection} customStartDate={customStartDate} customEndDate={customEndDate} />
             </div>
           </div>
 
@@ -117,7 +215,7 @@ const WalletPage = () => {
               </div>
             </div>
             <div className="w-full justify-center md:w-[40%] cursor-pointer md:flex hidden">
-              <WalletChart activeButton={activeButtonFirstSection} />
+              <WalletChart activeButton={activeButtonFirstSection} customStartDate={customStartDate} customEndDate={customEndDate} />
             </div>
             {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup} />}
           </div>

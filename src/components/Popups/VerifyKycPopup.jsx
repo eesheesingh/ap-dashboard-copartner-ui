@@ -10,17 +10,20 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = localStorage.getItem('stackIdData'); // Get the user ID from local storage
-      if (!userId) {
-        alert('User ID not found in local storage.');
+      const storedStackIdData = localStorage.getItem('stackIdData'); // Get the user data from local storage
+      if (!storedStackIdData) {
+        alert('User data not found in local storage.');
         return;
       }
+
+      const data = JSON.parse(storedStackIdData);
+      const userId = data.id;
 
       try {
         const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner?Id=${userId}`);
         if (response.ok) {
-          const data = await response.json();
-          setUserData(data.data[0]);
+          const result = await response.json();
+          setUserData(result.data[0]);
         } else {
           alert('Failed to fetch user data.');
         }
@@ -97,7 +100,10 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
           }
         ];
 
-        const userId = localStorage.getItem('userId'); // Get the user ID from local storage
+        const storedStackIdData = localStorage.getItem('stackIdData'); // Get the user data from local storage
+        const data = JSON.parse(storedStackIdData);
+        const userId = data.id;
+
         const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner?Id=${userId}`, {
           method: 'PATCH',
           headers: {

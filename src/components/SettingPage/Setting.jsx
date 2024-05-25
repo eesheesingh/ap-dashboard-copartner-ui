@@ -40,6 +40,8 @@ const Setting = () => {
             mobile: data.mobileNumber || '',
             gst: data.gst || '',
             pan: data.pan || '',
+            address: data.address || "",
+            state: data.state || "",
             referralCode: data.referralCode || '',
             imageURL: data.affiliatePartnerImagePath || ''
           });
@@ -157,12 +159,12 @@ const Setting = () => {
                   <div className='flex flex-row items-start gap-8'>
                       <span className='flex w-[250px] items-start gap-3 text-[#c9c9c9]'>
                         <img src={address} alt="" className='w-5 mt-1'/>
-                        5b/1 Woodlands Apartments, Near Antila, Grant Road, mumbai, 400026
+                        {profile.address || 'Address'}
                       </span>
                       <div className='flex flex-row flex-nowrap'>
                         <span className='flex items-center gap-3 text-[#c9c9c9] flex-nowrap'>
                           <img src={state} alt="" className='w-5'/>
-                          Maharashtra
+                          {profile.state || 'State'}
                           </span>
                       </div>
                     </div>
@@ -245,7 +247,7 @@ const Setting = () => {
         isOpen={isEditProfileOpen} 
         onClose={() => setIsEditProfileOpen(false)} 
         onUpdateProfile={updateProfile}
-        initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL, pan: profile.pan, state: profile.state, gst: profile.gst }}
+        initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL, pan: profile.pan, address:profile.address, state: profile.state, gst: profile.gst }}
       />
     </div>
   );

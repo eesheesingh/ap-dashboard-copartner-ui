@@ -143,7 +143,7 @@ const Sidebar = () => {
             </div>
             <div className="flex items-center">
               <div className="items-center ms-3 gap-4 flex">
-                {!isMobileView && (
+                {/* {!isMobileView && (
                   <div className="relative">
                     <div
                       className="flex items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px] cursor-pointer"
@@ -167,16 +167,16 @@ const Sidebar = () => {
                       </div>
                     )}
                   </div>
-                )}
+                )} */}
                 <div className='flex'>
-                  <div className='flex items-center justify-center mr-4'>
+                  {/* <div className='flex items-center justify-center mr-4'>
                     <div
                       className="flex md:hidden items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px] cursor-pointer"
                       onClick={toggleNotification}
                     >
                       <img src={notification} alt="Notification Icon" className="w-[21px] h-[21px]" />
                     </div>
-                  </div>
+                  </div> */}
                   <Link to="/setting">
                     <button type="button" className="flex text-sm bg-[#000] rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>

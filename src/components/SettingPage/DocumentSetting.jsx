@@ -119,7 +119,7 @@ const DocumentSetting = () => {
             </button>
           </div>
         ))}
-        <label htmlFor="file-upload" className='py-[50px] px-5 border-[2px] border-[#ffffffac] text-[#c9c9c9] border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer'>
+        {/* <label htmlFor="file-upload" className='py-[50px] px-5 text-[#c9c9c9] rounded-xl flex flex-col items-center justify-center cursor-pointer'>
           <img src={document} alt="" className='w-[60%] justify-center items-center' />
           {uploading ? "Uploading..." : "Upload Documents"}
           <input
@@ -129,7 +129,7 @@ const DocumentSetting = () => {
             onChange={handleFileChange}
             multiple
           />
-        </label>
+        </label> */}
       </div>
     </div>
   );

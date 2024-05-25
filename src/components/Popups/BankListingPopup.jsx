@@ -145,6 +145,7 @@ const BankListingPopup = ({ onClose }) => {
         withdrawalBy: "AP",
         amount: amountValue,
         withdrawalModeId: selectedItem.id,
+        withdrawalRequestDate: new Date().toISOString(), // Add the current date as withdrawalRequestDate
       });
 
       if (response.data.isSuccess) {
