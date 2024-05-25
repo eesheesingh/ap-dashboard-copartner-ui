@@ -119,7 +119,7 @@ const Setting = () => {
 
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="md:p-4 xl:p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[9rem]">
+      <div className="md:p-4 xl:p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[6rem]">
         <div className="text-white text-left">
           <div className='container-bg rounded-[20px] p-3 px-10 md:block hidden'>
             <div className='profileCard w-[100%] flex items-center justify-between'>

@@ -40,7 +40,7 @@ const Leader = () => {
 
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-10 mt-[20px]">
+      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
           {/* Second Section */}
           <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">

@@ -117,7 +117,7 @@ const ProfileCardMob = () => {
   };
 
   return (
-    <div className="container-bg rounded-[20px] p-3 md:px-10 mt-[8rem]">
+    <div className="container-bg rounded-[20px] p-3 md:px-10">
       <div className="flex flex-row">
         <div className="w-1/2 text-left">
           <span className="text-gradient text-[30px] font-bold">

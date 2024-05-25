@@ -45,7 +45,7 @@ const WalletPage = () => {
 
   return (
     <div className="xl:pt-3 md:p-4 sm:ml-[10rem] text-white">
-      <div className="md:p-4 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[8rem]">
+      <div className="md:p-1 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[70px]">
         <div className="text-white text-center">
           <div className="flex md:flex-row flex-col justify-between mt-2">
             <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>

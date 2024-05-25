@@ -121,7 +121,7 @@ const CustomersPage = () => {
 
   return (
     <div className="relative xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[10rem]">
+      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[100px]">
         <div className='flex justify-between items-center'>
           <span className='md:text-[30px] text-[20px] font-semibold'>Paid Users Listing</span>
           <div className='flex gap-5'>
@@ -276,7 +276,7 @@ const CustomersPage = () => {
           </div>
         )}
         <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
-          <table className="md:w-full w-[150%]">
+          <table className="md:w-full w-[170%]">
             <thead className='text-center bg-[#29303F] sticky top-0'>
               <tr className='uppercase'>
                 <th className='text-center text-[15px]'>Date</th>

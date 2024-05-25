@@ -35,7 +35,7 @@ const Marketing = () => {
 
   return (
     <div className="xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-4 md:px-5 px-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[8rem]">
+      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[80px]">
         <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Marketing Partner</h2>
 
         {/* Tab buttons */}
