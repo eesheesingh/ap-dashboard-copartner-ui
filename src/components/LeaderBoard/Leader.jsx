@@ -44,7 +44,7 @@ const Leader = () => {
         <div className="text-white text-center">
           {/* Second Section */}
           <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">
-            <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Lead Board Analysis</h2>
+            <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">Lead Board Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start md:flex-nowrap flex-wrap">
               <button
                 className={`button ${activeButtonSecondSection === "today" ? "bg-[#fff] text-[#000]" : "bg-transparent"} md:text-[18px] border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 md:py-2 py-1 px-2 md:px-6 rounded mb-2 md:mb-0`}

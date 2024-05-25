@@ -121,7 +121,7 @@ const CustomersPage = () => {
 
   return (
     <div className="relative xl:p-4 md:p-4 sm:ml-[8rem] text-white">
-      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[100px]">
+      <div className="p-1 md:p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[100px]">
         <div className='flex justify-between items-center'>
           <span className='md:text-[30px] text-[20px] font-semibold'>Paid Users Listing</span>
           <div className='flex gap-5'>

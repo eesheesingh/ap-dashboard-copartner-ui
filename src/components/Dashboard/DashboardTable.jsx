@@ -48,7 +48,7 @@ const DashboardTable = () => {
     <div className="relative">
       {/* Heading */}
       <div className="flex justify-between mt-10">
-        <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Customer Listing</h2>
+        <h2 className="md:text-left text-left md:text-[26px] text-[30px] xl:text-[40px] font-semibold w-full">Paid User Listing</h2>
       </div>
 
       {/* Table */}

@@ -189,7 +189,7 @@ const DashboardPage = () => {
             </div>
           </div>
           <div className="flex md:flex-row flex-col justify-between md:mt-10 mt-[1rem] items-center">
-            <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">
+            <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
               Earning Analysis
             </h2>
             <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start">
@@ -359,7 +359,7 @@ const DashboardPage = () => {
       </div>
 
       <div className="flex md:flex-row flex-col justify-between items-center mt-10">
-        <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">
+        <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
           Lead Board Analysis
         </h2>
         <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start">
