@@ -37,10 +37,10 @@ const ProfileCardMob = () => {
             mobile: data.mobileNumber || '',
             gst: data.gst || '',
             pan: data.pan || '',
+            address: data.address || "",
+            state: data.state || "",
             referralCode: data.referralCode || '',
             imageURL: data.affiliatePartnerImagePath || '',
-            address: '5b/1 Woodlands Apartments, Near Antila, Grant Road, Mumbai, 400026', // Example address
-            state: 'Maharashtra' // Example state
           });
 
           if (data.relationshipManagerId) {
@@ -150,13 +150,13 @@ const ProfileCardMob = () => {
               <div className="flex flex-row flex-nowrap">
                 <span className="flex items-center gap-3 text-[#c9c9c9] flex-nowrap">
                   <img src={address} alt="" className="w-5 mt-1" />
-                  {profile.address}
+                  {profile.address || 'Address'}
                 </span>
               </div>
               <div className="flex flex-row flex-nowrap">
                 <span className="flex items-center gap-3 text-[#c9c9c9] flex-nowrap">
                   <img src={state} alt="" className="w-5" />
-                  {profile.state}
+                  {profile.state || 'State'}
                 </span>
               </div>
             </div>

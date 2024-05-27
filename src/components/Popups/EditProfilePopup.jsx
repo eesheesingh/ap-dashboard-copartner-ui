@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { close } from '../../assets';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) => {
   const [name, setName] = useState('');
@@ -105,6 +107,7 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
             const result = await response.json();
             localStorage.setItem("stackIdData", JSON.stringify(result.data));
             onUpdateProfile(result.data);
+            toast.success('Your profile has been updated');
           } else {
             console.error('Error updating profile:', response.statusText);
           }
@@ -114,7 +117,6 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
       console.error('Error updating profile:', error);
     } finally {
       onClose();
-      window.location.reload();
     }
   };
 
@@ -178,6 +180,8 @@ const EditProfilePopup = ({ isOpen, onClose, initialProfile, onUpdateProfile }) 
           </div>
         </div>
       )}
+                <ToastContainer />
+
     </>
   );
 };

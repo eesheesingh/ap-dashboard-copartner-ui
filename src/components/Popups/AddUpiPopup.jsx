@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { close } from '../../assets';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
   const [UpiDetails, setUpiDetails] = useState({
@@ -62,6 +64,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
 
       if (response.data.isSuccess) {
         addUpiDetails({ ...UpiDetails });
+        toast.success('Your UPI details have been added successfully.');
         onClose();
       } else {
         setError(response.data.displayMessage || 'Failed to add UPI details.');
@@ -105,6 +108,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
             {initialUpiID ? 'Update' : 'Add'}
           </button>
         </div>
+        <ToastContainer />
       </div>
     </div>
   );
