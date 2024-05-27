@@ -145,9 +145,14 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
             Full access to in any of our products Full access to in any of{' '}
           </p>
         </div>
-        <div className="max-w-[643px] min-h-[303px] border border-[#ffffff3c] rounded-xl relative flex items-center justify-center">
+        <div className="max-w-[643px] min-h-[303px] border border-[#ffffff3c] rounded-xl relative flex items-center justify-center overflow-hidden">
           {videoURL ? (
-            <video src={videoURL} controls autoPlay className="max-w-full max-h-full rounded-xl" />
+            <video
+              src={videoURL}
+              controls
+              autoPlay
+              className="max-w-full max-h-full rounded-xl object-cover"
+            />
           ) : (
             <span className="text-[#c9c9c9]">No video uploaded</span>
           )}
