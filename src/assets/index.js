@@ -58,8 +58,12 @@ import signupBg from "./signInBck.png"
 import notify from "./Back.png"
 import address from './Point On Map.png'
 import state from "./Map Point Wave.png"
+import showPassword from './Eye.png'
+import hidePassword from './Eye Closed.png'
 export {
     signupBg,
+    showPassword,
+    hidePassword,
     notify,
     availableIcon,
     chatIcon,

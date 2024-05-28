@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { close, signupBg } from "../../assets";
+import { close, hidePassword, showPassword, signupBg } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPasswordState, setShowPasswordState] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,12 +21,12 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
-      console.log("StackId authentication response:", data); // Log the data received from the server
+      console.log("StackId authentication response:", data);
 
       if (response.ok && data.isSuccess) {
-        return data.data; // Return the stackId data
+        return data.data;
       } else {
-        console.error("StackId server response:", data); // Log server response for debugging
+        console.error("StackId server response:", data);
         setError("StackId authentication failed. Please try again.");
         return null;
       }
@@ -62,20 +63,23 @@ const LoginPage = () => {
       const data = await response.json();
       const authId = data.data.stackholderId;
       sessionStorage.setItem("authId", authId);
+
       if (response.ok && data.isSuccess) {
-        // Authenticate StackId
         const stackIdData = await authenticateStackId(authId);
-        
+
         if (stackIdData) {
-          // Save JWT token and email to local storage
           localStorage.setItem("token", data.data.password);
           localStorage.setItem("email", data.data.email);
           localStorage.setItem("stackIdData", JSON.stringify(stackIdData));
 
-          navigate("/"); // Redirect to dashboard on successful login
+          if (password === "copartner@1234#") {
+            navigate("/reset-password", { state: { email, password } });
+          } else {
+            navigate("/");
+          }
         }
       } else {
-        console.error("Server response:", data.data); // Log server response for debugging
+        console.error("Server response:", data.data);
         setError("Invalid email or password. Please try again.");
       }
     } catch (error) {
@@ -89,7 +93,7 @@ const LoginPage = () => {
   const isFormEmpty = () => !email || !password;
 
   const handleClose = () => {
-    navigate("/"); // Navigate to the home page
+    navigate("/login");
   };
 
   const scrollToTop = () => {
@@ -97,6 +101,10 @@ const LoginPage = () => {
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const toggleShowPassword = () => {
+    setShowPasswordState(!showPasswordState);
   };
 
   return (
@@ -126,22 +134,34 @@ const LoginPage = () => {
           <div className="mb-4">
             <h2 className="text-2xl font-semibold text-white">Log In</h2>
           </div>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
           <form className="flex flex-col gap-4 text-white" onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
+              className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
             />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-            />
+            <div className="relative">
+              <input
+                type={showPasswordState ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent w-full"
+              />
+              {password.length > 0 && (
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none"
+                >
+                  <img src={showPasswordState ? hidePassword : showPassword} className="w-5" alt="Toggle Password Visibility" />
+                </button>
+              )}
+            </div>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
             <button
               type="submit"
               className={`bg-white hover:bg-black hover:text-white text-black transition duration-300 font-semibold text-[20px] py-3 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
@@ -153,7 +173,7 @@ const LoginPage = () => {
             </button>
           </form>
           <div className="mt-4">
-            <button onClick={() => navigate("/reset-password")} className="text-sm text-blue-500 hover:underline">
+            <button onClick={() => alert("Please contact support to reset your password.")} className="text-sm text-blue-500 hover:underline">
               Forgot Password?
             </button>
           </div>

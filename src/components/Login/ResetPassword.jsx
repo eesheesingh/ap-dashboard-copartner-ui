@@ -1,15 +1,23 @@
-import React, { useState } from "react";
-import { close, signupBg } from "../../assets";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { close, hidePassword, showPassword, signupBg } from "../../assets";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const ResetPassword = () => {
-  const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email, password: oldPassword } = location.state || {};
+
+  useEffect(() => {
+    if (!email || !oldPassword) {
+      navigate("/login"); // Redirect to login if email or oldPassword is not present
+    }
+  }, [email, oldPassword, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,6 +74,15 @@ const ResetPassword = () => {
             const resetPasswordData = await resetPasswordResponse.json();
 
             if (resetPasswordResponse.ok && resetPasswordData.isSuccess) {
+              // Update the user data to clear the first-time login flag
+              await fetch(`https://copartners.in:5130/api/Users/${userId}/ClearFirstTimeLoginFlag`, {
+                method: "POST",
+                headers: {
+                  "Accept": "*/*",
+                  "Content-Type": "application/json",
+                },
+              });
+
               navigate("/login");
             } else {
               setError("Failed to reset password. Please try again.");
@@ -87,10 +104,10 @@ const ResetPassword = () => {
     setLoading(false);
   };
 
-  const isFormEmpty = () => !email || !newPassword || !confirmPassword || !oldPassword;
+  const isFormEmpty = () => !newPassword || !confirmPassword;
 
   const handleClose = () => {
-    navigate("/"); // Navigate to the home page
+    navigate("/login"); // Navigate to the login page
   };
 
   const scrollToTop = () => {
@@ -98,6 +115,14 @@ const ResetPassword = () => {
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const toggleShowNewPassword = () => {
+    setShowNewPassword(!showNewPassword);
+  };
+
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -129,34 +154,42 @@ const ResetPassword = () => {
           </div>
           {error && <p className="text-red-500 mb-4">{error}</p>}
           <form className="flex flex-col gap-4 text-white" onSubmit={handleSubmit}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-            />
-            <input
-              type="password"
-              placeholder="Old Password"
-              value={oldPassword}
-              onChange={(e) => setOldPassword(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-            />
-            <input
-              type="password"
-              placeholder="New Password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-            />
-            <input
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="text-center px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-            />
+            <div className="relative">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent w-full"
+              />
+              {newPassword.length > 0 && (
+                <button
+                  type="button"
+                  onClick={toggleShowNewPassword}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none"
+                >
+                  <img src={showNewPassword ? hidePassword : showPassword} className="w-5" alt="Toggle Password Visibility" />
+                </button>
+              )}
+            </div>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent w-full"
+              />
+              {confirmPassword.length > 0 && (
+                <button
+                  type="button"
+                  onClick={toggleShowConfirmPassword}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none"
+                >
+                  <img src={showConfirmPassword ? hidePassword : showPassword} className="w-5" alt="Toggle Password Visibility" />
+                </button>
+              )}
+            </div>
             <button
               type="submit"
               className={`bg-white hover:bg-black hover:text-white text-black transition duration-300 font-semibold text-[20px] py-3 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${

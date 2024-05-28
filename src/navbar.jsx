@@ -48,17 +48,17 @@ const Sidebar = () => {
   useEffect(() => {
     setActiveItem(location.pathname);
 
-    if (isSidebarOpen && isMobileView) {
-      setIsSidebarOpen(true);
-    }
-
     const handleResize = () => {
-      setIsMobileView(window.innerWidth < 768);
+      const isMobile = window.innerWidth < 1000;
+      setIsMobileView(isMobile);
+      if (isMobile) {
+        setIsSidebarOpen(false);
+      }
     };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [location, isMobileView, isSidebarOpen]);
+  }, [location]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -191,7 +191,7 @@ const Sidebar = () => {
       </nav>
       <aside
         id="logo-sidebar"
-        className={`fixed top-2 left-0 z-40 w-[12rem] h-screen md:pt-[90px] pt-[150px] transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
+        className={`fixed top-2 left-0 z-40 w-[12rem] h-screen md:pt-[90px] pt-[100px] transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
         aria-label="Sidebar"
       >
         <div className="h-full px-3 pb-4 overflow-y-auto bg-[#22262F]">
