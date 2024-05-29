@@ -99,7 +99,7 @@ const CustomersPage = () => {
   };
 
   const filteredData = customers.filter((item) => {
-    const itemDate = new Date(item.date.split('T')[0]);
+    const itemDate = new Date(item.subscribeDate.split('T')[0]);
     const matchesSearchQuery = (item.raName && item.raName.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.amount && item.amount.toString().includes(searchQuery));
     
@@ -289,7 +289,7 @@ const CustomersPage = () => {
             <tbody>
               {filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((customer) => (
                 <tr key={customer.id} className="">
-                  <td className="px-6 py-4 text-center">{customer.date.split('T')[0]}</td>
+                  <td className="px-6 py-4 text-center">{customer.subscribeDate.split('T')[0]}</td>
                   <td className='text-center'>{customer.userMobileNo}</td>
                   <td className='text-center'>{customer.subscription || 'N/A'}</td>
                   <td className='text-center'>{customer.raName || 'N/A'}</td>

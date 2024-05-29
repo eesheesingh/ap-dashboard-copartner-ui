@@ -70,7 +70,7 @@ const DashboardTable = () => {
               <tbody>
                 {data.map((customer, index) => (
                   <tr key={index}>
-                    <td className='text-center'>{new Date(customer.date).toLocaleDateString() || 'N/A'}</td>
+                    <td className='text-center'>{new Date(customer.subscribeDate).toLocaleDateString() || 'N/A'}</td>
                     <td className='text-center'>{(customer.userMobileNo) || 'N/A'}</td>
                     <td className='text-center'>{customer.subscription || 'N/A'}</td>
                     <td className='text-center'>{customer.raName || 'N/A'}</td>

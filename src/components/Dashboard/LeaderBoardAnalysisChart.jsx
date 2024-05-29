@@ -21,31 +21,31 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
 
           if (response.data.isSuccess) {
             const apiData = response.data.data;
+            console.log("API Response Data:", apiData);
 
-            // Group data by day of the week and month
-            const dailyData = [];
+            const dailyData = {};
             const weeklyData = Array(7).fill().map((_, index) => ({
-              name: format(new Date(2024, 0, 1 + index), 'EEEE'), // Generate day names starting from Monday
+              name: format(new Date(2024, 0, 1 + index), 'EEEE'),
               totalVisit: 0,
               paidUsers: 0,
               usersLeft: 0,
             }));
             const monthlyData = Array(12).fill().map((_, index) => ({
-              name: format(new Date(2024, index, 1), 'MMMM'), // Generate month names
+              name: format(new Date(2024, index, 1), 'MMMM'),
               totalVisit: 0,
               paidUsers: 0,
               usersLeft: 0,
             }));
 
             apiData.forEach((item) => {
-              const date = parseISO(item.date);
+              const date = parseISO(item.userJoiningDate);
               const dayOfWeek = getDay(date);
               const month = getMonth(date);
               const dayLabel = format(date, 'yyyy-MM-dd');
 
               const totalVisit = 1;
               const paidUser = item.subscription !== '0' ? 1 : 0;
-              const notInterested = totalVisit - paidUser;
+              const notInterested = item.subscription === '0' ? 1 : 0;
 
               // Daily data
               if (!dailyData[dayLabel]) {
@@ -72,10 +72,13 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
               monthly: monthlyData,
             });
           } else {
-            setError(response.data.displayMessage);
+            setError(response.data.displayMessage || 'Unknown error occurred');
           }
+        } else {
+          setError('No stackIdData found in local storage');
         }
       } catch (error) {
+        console.error('Error fetching data:', error);
         setError('Error fetching data');
       }
     };

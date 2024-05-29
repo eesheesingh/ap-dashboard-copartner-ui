@@ -34,7 +34,7 @@ const WalletChart = ({ activeButton, customStartDate, customEndDate }) => {
             }));
 
             apiData.forEach((item) => {
-              const date = parseISO(item.date);
+              const date = parseISO(item.userJoiningDate);
               const dayOfWeek = getDay(date);
               const month = getMonth(date);
               const dayLabel = format(date, 'yyyy-MM-dd');

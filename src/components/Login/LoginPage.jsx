@@ -195,11 +195,11 @@ const LoginPage = () => {
               {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
-          <div className="mt-4">
-            <button onClick={() => alert("Please contact support to reset your password.")} className="text-sm text-blue-500 hover:underline">
-              Forgot Password?
+          {/* <div className="mt-4">
+            <button onClick={() => navigate("/reset-password", { state: { email, password } })} className="text-sm text-blue-500 hover:underline">
+              Reset Password?
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

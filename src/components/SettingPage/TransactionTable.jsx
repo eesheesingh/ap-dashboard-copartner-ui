@@ -207,7 +207,7 @@ const TransactionTable = () => {
               <th className="text-center text-[15px]">Bank</th>
               <th className="text-center text-[15px]">Account Number</th>
               <th className="text-center text-[15px]">Amount</th>
-              <th className="text-center text-[15px]">Invoice</th>
+              {/* <th className="text-center text-[15px]">Invoice</th> */}
             </tr>
           </thead>
           <tbody>
@@ -223,9 +223,9 @@ const TransactionTable = () => {
                   <td className="text-center">{transaction.bankName}</td>
                   <td className="text-center">{transaction.accountNumber}</td>
                   <td className="text-center">{transaction.amount}</td>
-                  <td className="text-center flex justify-center">
+                  {/* <td className="text-center flex justify-center">
                     <img src={invoiceBtn} alt="" className="w-5" />
-                  </td>
+                  </td> */}
                 </tr>
               ))
             )}

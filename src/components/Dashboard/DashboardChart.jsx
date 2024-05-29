@@ -18,6 +18,7 @@ const DashboardChart = ({ activeButton, customStartDate, customEndDate }) => {
           const response = await axios.get(
             `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
           );
+          console.log("", response);
 
           if (response.data.isSuccess) {
             const apiData = response.data.data;
@@ -34,7 +35,7 @@ const DashboardChart = ({ activeButton, customStartDate, customEndDate }) => {
             }));
 
             apiData.forEach((item) => {
-              const date = parseISO(item.date);
+              const date = parseISO(item.userJoiningDate);
               const dayOfWeek = getDay(date);
               const month = getMonth(date);
               const dayLabel = format(date, 'yyyy-MM-dd');

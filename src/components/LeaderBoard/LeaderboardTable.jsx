@@ -60,7 +60,7 @@ const LeaderboardTable = () => {
   }, [currentPage]);
 
   const filteredData = customers.filter((item) => {
-    const itemDate = new Date(item.date.split('T')[0]);
+    const itemDate = new Date(item.userJoiningDate.split('T')[0]);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -182,7 +182,7 @@ const LeaderboardTable = () => {
             ) : (
               currentData.map((item, index) => (
                 <tr key={index} className='text-center'>
-                  <td>{item.date.split('T')[0]}</td>
+                  <td>{item.userJoiningDate.split('T')[0]}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
                   <td>{item.subscription === "0" ? "UnPaid" : "Paid"}</td>
                 </tr>

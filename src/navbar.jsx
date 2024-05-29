@@ -135,10 +135,10 @@ const Sidebar = () => {
                 </svg>
               </button>
               <a href="/" className="md:flex hidden ms-2 md:me-24">
-                <img src={logo} className="md:h-10 me-3" alt="FlowBite Logo" />
+                <img src={logo} className="md:h-10 me-3" alt="Copartner Logo" />
               </a>
               <a href="/" className="flex md:me-24 md:hidden text-nowrap flex-nowrap">
-                <img src={logo} className="h-10" alt="FlowBite Logo" />
+                <img src={logo} className="h-10" alt="Copartner Logo" />
               </a>
             </div>
             <div className="flex items-center">
@@ -180,7 +180,9 @@ const Sidebar = () => {
                   <Link to="/setting">
                     <button type="button" className="flex text-sm bg-[#000] rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>
-                      <img src={profile.imageURL || userImg} alt="" className="w-[50px] h-[50px] rounded-full" />
+                      <div className="w-[50px] h-[50px] rounded-full overflow-hidden">
+                        <img src={profile.imageURL || userImg} alt="User" className="object-cover w-full h-full" />
+                      </div>
                     </button>
                   </Link>
                 </div>

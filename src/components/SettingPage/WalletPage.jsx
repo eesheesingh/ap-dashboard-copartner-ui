@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { customBtn } from '../../assets';
 import WalletTable from './WalletTable';
 import WalletChart from './WalletChart';
 import WalletChartMob from './WalletChartMob';
@@ -87,22 +86,21 @@ const WalletPage = () => {
             <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[20px] flex w-full md:justify-end md:items-center xl:items-center justify-start">
               <div>
-              <button
-                className={`button ${activeButtonFirstSection === 'weekly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
-                onClick={() => setActiveButtonFirstSection('weekly')}
-              >
-                Weekly
-              </button>
+                <button
+                  className={`button ${activeButtonFirstSection === 'weekly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
+                  onClick={() => setActiveButtonFirstSection('weekly')}
+                >
+                  Weekly
+                </button>
               </div>
               <div>
-              <button
-                className={`button ${activeButtonFirstSection === 'monthly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
-                onClick={() => setActiveButtonFirstSection('monthly')}
-              >
-                Monthly
-              </button>
+                <button
+                  className={`button ${activeButtonFirstSection === 'monthly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
+                  onClick={() => setActiveButtonFirstSection('monthly')}
+                >
+                  Monthly
+                </button>
               </div>
-              <div>
               <div className="relative inline-block">
                 <button
                   className={`button ${activeButtonFirstSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded flex items-center`}
@@ -110,7 +108,6 @@ const WalletPage = () => {
                 >
                   Custom
                 </button>
-                </div>
                 {isCustomPickerVisible && (
                   <div ref={customPickerRef} className="absolute top-full right-0 mt-2 z-10 bg-[#2b2d42] p-4 rounded-lg shadow-lg flex flex-col gap-3">
                     <DatePicker

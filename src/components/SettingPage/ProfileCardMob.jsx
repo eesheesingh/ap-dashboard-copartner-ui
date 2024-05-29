@@ -229,7 +229,7 @@ const ProfileCardMob = () => {
           isOpen={isEditProfileOpen} 
           onClose={() => setIsEditProfileOpen(false)} 
           onUpdateProfile={updateProfile}   
-          initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL, pan: profile.pan, state: profile.state, gst: profile.gst }}
+          initialProfile={{ name: profile.name, email: profile.email, mobile: profile.mobile, file: profile.file, imageURL: profile.imageURL, pan: profile.pan, state: profile.state,  address: profile.address, gst: profile.gst }}
         />
       )}
     </div>
