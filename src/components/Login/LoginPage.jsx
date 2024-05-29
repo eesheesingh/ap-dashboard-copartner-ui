@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { close, hidePassword, showPassword, signupBg } from "../../assets";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [logoutTimeout, setLogoutTimeout] = useState(null);
 
   const authenticateStackId = async (stackId) => {
     try {
@@ -72,11 +73,17 @@ const LoginPage = () => {
           localStorage.setItem("email", data.data.email);
           localStorage.setItem("stackIdData", JSON.stringify(stackIdData));
 
-          if (password === "copartner@1234#") {
+          if (password === "Copartner@1234#") {
             navigate("/reset-password", { state: { email, password } });
           } else {
             navigate("/");
           }
+
+          // Set timeout to logout after 24 hours
+          const timeout = setTimeout(() => {
+            handleLogout();
+          }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+          setLogoutTimeout(timeout);
         }
       } else {
         console.error("Server response:", data.data);
@@ -89,6 +96,22 @@ const LoginPage = () => {
 
     setLoading(false);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    localStorage.removeItem("stackIdData");
+    sessionStorage.removeItem("authId");
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    return () => {
+      if (logoutTimeout) {
+        clearTimeout(logoutTimeout);
+      }
+    };
+  }, [logoutTimeout]);
 
   const isFormEmpty = () => !email || !password;
 

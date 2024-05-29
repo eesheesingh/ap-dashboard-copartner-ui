@@ -125,6 +125,16 @@ const BankListingPopup = ({ onClose }) => {
       return;
     }
 
+    if (amountValue < 100) {
+      setError('The minimum withdrawal amount is 100.');
+      return;
+    }
+
+    if (amountValue > 100000) {
+      setError('The maximum withdrawal amount is 100,000.');
+      return;
+    }
+
     if (!selectedItem) {
       setError('Please select a bank or UPI.');
       return;

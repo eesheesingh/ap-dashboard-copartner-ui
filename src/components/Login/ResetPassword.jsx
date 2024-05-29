@@ -44,6 +44,7 @@ const ResetPassword = () => {
 
       if (emailCheckResponse.ok && emailCheckData.isSuccess) {
         const user = emailCheckData.data.find((user) => user.email === email);
+        console.log("", user.email);
 
         if (user) {
           const userId = user.userId;
