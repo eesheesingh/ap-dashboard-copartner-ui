@@ -95,6 +95,19 @@ const LeaderboardTable = () => {
     return `${day}-${month}-${year}`;
   };
 
+  const getSubscriptionName = (subscriptionId) => {
+    switch (subscriptionId) {
+      case '1':
+        return "Commodity";
+      case '2':
+        return "Equity";
+      case '3':
+        return "Options";
+      default:
+        return "N/A";
+    }
+  };
+
   return (
     <div className="table-responsive mt-5 relative">
       <div className='flex justify-between items-center'>
@@ -120,7 +133,7 @@ const LeaderboardTable = () => {
       </div>
       {isFilterClicked && (
         <div className="absolute right-0 mt-5 mr-4 z-10">
-          <div className="bg-[#000] rounded-[30px] p-4 flex flex-col gap-3">          
+          <div className="bg-[#000] rounded-[30px] p-4 flex flex-col gap-3">
             <DatePicker
               selected={startDate}
               onChange={(date) => handleFilterChange({ startDate: date, endDate })}
@@ -178,7 +191,7 @@ const LeaderboardTable = () => {
           </div>
         </div>
       )}
-      <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">      
+      <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
         <table className='md:w-full w-[105%]'>
           <thead>
             <tr className='uppercase'>
@@ -195,7 +208,7 @@ const LeaderboardTable = () => {
                 <tr key={index} className='text-center'>
                   <td>{formatDate(item.userJoiningDate)}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
-                  <td>{item.subscription === "0" ? "UnPaid" : "Paid"}</td>
+                  <td>{getSubscriptionName(item.subscription)}</td>
                 </tr>
               ))
             )}

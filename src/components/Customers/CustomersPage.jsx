@@ -100,6 +100,19 @@ const CustomersPage = () => {
     setSearchQuery(e.target.value);
   };
 
+  const getSubscriptionName = (subscriptionId) => {
+    switch (subscriptionId) {
+      case '1':
+        return "Commodity";
+      case '2':
+        return "Equity";
+      case '3':
+        return "Options";
+      default:
+        return "N/A";
+    }
+  };
+
   const filteredData = customers.filter((item) => {
     const itemDate = new Date(item.subscribeDate.split('T')[0]);
     const matchesSearchQuery = (item.raName && item.raName.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -301,7 +314,7 @@ const CustomersPage = () => {
                 <tr key={customer.id} className="">
                   <td className="px-6 py-4 text-center">{formatDate(customer.subscribeDate)}</td>
                   <td className='text-center'>{customer.userMobileNo}</td>
-                  <td className='text-center'>{customer.subscription || 'N/A'}</td>
+                  <td className='text-center'>{getSubscriptionName(customer.subscription)}</td>
                   <td className='text-center'>{customer.raName || 'N/A'}</td>
                   <td className='text-center'>₹{customer.amount !== null ? customer.amount : 'N/A'}</td>
                 </tr>

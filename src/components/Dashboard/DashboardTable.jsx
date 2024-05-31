@@ -50,6 +50,19 @@ const DashboardTable = () => {
     return `${day}-${month}-${year}`;
   };
 
+  const getSubscriptionName = (subscriptionId) => {
+    switch (subscriptionId) {
+      case '1':
+        return "Commodity";
+      case '2':
+        return "Equity";
+      case '3':
+        return "Options";
+      default:
+        return "N/A";
+    }
+  };
+
   return (
     <div className="relative">
       {/* Heading */}
@@ -78,7 +91,7 @@ const DashboardTable = () => {
                   <tr key={index}>
                     <td className='text-center'>{formatDate(customer.subscribeDate)}</td>
                     <td className='text-center'>{customer.userMobileNo || 'N/A'}</td>
-                    <td className='text-center'>{customer.subscription || 'N/A'}</td>
+                    <td className='text-center'>{getSubscriptionName(customer.subscription)}</td>
                     <td className='text-center'>{customer.raName || 'N/A'}</td>
                     <td className='text-center'>₹{customer.amount !== null ? customer.amount : 'N/A'}</td>
                   </tr>
