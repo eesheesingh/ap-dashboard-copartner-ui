@@ -71,6 +71,9 @@ const LeaderboardTable = () => {
     return true; // If neither start nor end date is specified, show all data
   });
 
+  // Sort data by date in descending order
+  filteredData.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
+
   // Pagination
   const dataPerPage = 10;
   const totalPages = Math.ceil(filteredData.length / dataPerPage);
@@ -82,6 +85,14 @@ const LeaderboardTable = () => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
 
   return (
@@ -182,7 +193,7 @@ const LeaderboardTable = () => {
             ) : (
               currentData.map((item, index) => (
                 <tr key={index} className='text-center'>
-                  <td>{item.userJoiningDate.split('T')[0]}</td>
+                  <td>{formatDate(item.userJoiningDate)}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
                   <td>{item.subscription === "0" ? "UnPaid" : "Paid"}</td>
                 </tr>

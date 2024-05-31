@@ -156,7 +156,8 @@ const DashboardPage = () => {
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
-          <div className="flex md:hidden flex-col md:flex-row mt-[4rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-center">
+          <div className="flex md:hidden flex-col md:flex-row mt-[4rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
+          <span className="text-lg text-left font-semibold mb-3">For Signing Up : -</span>
             <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
               <span className="md:text-lg text-sm">Referral Link</span>
               <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
@@ -355,6 +356,7 @@ const DashboardPage = () => {
               </button>
             )}
           </div>
+          (For Signing Up)
         </div>
       </div>
 

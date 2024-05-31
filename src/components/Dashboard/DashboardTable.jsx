@@ -18,6 +18,8 @@ const DashboardTable = () => {
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${dataPerPage}`);
         const result = await response.json();
         const filteredData = result.data.filter(item => item.subscription !== '0');
+        // Sort data by date in descending order
+        filteredData.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
         setData(filteredData);
         setTotalPages(Math.ceil(result.totalCount / dataPerPage));
       }
@@ -40,9 +42,13 @@ const DashboardTable = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  // const hideFirstSixDigits = (mobileNumber) => {
-  //   return mobileNumber ? mobileNumber.replace(/^(\d{6})/, '******') : 'N/A';
-  // };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   return (
     <div className="relative">
@@ -70,8 +76,8 @@ const DashboardTable = () => {
               <tbody>
                 {data.map((customer, index) => (
                   <tr key={index}>
-                    <td className='text-center'>{new Date(customer.subscribeDate).toLocaleDateString() || 'N/A'}</td>
-                    <td className='text-center'>{(customer.userMobileNo) || 'N/A'}</td>
+                    <td className='text-center'>{formatDate(customer.subscribeDate)}</td>
+                    <td className='text-center'>{customer.userMobileNo || 'N/A'}</td>
                     <td className='text-center'>{customer.subscription || 'N/A'}</td>
                     <td className='text-center'>{customer.raName || 'N/A'}</td>
                     <td className='text-center'>₹{customer.amount !== null ? customer.amount : 'N/A'}</td>

@@ -38,6 +38,12 @@ const Leader = () => {
     setNotInterested(data.notInterested);
   };
 
+  useEffect(() => {
+    console.log("Total Visits: ", totalVisits);
+    console.log("Paid Users: ", paidUsers);
+    console.log("Not Interested: ", notInterested);
+  }, [totalVisits, paidUsers, notInterested]);
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
@@ -80,7 +86,7 @@ const Leader = () => {
                       startDate={customStartDate}
                       endDate={customEndDate}
                       placeholderText="Start Date"
-                      className="bg-transparent text-white border-b border-white mb-2" // Apply custom styles here
+                      className="bg-transparent text-white border-b border-white mb-2"
                       renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                         <div className="flex justify-between items-center">
                           <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
@@ -106,7 +112,7 @@ const Leader = () => {
                       endDate={customEndDate}
                       minDate={customStartDate}
                       placeholderText="End Date"
-                      className="bg-transparent text-white border-b border-white" // Apply custom styles here
+                      className="bg-transparent text-white border-b border-white"
                       renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                         <div className="flex justify-between items-center">
                           <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>{'<'}</button>
@@ -143,7 +149,7 @@ const Leader = () => {
                 customStartDate={customStartDate}
                 customEndDate={customEndDate}
                 onDataUpdate={handleDataUpdate}
-              /> {/* Pass customDate as prop */}
+              />
             </div>
             <div className="w-full md:w-2/3 pr-0 md:pr-8 md:hidden">
               <LeaderBoardChartMob
@@ -151,7 +157,7 @@ const Leader = () => {
                 customStartDate={customStartDate}
                 customEndDate={customEndDate}
                 onDataUpdate={handleDataUpdate}
-              /> {/* Pass customDate as prop */}
+              />
             </div>
             <div className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center container-bg rounded-[30px] p-2 md:mt-0 mt-3">
               <img src={usersPurple} alt="" className="md:w-[150px] w-[100px] border-[2px] rounded-full p-4" />

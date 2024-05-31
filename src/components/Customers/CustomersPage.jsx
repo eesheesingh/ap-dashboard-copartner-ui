@@ -27,6 +27,8 @@ const CustomersPage = () => {
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${itemsPerPage}`);
         const result = await response.json();
         const filteredCustomers = result.data.filter(customer => customer.subscription !== "0");
+        // Sort data by date in descending order
+        filteredCustomers.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
         setCustomers(filteredCustomers);
         setTotalPages(Math.ceil(filteredCustomers.length / itemsPerPage));
       }
@@ -117,6 +119,14 @@ const CustomersPage = () => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
     }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   };
 
   return (
@@ -289,7 +299,7 @@ const CustomersPage = () => {
             <tbody>
               {filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((customer) => (
                 <tr key={customer.id} className="">
-                  <td className="px-6 py-4 text-center">{customer.subscribeDate.split('T')[0]}</td>
+                  <td className="px-6 py-4 text-center">{formatDate(customer.subscribeDate)}</td>
                   <td className='text-center'>{customer.userMobileNo}</td>
                   <td className='text-center'>{customer.subscription || 'N/A'}</td>
                   <td className='text-center'>{customer.raName || 'N/A'}</td>
