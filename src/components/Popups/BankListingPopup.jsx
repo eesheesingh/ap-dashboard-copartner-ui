@@ -120,20 +120,20 @@ const BankListingPopup = ({ onClose }) => {
 
     const amountValue = parseFloat(amount);
 
-    // if (!amount || isNaN(amountValue) || amountValue <= 0) {
-    //   setError('Please enter a valid amount.');
-    //   return;
-    // }
+    if (!amount || isNaN(amountValue) || amountValue <= 0) {
+      setError('Please enter a valid amount.');
+      return;
+    }
 
-    // if (amountValue < 100) {
-    //   setError('The minimum withdrawal amount is 100.');
-    //   return;
-    // }
+    if (amountValue < 100) {
+      setError('The minimum withdrawal amount is 100.');
+      return;
+    }
 
-    // if (amountValue > 100000) {
-    //   setError('The maximum withdrawal amount is 100,000.');
-    //   return;
-    // }
+    if (amountValue > 100000) {
+      setError('The maximum withdrawal amount is 100,000.');
+      return;
+    }
 
     if (!selectedItem) {
       setError('Please select a bank or UPI.');
