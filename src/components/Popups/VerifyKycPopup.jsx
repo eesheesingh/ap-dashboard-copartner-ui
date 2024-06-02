@@ -1,12 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { close } from '../../assets';
 
+const TermsPopup = ({ onClose }) => (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-[#2E374B] p-7 rounded-lg shadow-lg relative w-full max-w-md md:max-w-lg lg:max-w-xl md:max-h-[80vh] max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-white">Terms and Conditions</h2>
+        <button onClick={onClose}>
+          <img src={close} alt="Close" className="w-10 h-10" />
+        </button>
+      </div>
+      <div className="flex-grow overflow-y-auto">
+        <p className="text-[#fff] mb-6">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
+          aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
+          aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
+          aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+          occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={onClose}
+          className="bg-[#000] text-white px-4 py-2 rounded-md hover:bg-[#fff] hover:text-[#000] transition duration-300"
+        >
+          Accept
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
   const [userData, setUserData] = useState({});
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [videoURL, setVideoURL] = useState(null);
   const [videoFile, setVideoFile] = useState(null);
+  const [isTermsPopupOpen, setIsTermsPopupOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,13 +183,13 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
             Full access to in any of our products Full access to in any of{' '}
           </p>
         </div>
-        <div className="max-w-[643px] min-h-[303px] border border-[#ffffff3c] rounded-xl relative flex items-center justify-center overflow-hidden">
+        <div className="max-w-[643px] min-h-[303px] h-[303px] border border-[#ffffff3c] rounded-xl relative flex items-center justify-center overflow-hidden">
           {videoURL ? (
             <video
               src={videoURL}
               controls
               autoPlay
-              className="max-w-full max-h-full rounded-xl object-cover"
+              className="w-full h-full rounded-xl object-cover"
             />
           ) : (
             <span className="text-[#c9c9c9]">No video uploaded</span>
@@ -194,9 +232,13 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
               onChange={handleCheckboxChange2}
               className="mr-2 mt-2"
             />
-            I/ We hereby declare, represent and undertake -&gt; The information and the documents
-            submitted by me are true, correct and accurate. I am/ we are the rightful owner and/or
-            in genuine possession of the said documents/ information.
+            I/ We hereby declare, accept the
+            <span 
+              onClick={() => setIsTermsPopupOpen(true)} 
+              className="text-blue-500 underline pl-1 cursor-pointer"
+            >
+              Terms & Conditions
+            </span>.
           </label>
         </div>
 
@@ -209,6 +251,7 @@ const VerifyKycPopup = ({ onClose, onVideoUpload }) => {
           </button>
         </div>
       </div>
+      {isTermsPopupOpen && <TermsPopup onClose={() => setIsTermsPopupOpen(false)} />}
     </div>
   );
 };
