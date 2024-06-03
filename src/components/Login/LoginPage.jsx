@@ -87,11 +87,11 @@ const LoginPage = () => {
         }
       } else {
         console.error("Server response:", data.data);
-        setError("Invalid email or password. Please try again.");
+        setError("Either email or password is wrong.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred during login. Please try again.");
+      setError("Either email or password is wrong. Please try again.");
     }
 
     setLoading(false);
@@ -195,11 +195,6 @@ const LoginPage = () => {
               {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
-          {/* <div className="mt-4">
-            <button onClick={() => navigate("/reset-password", { state: { email, password } })} className="text-sm text-blue-500 hover:underline">
-              Reset Password?
-            </button>
-          </div> */}
         </div>
       </div>
     </>
