@@ -46,7 +46,10 @@ const LeaderboardTable = () => {
         const affiliateId = data.id; // Use the ID from stackIdData
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=10`);
         const result = await response.json();
-        setCustomers(result.data);
+        const filteredCustomers = result.data.filter(customer => customer.amount !== 0);
+        // Sort data by date and time in descending order
+        filteredCustomers.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
+        setCustomers(filteredCustomers);
       }
     } catch (error) {
       console.error('Error fetching data:', error);

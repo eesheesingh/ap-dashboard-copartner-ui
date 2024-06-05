@@ -18,7 +18,7 @@ const DashboardChart = ({ activeButton, customStartDate, customEndDate }) => {
           const response = await axios.get(
             `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
           );
-          console.log("", response);
+          // console.log("", response);
 
           if (response.data.isSuccess) {
             const apiData = response.data.data;

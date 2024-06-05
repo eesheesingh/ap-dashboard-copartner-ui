@@ -17,7 +17,7 @@ const DashboardTable = () => {
         const affiliateId = data.id; // Use the ID from stackIdData
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${dataPerPage}`);
         const result = await response.json();
-        const filteredData = result.data.filter(item => item.subscription !== '0');
+        const filteredData = result.data.filter(item => item.amount !== 0);
         // Sort data by date in descending order
         filteredData.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
         setData(filteredData);

@@ -12,6 +12,8 @@ import Marketing from "./components/Marketing/Marketing.jsx";
 import LoginPage from "./components/Login/LoginPage.jsx";
 import ResetPassword from "./components/Login/ResetPassword.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
+import ForgotPassword from "./components/Login/ForgotPAssword.jsx";
+import SetNewPassword from "./components/Login/SetNewPassword.jsx";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/set-new-password" element={<SetNewPassword />} />
         <Route
           path="*"
           element={

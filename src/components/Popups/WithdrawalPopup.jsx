@@ -39,7 +39,7 @@ const WithdrawalPopup = ({ isOpen, onClose }) => {
 
   const handleVerify = () => {
     // Implement PAN card verification logic here
-    console.log('PAN Card:', panCard);
+    // console.log('PAN Card:', panCard);
     // Open the KYC verification popup
     setVerifyPopupOpen(true);
   }

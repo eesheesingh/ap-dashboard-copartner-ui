@@ -4,7 +4,6 @@ import { close } from '../../assets';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const AddBankPopup = ({ onClose, addBankDetails }) => {
   const [bankDetails, setBankDetails] = useState({
     accountNumber: '',
@@ -16,6 +15,7 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
 
   const [acknowledged, setAcknowledged] = useState(false); // State to track acknowledgment
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -45,10 +45,13 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
       return;
     }
 
+    setIsSubmitting(true); // Disable the button while submitting
+
     try {
       const affiliatePartnerData = localStorage.getItem('stackIdData');
       if (!affiliatePartnerData) {
         setError('Affiliate Partner data not found in localStorage');
+        setIsSubmitting(false);
         return;
       }
 
@@ -79,6 +82,8 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
       }
     } catch (err) {
       setError('An error occurred while adding bank details. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Re-enable the button after submission
     }
   };
 
@@ -129,13 +134,13 @@ const AddBankPopup = ({ onClose, addBankDetails }) => {
         </div>
         <div className="flex justify-center mt-1">
          {/* Submit button */}
-        <div className="flex justify-center mt-8">
-          <button onClick={handleSubmit} className="px-10 py-2 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#FFF] transition duration-300 rounded-md hover:[#000] focus:outline-none focus:bg-[#000]">
-            Add
-          </button>
+          <div className="flex justify-center mt-8">
+            <button onClick={handleSubmit} disabled={isSubmitting} className={`px-10 py-2 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#FFF] transition duration-300 rounded-md focus:outline-none focus:bg-[#000] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              Add
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

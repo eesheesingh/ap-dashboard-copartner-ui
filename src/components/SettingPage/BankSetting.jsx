@@ -3,6 +3,8 @@ import axios from 'axios';
 import { deleteIcon } from '../../assets'; // Ensure necessary imports
 import AddBankPopup from '../Popups/AddBankPopup';
 import AddUpiPopup from '../Popups/AddUpiPopup';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BankSetting = () => {
   const [isAddBankPopupOpen, setIsAddBankPopupOpen] = useState(false);
@@ -30,11 +32,11 @@ const BankSetting = () => {
   const deleteBankDetail = async (id, index) => {
     try {
       const response = await axios.delete(`https://copartners.in:5135/api/Withdrawal/${id}`);
-      console.log('Delete response:', response);
       if (response.data.isSuccess) {
         const updatedBankDetails = [...bankDetails];
         updatedBankDetails.splice(index, 1);
         setBankDetails(updatedBankDetails);
+        toast.success('Bank detail has been deleted');
       } else {
         setError(`Failed to delete bank detail: ${response.data.displayMessage}`);
       }
@@ -42,7 +44,7 @@ const BankSetting = () => {
       setError(`Error deleting bank detail: ${error.message}`);
     }
   };
-  
+
   const deleteUpiDetail = async (id, index) => {
     try {
       const response = await axios.delete(`https://copartners.in:5135/api/Withdrawal/${id}`);
@@ -50,6 +52,7 @@ const BankSetting = () => {
         const updatedUpiDetails = [...upiDetails];
         updatedUpiDetails.splice(index, 1);
         setUpiDetails(updatedUpiDetails);
+        toast.success('UPI detail has been deleted');
       } else {
         setError(`Failed to delete UPI detail: ${response.data.displayMessage}`);
       }
@@ -113,6 +116,7 @@ const BankSetting = () => {
 
   return (
     <div className='p-4 border-[1px] border-[#fff3] rounded-xl'>
+      <ToastContainer />
       {/* Bank Details */}
       <div className='flex justify-between items-center'>
         <h2 className="text-left md:text-[22px] xl:text-[40px] font-semibold">Bank Details</h2>

@@ -270,12 +270,12 @@ const Sidebar = () => {
                   {isHovered ? (
                     <>
                       Logout
-                      <img src={loginBtn} alt="" className="inline-block w-4 mr-1" />
+                      {/* <img src={loginBtn} alt="" className="inline-block w-4 mr-1" /> */}
                     </>
                   ) : (
                     <>
                       Logout
-                      <img src={loginBlack} alt="" className="inline-block w-4 mr-1" />
+                      {/* <img src={loginBlack} alt="" className="inline-block w-4 mr-1" /> */}
                     </>
                   )}
                 </span>

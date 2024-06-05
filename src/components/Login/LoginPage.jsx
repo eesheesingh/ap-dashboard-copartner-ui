@@ -22,7 +22,6 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
-      console.log("StackId authentication response:", data);
 
       if (response.ok && data.isSuccess) {
         return data.data;
@@ -79,7 +78,6 @@ const LoginPage = () => {
             navigate("/");
           }
 
-          // Set timeout to logout after 24 hours
           const timeout = setTimeout(() => {
             handleLogout();
           }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
@@ -195,6 +193,14 @@ const LoginPage = () => {
               {loading ? "Logging in..." : "Log In"}
             </button>
           </form>
+          <div className="mt-4">
+            <button
+              className="text-blue-500 hover:underline"
+              onClick={() => navigate("/forgot-password")}
+            >
+              Forgot Your Password?
+            </button>
+          </div>
         </div>
       </div>
     </>

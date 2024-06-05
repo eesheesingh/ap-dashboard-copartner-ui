@@ -38,11 +38,11 @@ const Leader = () => {
     setNotInterested(data.notInterested);
   };
 
-  useEffect(() => {
-    console.log("Total Visits: ", totalVisits);
-    console.log("Paid Users: ", paidUsers);
-    console.log("Not Interested: ", notInterested);
-  }, [totalVisits, paidUsers, notInterested]);
+  // useEffect(() => {
+  //   console.log("Total Visits: ", totalVisits);
+  //   console.log("Paid Users: ", paidUsers);
+  //   console.log("Not Interested: ", notInterested);
+  // }, [totalVisits, paidUsers, notInterested]);
 
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">

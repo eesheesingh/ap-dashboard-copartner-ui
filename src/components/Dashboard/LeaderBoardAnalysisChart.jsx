@@ -70,7 +70,7 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
               monthlyData[month].usersLeft += notInterested;
             });
 
-            console.log("Processed Data: ", { daily: Object.values(dailyData), weekly: weeklyData, monthly: monthlyData });
+            // console.log("Processed Data: ", { daily: Object.values(dailyData), weekly: weeklyData, monthly: monthlyData });
 
             setData({
               daily: Object.values(dailyData),
@@ -97,7 +97,7 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
     const totalVisits = selectedData.reduce((sum, item) => sum + item.totalVisit, 0);
     const paidUsers = selectedData.reduce((sum, item) => sum + item.paidUsers, 0);
     const notInterested = selectedData.reduce((sum, item) => sum + item.usersLeft, 0);
-    console.log("Selected Data: ", selectedData);
+    // console.log("Selected Data: ", selectedData);
     onDataUpdate({ totalVisits, paidUsers, notInterested });
   }, [data, activeButton, customStartDate, customEndDate]);
 

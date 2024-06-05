@@ -11,6 +11,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
 
   const [acknowledged, setAcknowledged] = useState(false); // State to track acknowledgment
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false); // State to track form submission
 
   // Set initial UPI ID when the component mounts
   useEffect(() => {
@@ -39,10 +40,13 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
       return;
     }
 
+    setIsSubmitting(true); // Disable the button while submitting
+
     try {
       const affiliatePartnerData = localStorage.getItem('stackIdData');
       if (!affiliatePartnerData) {
         setError('Affiliate Partner data not found in localStorage');
+        setIsSubmitting(false);
         return;
       }
 
@@ -71,6 +75,8 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
       }
     } catch (err) {
       setError('An error occurred while adding UPI details. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Re-enable the button after submission
     }
   };
 
@@ -104,7 +110,7 @@ const AddUpiPopup = ({ onClose, addUpiDetails, initialUpiID }) => {
           </label>
         </div>
         <div className="flex justify-center mt-8">
-          <button onClick={handleSubmit} className="w-full px-10 py-2 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#FFF] transition duration-300 rounded-md hover:[#000] focus:outline-none focus:bg-[#000]">
+          <button onClick={handleSubmit} disabled={isSubmitting} className={`w-full px-10 py-2 bg-[#fff] hover:bg-[#000] text-[#000] hover:text-[#FFF] transition duration-300 rounded-md focus:outline-none focus:bg-[#000] ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
             {initialUpiID ? 'Update' : 'Add'}
           </button>
         </div>

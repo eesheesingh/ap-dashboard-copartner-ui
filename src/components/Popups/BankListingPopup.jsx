@@ -19,6 +19,7 @@ const BankListingPopup = ({ onClose }) => {
   const [amount, setAmount] = useState('');
   const [notifications, setNotifications] = useState([]);
   const [isKycVerified, setIsKycVerified] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,7 @@ const BankListingPopup = ({ onClose }) => {
           const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/${affiliateId}`);
           if (response.ok) {
             const result = await response.json();
-            setIsKycVerified(result.data.isKyc);
+            setIsKycVerified(result.data.isKYC);
           } else {
             console.error('Failed to fetch KYC status.');
           }
@@ -117,36 +118,43 @@ const BankListingPopup = ({ onClose }) => {
 
   const handleVerify = async () => {
     setError('');
+    setIsWithdrawing(true);
 
     const amountValue = parseFloat(amount);
 
     if (!amount || isNaN(amountValue) || amountValue <= 0) {
       setError('Please enter a valid amount.');
+      setIsWithdrawing(false);
       return;
     }
 
     if (amountValue < 100) {
       setError('The minimum withdrawal amount is 100.');
+      setIsWithdrawing(false);
       return;
     }
 
     if (amountValue > 100000) {
       setError('The maximum withdrawal amount is 100,000.');
+      setIsWithdrawing(false);
       return;
     }
 
     if (!selectedItem) {
       setError('Please select a bank or UPI.');
+      setIsWithdrawing(false);
       return;
     }
 
     if (amountValue > withdrawalBalance) {
       setError('Insufficient balance.');
+      setIsWithdrawing(false);
       return;
     }
 
     if (!isKycVerified) {
       setVerifyPopupOpen(true);
+      setIsWithdrawing(false);
       return;
     }
 
@@ -168,6 +176,8 @@ const BankListingPopup = ({ onClose }) => {
       }
     } catch (error) {
       setError(`Error creating withdrawal request: ${error.message}`);
+    } finally {
+      setIsWithdrawing(false);
     }
   };
 
@@ -317,9 +327,9 @@ const BankListingPopup = ({ onClose }) => {
           <button
             className="bg-[#fff] text-[#000] hover:bg-[#000] hover:text-[#fff] transition duration-300 font-bold py-2 px-7 rounded focus:outline-none focus:shadow-outline"
             onClick={handleVerify}
-            disabled={withdrawalBalance === 0}
+            disabled={withdrawalBalance === 0 || isWithdrawing}
           >
-            Withdrawal
+            {isWithdrawing ? 'Withdrawing...' : 'Withdrawal'}
           </button>
         </div>
 

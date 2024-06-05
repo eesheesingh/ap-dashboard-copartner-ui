@@ -26,8 +26,8 @@ const CustomersPage = () => {
         const affiliateId = data.id; // Use the ID from stackIdData
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${itemsPerPage}`);
         const result = await response.json();
-        const filteredCustomers = result.data.filter(customer => customer.subscription !== "0");
-        // Sort data by date in descending order
+        const filteredCustomers = result.data.filter(customer => customer.amount !== 0);
+        // Sort data by date and time in descending order
         filteredCustomers.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
         setCustomers(filteredCustomers);
         setTotalPages(Math.ceil(filteredCustomers.length / itemsPerPage));
@@ -148,8 +148,6 @@ const CustomersPage = () => {
         <div className='flex justify-between items-center'>
           <span className='md:text-[30px] text-[20px] font-semibold'>Paid Users Listing</span>
           <div className='flex gap-5'>
-            {/* Commented out search */}
-            
             <div className="relative md:flex hidden">
               <img
                 src={searchIcon}
@@ -164,7 +162,6 @@ const CustomersPage = () => {
                 className="pl-[3rem] pr-4 bg-[#2E323C] w-full h-[55px] text-white rounded-[10px]"
               />
             </div>
-           
             <button
               className="bg-transparent border-[1px] text-white px-5 py-3 rounded-lg transition duration-300 hover:bg-[#fff] hover:text-[#000]"
               onClick={handleFilterClick}
@@ -185,8 +182,6 @@ const CustomersPage = () => {
             </button>
           </div>
         </div>
-        {/* Commented out mobile search */}
-        
         <div className="relative md:hidden mt-2">
           <img
             src={searchIcon}
@@ -201,7 +196,6 @@ const CustomersPage = () => {
             className="pl-[3rem] pr-4 bg-[#2E323C] w-full h-[55px] text-white rounded-[10px]"
           />
         </div>
-       
         {showFilterModal && (
           <div className="absolute right-0 mt-5 mr-4 z-10">
             <div className="bg-gradient rounded-[30px] p-8">

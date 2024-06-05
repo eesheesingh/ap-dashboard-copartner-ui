@@ -17,7 +17,7 @@ const DashboardPage = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
-  const [copiedReferralCode, setCopiedReferralCode] = useState(false);
+  const [copiedLandingLink, setCopiedLandingLink] = useState(false);
   const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [affiliateData, setAffiliateData] = useState(null);
@@ -26,7 +26,9 @@ const DashboardPage = () => {
   const [notInterested, setNotInterested] = useState(0);
   const [walletBalance, setWalletBalance] = useState(null);
   const [referralLink, setReferralLink] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [landingLink, setLandingLink] = useState('');
+  const [loadingReferral, setLoadingReferral] = useState(false);
+  const [loadingLanding, setLoadingLanding] = useState(false);
 
   const fetchWalletBalance = async (affiliateId) => {
     try {
@@ -43,7 +45,7 @@ const DashboardPage = () => {
   };
 
   const generateReferralLink = async (affiliateId) => {
-    setLoading(true);
+    setLoadingReferral(true);
     try {
       const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/GenerateReferralLink/${affiliateId}`);
       const result = await response.json();
@@ -55,7 +57,23 @@ const DashboardPage = () => {
     } catch (error) {
       console.error('Error fetching referral link:', error);
     }
-    setLoading(false);
+    setLoadingReferral(false);
+  };
+
+  const fetchLandingLink = async (affiliateId) => {
+    setLoadingLanding(true);
+    try {
+      const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/Ad1LandingPage/${affiliateId}`);
+      const result = await response.json();
+      if (result.isSuccess) {
+        setLandingLink(result.data);
+      } else {
+        console.error('Failed to fetch landing link');
+      }
+    } catch (error) {
+      console.error('Error fetching landing link:', error);
+    }
+    setLoadingLanding(false);
   };
 
   const toggleBankListingPopup = () => {
@@ -63,7 +81,7 @@ const DashboardPage = () => {
   };
 
   const referralLinkRef = useRef(null);
-  const referralCodeRef = useRef(null);
+  const landingLinkRef = useRef(null);
 
   useEffect(() => {
     const fetchAffiliateData = async () => {
@@ -75,6 +93,7 @@ const DashboardPage = () => {
           setReferralCode(data.referralCode || '');
           fetchWalletBalance(data.id);
           generateReferralLink(data.id);
+          fetchLandingLink(data.id);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -93,14 +112,12 @@ const DashboardPage = () => {
     }
   };
 
-  const copyReferralCodeToClipboard = () => {
-    if (referralCodeRef.current) {
-      const fullCode = referralCodeRef.current.innerText;
-      navigator.clipboard.writeText(fullCode);
-      setCopiedReferralCode(true);
-      setTimeout(() => {
-        setCopiedReferralCode(false);
-      }, 3000);
+  const copyLandingLinkToClipboard = () => {
+    if (landingLinkRef.current) {
+      navigator.clipboard.writeText(landingLinkRef.current.innerText).then(() => {
+        setCopiedLandingLink(true);
+        setTimeout(() => setCopiedLandingLink(false), 2000);
+      });
     }
   };
 
@@ -180,10 +197,43 @@ const DashboardPage = () => {
                   </>
                 ) : (
                   <button
-                    onClick={generateReferralLink}
+                    onClick={() => generateReferralLink(affiliateData.id)}
                     className="flex items-center mt-[2px]"
-                    disabled={loading}>
-                    {loading ? 'Just a sec...' : 'View Link'}
+                    disabled={loadingReferral}>
+                    {loadingReferral ? 'Just a sec...' : 'View Link'}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="flex md:hidden flex-col md:flex-row mt-[1rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
+          <span className="text-lg text-left font-semibold mb-3">For Landing Link : -</span>
+            <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
+              <span className="md:text-lg text-sm">Landing Link</span>
+              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                {landingLink ? (
+                  <>
+                    <span ref={landingLinkRef} className="mr-1 md:block truncate-link">
+                      {landingLink}
+                    </span>
+                    <button
+                      onClick={copyLandingLinkToClipboard}
+                      className="flex items-center mt-[2px]"
+                    >
+                      |
+                      {copiedLandingLink ? (
+                        <img src={tick} alt="Copied" className="w-5" />
+                      ) : (
+                        <img src={clipboard} alt="Copy" className="w-5" />
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => fetchLandingLink(affiliateData.id)}
+                    className="flex items-center mt-[2px]"
+                    disabled={loadingLanding}>
+                    {loadingLanding ? 'Just a sec...' : 'View Link'}
                   </button>
                 )}
               </div>
@@ -348,15 +398,50 @@ const DashboardPage = () => {
               </>
             ) : (
               <button
-                onClick={generateReferralLink}
+                onClick={() => generateReferralLink(affiliateData.id)}
                 className="flex items-center mt-[2px]"
-                disabled={loading}
+                disabled={loadingReferral}
               >
-                {loading ? 'Just a sec...' : 'View Link'}
+                {loadingReferral ? 'Just a sec...' : 'View Link'}
               </button>
             )}
           </div>
           (For Signing Up)
+        </div>
+      </div>
+
+      <div className="md:flex flex-col hidden md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+        <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
+          <span className="md:text-lg text-sm">Landing Link</span>
+          <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+            {landingLink ? (
+              <>
+                <span ref={landingLinkRef} className="mr-1 md:block">
+                  {landingLink}
+                </span>
+                <button
+                  onClick={copyLandingLinkToClipboard}
+                  className="flex items-center mt-[2px]"
+                >
+                  |
+                  {copiedLandingLink ? (
+                    <img src={tick} alt="Copied" className="w-5" />
+                  ) : (
+                    <img src={clipboard} alt="Copy" className="w-5" />
+                  )}
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => fetchLandingLink(affiliateData.id)}
+                className="flex items-center mt-[2px]"
+                disabled={loadingLanding}
+              >
+                {loadingLanding ? 'Just a sec...' : 'View Link'}
+              </button>
+            )}
+          </div>
+          (Ad1 Link)
         </div>
       </div>
 
