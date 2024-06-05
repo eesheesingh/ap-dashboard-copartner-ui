@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import WalletTable from './WalletTable';
@@ -78,36 +79,67 @@ const WalletPage = () => {
     };
   }, [customPickerRef]);
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
     <div className="xl:pt-3 md:p-4 sm:ml-[10rem] text-white">
-      <div className="md:p-1 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 xl:mt-[70px] md:mt-14 mt-[70px]">
-        <div className="text-white text-center">
+      <motion.div
+        className="md:p-1 p-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 xl:mt-[70px] md:mt-14 mt-[70px]"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.div
+          className="text-white text-center"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           <div className="flex md:flex-row flex-col justify-between mt-2">
-            <h2 className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full">Earning Analysis</h2>
+            <motion.h2
+              className="md:text-left text-left md:text-[22px] text-[30px] xl:text-[40px] font-semibold w-full"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
+              Earning Analysis
+            </motion.h2>
             <div className="space-x-4 md:mr-1 xl:mr-[20px] flex w-full md:justify-end md:items-center xl:items-center justify-start">
               <div>
-                <button
+                <motion.button
                   className={`button ${activeButtonFirstSection === 'weekly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
                   onClick={() => setActiveButtonFirstSection('weekly')}
+                  initial="hidden"
+                  animate="visible"
+                  variants={containerVariants}
                 >
                   Weekly
-                </button>
+                </motion.button>
               </div>
               <div>
-                <button
+                <motion.button
                   className={`button ${activeButtonFirstSection === 'monthly' ? 'bg-[#fff] text-[#000]' : 'bg-transparent'} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded`}
                   onClick={() => setActiveButtonFirstSection('monthly')}
+                  initial="hidden"
+                  animate="visible"
+                  variants={containerVariants}
                 >
                   Monthly
-                </button>
+                </motion.button>
               </div>
               <div className="relative inline-block">
-                <button
+                <motion.button
                   className={`button ${activeButtonFirstSection === "custom" ? "bg-[#fff] text-[#000]" : "bg-transparent"} border-[1px] hover:bg-[#fff] hover:text-[#000] transition duration-300 py-2 px-2 md:px-6 rounded flex items-center`}
                   onClick={handleCustomButtonClick}
+                  initial="hidden"
+                  animate="visible"
+                  variants={containerVariants}
                 >
                   Custom
-                </button>
+                </motion.button>
                 {isCustomPickerVisible && (
                   <div ref={customPickerRef} className="absolute top-full right-0 mt-2 z-10 bg-[#2b2d42] p-4 rounded-lg shadow-lg flex flex-col gap-3">
                     <DatePicker
@@ -177,7 +209,12 @@ const WalletPage = () => {
           </div>
 
           <div className="flex md:flex-row flex-col mt-8 gap-3 md:justify-center">
-            <div className="w-full xl:[59%] md:w-2/3 container-bg rounded-[30px]">
+            <motion.div
+              className="w-full xl:[59%] md:w-2/3 container-bg rounded-[30px]"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
               <div className='flex md:flex-row flex-col xl:p-7 md:p-4 justify-between items-center'>
                 <h3 className="text-left font-semibold md:text-[30px] text-[28px] xl:text-[50px]">Total Earning</h3>
               </div>
@@ -216,17 +253,22 @@ const WalletPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
             <div className="w-full justify-center md:w-[40%] cursor-pointer md:flex hidden">
               <WalletChart activeButton={activeButtonFirstSection} customStartDate={customStartDate} customEndDate={customEndDate} />
             </div>
             {isBankListingPopupOpen && <BankListingPopup onClose={toggleBankListingPopup} />}
           </div>
-        </div>
-        <div className='mt-5'>
+        </motion.div>
+        <motion.div
+          className='mt-5'
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
           <WalletTable />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

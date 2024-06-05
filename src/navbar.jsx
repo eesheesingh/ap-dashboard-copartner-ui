@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { dummyUser, logo, notification, searchIcon, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon, customerActive, userImg, close } from './assets';
 import styles from './style';
 import EarningPopup from './components/EarningPopup';
@@ -111,7 +112,13 @@ const Sidebar = () => {
 
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
-      <nav className="fixed left-0 top-0 z-50 w-full bg-[#22262F]">
+      <motion.nav
+        className="fixed left-0 top-0 z-50 w-full bg-[#22262F]"
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 120 }}
+        key={location.pathname}
+      >
         <div className="px-3 py-4 lg:px-5 lg:pr-[4rem] lg:pl-3">
           <div className="flex items-center md:justify-between justify-between">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -190,7 +197,7 @@ const Sidebar = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </motion.nav>
       <aside
         id="logo-sidebar"
         className={`fixed top-2 left-0 z-40 w-[12rem] h-screen md:pt-[90px] pt-[100px] transition-transform ${isSidebarOpen ? '' : '-translate-x-full'} bg-[#22262F] sm:translate-x-0`}
@@ -270,12 +277,10 @@ const Sidebar = () => {
                   {isHovered ? (
                     <>
                       Logout
-                      {/* <img src={loginBtn} alt="" className="inline-block w-4 mr-1" /> */}
                     </>
                   ) : (
                     <>
                       Logout
-                      {/* <img src={loginBlack} alt="" className="inline-block w-4 mr-1" /> */}
                     </>
                   )}
                 </span>

@@ -106,7 +106,7 @@ const DocumentSetting = () => {
       <div className='flex flex-row pt-3 md:items-center md:justify-start items-center justify-center flex-wrap'>
         {kycVideoPath && (
           <div className="flex flex-col justify-center items-center mx-2">
-            <video src={kycVideoPath} controls className="mt-2 w-40 h-40 object-cover" />
+            <video src={kycVideoPath} controls className="mt-2 w-40 h-40 object-cover rounded-xl" />
             <h3 className="text-lg font-semibold">KYC Video</h3>
           </div>
         )}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { customBtn, graph, graph2, usersPurple } from "../../assets";
@@ -159,7 +160,12 @@ const Leader = () => {
                 onDataUpdate={handleDataUpdate}
               />
             </div>
-            <div className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center container-bg rounded-[30px] p-2 md:mt-0 mt-3">
+            <motion.div
+              className="leaderDiv w-full md:w-1/3 flex md:flex-col justify-center items-center container-bg rounded-[30px] p-2 md:mt-0 mt-3"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <img src={usersPurple} alt="" className="md:w-[150px] w-[100px] border-[2px] rounded-full p-4" />
               <div className="px-4">
                 <h3 className="text-left md:text-[3rem] text-[1.7rem] xl:text-[4rem] font-bold text-gradient">Leader Board</h3>
@@ -176,11 +182,17 @@ const Leader = () => {
                   <span className="font-semibold text-[#D0667A]">{notInterested}</span>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
-        <LeaderboardTable />
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <LeaderboardTable />
+        </motion.div>
         {/* <DataSampleFilter /> */}
       </div>
     </div>

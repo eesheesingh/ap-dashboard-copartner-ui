@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { call, card, cardHolder, mail, userImg, clipboard, tick, editBtn, editBlack, address, state } from '../../assets';
 import DocumentSetting from './DocumentSetting';
 import BankSetting from './BankSetting';
@@ -119,11 +120,31 @@ const Setting = () => {
     localStorage.setItem("stackIdData", JSON.stringify(updatedProfile));
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
-      <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-[5rem] mt-[5rem]">
-        <div className="text-white text-left">
-          <div className='container-bg rounded-[20px] p-3 px-10 md:block hidden'>
+      <motion.div
+        className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-[5rem] mt-[5rem]"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.div
+          className="text-white text-left"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div
+            className='container-bg rounded-[20px] p-3 px-10 md:block hidden'
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <div className='profileCard w-[100%] flex items-center justify-between'>
               <div className='w-2/3'>
                 <span className='text-gradient text-[70px] font-bold'>{profile.name}</span>
@@ -228,21 +249,36 @@ const Setting = () => {
                 </div>
               </div>
             )}
-          </div>
+          </motion.div>
 
-          <div className='md:hidden'>
+          <motion.div
+            className='md:hidden'
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <ProfileCardMob />
-          </div>
+          </motion.div>
 
-          <div className='my-5'>
+          <motion.div
+            className='my-5'
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <DocumentSetting />
-          </div>
+          </motion.div>
 
-          <div className='my-5'>
+          <motion.div
+            className='my-5'
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+          >
             <BankSetting />
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
       <EditProfilePopup 
         isOpen={isEditProfileOpen} 
         onClose={() => setIsEditProfileOpen(false)} 
