@@ -37,19 +37,18 @@ const LeaderboardTable = () => {
     setCurrentPage(1); // Reset current page when dates are cleared
   };
 
-  const fetchData = async (page) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const storedStackIdData = localStorage.getItem("stackIdData");
       if (storedStackIdData) {
         const data = JSON.parse(storedStackIdData);
         const affiliateId = data.id; // Use the ID from stackIdData
-        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=10`);
+        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`);
         const result = await response.json();
-        const filteredCustomers = result.data.filter(customer => customer.amount !== 0);
         // Sort data by date and time in descending order
-        filteredCustomers.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
-        setCustomers(filteredCustomers);
+        result.data.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
+        setCustomers(result.data);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -59,8 +58,8 @@ const LeaderboardTable = () => {
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData();
+  }, []);
 
   const filteredData = customers.filter((item) => {
     const itemDate = new Date(item.userJoiningDate.split('T')[0]);
@@ -98,17 +97,8 @@ const LeaderboardTable = () => {
     return `${day}-${month}-${year}`;
   };
 
-  const getSubscriptionName = (subscriptionId) => {
-    switch (subscriptionId) {
-      case '1':
-        return "Commodity";
-      case '2':
-        return "Equity";
-      case '3':
-        return "Options";
-      default:
-        return "N/A";
-    }
+  const getSubscriptionStatus = (subscriptionId) => {
+    return subscriptionId === "0" ? "Unpaid" : "Paid";
   };
 
   return (
@@ -144,7 +134,7 @@ const LeaderboardTable = () => {
               startDate={startDate}
               endDate={endDate}
               placeholderText="From Date"
-              className="bg-transparent text-white border-b border-white" // Apply custom styles here
+              className="bg-transparent text-white border-b border-white"
               renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                 <div className="flex justify-center">
                   <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
@@ -170,7 +160,7 @@ const LeaderboardTable = () => {
               endDate={endDate}
               minDate={startDate}
               placeholderText="To Date"
-              className="bg-transparent text-white border-b border-white" // Apply custom styles here
+              className="bg-transparent text-white border-b border-white"
               renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
                 <div className="flex justify-center">
                   <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
@@ -211,7 +201,7 @@ const LeaderboardTable = () => {
                 <tr key={index} className='text-center'>
                   <td>{formatDate(item.userJoiningDate)}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
-                  <td>{getSubscriptionName(item.subscription)}</td>
+                  <td>{getSubscriptionStatus(item.subscription)}</td>
                 </tr>
               ))
             )}

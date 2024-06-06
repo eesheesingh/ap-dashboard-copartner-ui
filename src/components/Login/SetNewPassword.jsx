@@ -3,12 +3,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import queryString from "query-string";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { signupBg, close } from "../../assets";
+import { signupBg, close, showPassword, hidePassword } from "../../assets";
 
 const SetNewPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
+  const [showConfirmPasswordField, setShowConfirmPasswordField] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -114,22 +116,48 @@ const SetNewPassword = () => {
             className="flex flex-col gap-4 text-white"
             onSubmit={handleSubmit}
           >
-            <input
-              type="password"
-              placeholder="New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-              required
-            />
-            <input
-              type="password"
-              placeholder="Confirm New Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPasswordField ? "text" : "password"}
+                placeholder="New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent w-full"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPasswordField(!showPasswordField)}
+                className="absolute right-3 top-3"
+              >
+                <img
+                  src={showPasswordField ? hidePassword : showPassword}
+                  className="w-6"
+                  alt="toggle password visibility"
+                />
+              </button>
+            </div>
+            <div className="relative">
+              <input
+                type={showConfirmPasswordField ? "text" : "password"}
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="text-left px-4 py-3 border border-[#ffffff34] rounded-xl focus:outline-none focus:border-white-500 bg-transparent w-full"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPasswordField(!showConfirmPasswordField)}
+                className="absolute right-3 top-3"
+              >
+                <img
+                  src={showConfirmPasswordField ? hidePassword : showPassword}
+                  className="w-6"
+                  alt="toggle password visibility"
+                />
+              </button>
+            </div>
             <button
               type="submit"
               className={`bg-white hover:bg-black hover:text-white text-black transition duration-300 font-semibold text-[20px] py-3 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${

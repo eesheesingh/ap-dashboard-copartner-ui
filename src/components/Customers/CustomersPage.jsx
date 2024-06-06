@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { filterBlack, filterBtn, leftArrow, rightArrow, searchIcon } from '../../assets';
+import { useNavigate } from 'react-router-dom';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
   const [sortBy, setSortBy] = useState('none');
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -16,32 +18,43 @@ const CustomersPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const itemsPerPage = 10;
+  const navigate = useNavigate();
 
-  const fetchData = async (page) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const storedStackIdData = localStorage.getItem("stackIdData");
       if (storedStackIdData) {
         const data = JSON.parse(storedStackIdData);
         const affiliateId = data.id; // Use the ID from stackIdData
-        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${itemsPerPage}`);
+        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`);
         const result = await response.json();
-        const filteredCustomers = result.data.filter(customer => customer.amount !== 0);
+
+        const filteredCustomers = result.data.filter(customer => customer.amount !== 0 && customer.amount !== null);
+
         // Sort data by date and time in descending order
         filteredCustomers.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
+
         setCustomers(filteredCustomers);
+        setFilteredData(filteredCustomers);
         setTotalPages(Math.ceil(filteredCustomers.length / itemsPerPage));
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+      alert('Nothing to show in the data');
+      navigate(-1); // Navigate back to the previous page
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -52,13 +65,13 @@ const CustomersPage = () => {
   };
 
   const handleSort = (type) => {
-    let sortedCustomers = [...customers];
+    let sortedCustomers = [...filteredData];
     if (type === 'price') {
       sortedCustomers.sort((a, b) => a.amount - b.amount);
     } else if (type === 'price_reverse') {
       sortedCustomers.sort((a, b) => b.amount - a.amount);
     }
-    setCustomers(sortedCustomers);
+    setFilteredData(sortedCustomers);
   };
 
   const handleOptionChange = (option) => {
@@ -76,7 +89,7 @@ const CustomersPage = () => {
     setEndDate(null);
     setSearchQuery('');
     setShowFilterModal(false);
-    fetchData(currentPage);
+    setFilteredData(customers);
   };
 
   const handleApplyFilter = () => {
@@ -113,11 +126,12 @@ const CustomersPage = () => {
     }
   };
 
-  const filteredData = customers.filter((item) => {
+  const filteredDataByDateAndSearch = customers.filter((item) => {
+    if (!item.subscribeDate) return false;
     const itemDate = new Date(item.subscribeDate.split('T')[0]);
     const matchesSearchQuery = (item.raName && item.raName.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.amount && item.amount.toString().includes(searchQuery));
-    
+
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate && matchesSearchQuery;
     } else if (startDate) {
@@ -128,6 +142,10 @@ const CustomersPage = () => {
     return matchesSearchQuery;
   });
 
+  useEffect(() => {
+    setFilteredData(filteredDataByDateAndSearch);
+  }, [startDate, endDate, searchQuery, customers]);
+
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
@@ -135,6 +153,7 @@ const CustomersPage = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');

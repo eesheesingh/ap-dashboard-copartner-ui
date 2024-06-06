@@ -42,7 +42,8 @@ const ForgotPassword = () => {
         toast.success("Token has been sent to your mail");
         setSuccessMessage("Check Your Mail");
       } else {
-        toast.error("Failed to send token. Please try again.");
+        const errorMessage = data.errorMessages?.[0] || "Failed to send token. Please try again.";
+        toast.error(errorMessage);
       }
     } catch (error) {
       console.error("Forgot password error:", error);

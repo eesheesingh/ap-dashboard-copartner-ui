@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { parseISO, format, addDays, startOfWeek, isWithinInterval } from 'date-fns';
 
 const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onDataUpdate }) => {
@@ -16,7 +16,7 @@ const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onD
           const affiliateId = stackIdData.id;
 
           const response = await axios.get(
-            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
+            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`
           );
 
           if (response.data.isSuccess) {
@@ -70,8 +70,6 @@ const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onD
               monthlyData[month].usersLeft += notInterested;
             });
 
-            // console.log("Processed Data: ", { daily: Object.values(dailyData), weekly: weeklyData, monthly: monthlyData });
-
             setData({
               daily: Object.values(dailyData),
               weekly: weeklyData,
@@ -97,7 +95,6 @@ const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onD
     const totalVisits = selectedData.reduce((sum, item) => sum + item.totalVisit, 0);
     const paidUsers = selectedData.reduce((sum, item) => sum + item.paidUsers, 0);
     const notInterested = selectedData.reduce((sum, item) => sum + item.usersLeft, 0);
-    // console.log("Selected Data: ", selectedData);
     onDataUpdate({ totalVisits, paidUsers, notInterested });
   }, [data, activeButton, customStartDate, customEndDate]);
 

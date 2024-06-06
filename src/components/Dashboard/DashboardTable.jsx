@@ -4,24 +4,30 @@ import { leftArrow, rightArrow } from '../../assets';
 const DashboardTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const dataPerPage = 10;
 
-  const fetchData = async (page) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
       const storedStackIdData = localStorage.getItem("stackIdData");
       if (storedStackIdData) {
         const data = JSON.parse(storedStackIdData);
         const affiliateId = data.id; // Use the ID from stackIdData
-        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=${page}&pageSize=${dataPerPage}`);
+        const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`);
         const result = await response.json();
-        const filteredData = result.data.filter(item => item.amount !== 0);
+
+        // Filter data to exclude items with amount or subscription as 0 or null
+        const filteredData = result.data.filter(item => item.amount !== 0 && item.amount !== null && item.subscription !== "0" && item.subscription !== null);
+
         // Sort data by date in descending order
         filteredData.sort((a, b) => new Date(b.subscribeDate) - new Date(a.subscribeDate));
+
         setData(filteredData);
-        setTotalPages(Math.ceil(result.totalCount / dataPerPage));
+        setFilteredData(filteredData);
+        setTotalPages(Math.ceil(filteredData.length / dataPerPage));
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -31,8 +37,12 @@ const DashboardTable = () => {
   };
 
   useEffect(() => {
-    fetchData(currentPage);
-  }, [currentPage]);
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredData.length / dataPerPage));
+  }, [filteredData]);
 
   const goToPreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
@@ -43,6 +53,7 @@ const DashboardTable = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -63,6 +74,8 @@ const DashboardTable = () => {
     }
   };
 
+  const currentData = filteredData.slice((currentPage - 1) * dataPerPage, currentPage * dataPerPage);
+
   return (
     <div className="relative">
       {/* Heading */}
@@ -75,7 +88,7 @@ const DashboardTable = () => {
         <div className="mt-4 relative overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
           {loading ? (
             <div className="text-center p-4">Loading...</div>
-          ) : (
+          ) : currentData.length > 0 ? (
             <table className='md:w-full w-[150%]'>
               <thead className='text-center bg-[#29303F] sticky top-0'>
                 <tr className='uppercase'>
@@ -87,7 +100,7 @@ const DashboardTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((customer, index) => (
+                {currentData.map((customer, index) => (
                   <tr key={index}>
                     <td className='text-center'>{formatDate(customer.subscribeDate)}</td>
                     <td className='text-center'>{customer.userMobileNo || 'N/A'}</td>
@@ -98,6 +111,8 @@ const DashboardTable = () => {
                 ))}
               </tbody>
             </table>
+          ) : (
+            <div className="text-center p-4">No data available</div>
           )}
         </div>
       </div>
