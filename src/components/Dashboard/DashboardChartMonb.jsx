@@ -16,7 +16,7 @@ const DashboardChartMob = ({ activeButton, customStartDate, customEndDate }) => 
           const affiliateId = stackIdData.id;
 
           const response = await axios.get(
-            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=10`
+            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`
           );
 
           if (response.data.isSuccess) {

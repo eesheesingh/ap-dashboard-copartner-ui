@@ -14,6 +14,7 @@ import ResetPassword from "./components/Login/ResetPassword.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ForgotPassword from "./components/Login/ForgotPAssword.jsx";
 import SetNewPassword from "./components/Login/SetNewPassword.jsx";
+import Link from "./components/Link/Link.jsx";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ const MainLayout = () => {
             <Route path="/setting" element={<Setting />} />
             <Route path="/marketing-planning" element={<Marketing />} />
             <Route path="/customers/:id" element={<SingleCustomer />} />
+            <Route path="/generate-your-links" element={<Link />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

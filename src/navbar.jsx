@@ -269,6 +269,16 @@ const Sidebar = () => {
               </Link>
             </li>
             <li>
+              <Link
+                to="/generate-your-links"
+                onClick={handleMenuItemClick}
+                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/generate-your-links' ? 'btn-active' : ''}`}
+              >
+                <img src={settingIcon} alt="generateLink" className="w-6 mr-1" />
+                <span className="ml-3">Links</span>
+              </Link>
+            </li>
+            <li>
               <button
                 onClick={handleLogout}
                 className="flex items-center text-white rounded-lg group w-full"

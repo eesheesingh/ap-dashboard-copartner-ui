@@ -17,7 +17,7 @@ const DashboardPage = () => {
   const [activeButtonFirstSection, setActiveButtonFirstSection] = useState("weekly");
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
-  const [copiedLandingLink, setCopiedLandingLink] = useState(false);
+  const [copiedLandingLinks, setCopiedLandingLinks] = useState([]);
   const [isBankListingPopupOpen, setIsBankListingPopupOpen] = useState(false);
   const [referralCode, setReferralCode] = useState("");
   const [affiliateData, setAffiliateData] = useState(null);
@@ -26,7 +26,7 @@ const DashboardPage = () => {
   const [notInterested, setNotInterested] = useState(0);
   const [walletBalance, setWalletBalance] = useState(null);
   const [referralLink, setReferralLink] = useState('');
-  const [landingLink, setLandingLink] = useState('');
+  const [landingLinks, setLandingLinks] = useState([]);
   const [loadingReferral, setLoadingReferral] = useState(false);
   const [loadingLanding, setLoadingLanding] = useState(false);
 
@@ -60,18 +60,31 @@ const DashboardPage = () => {
     setLoadingReferral(false);
   };
 
-  const fetchLandingLink = async (affiliateId) => {
+  const fetchLandingLinks = async (affiliateId) => {
     setLoadingLanding(true);
+    const landingLinkApis = [
+      `https://copartners.in:5133/api/AffiliatePartner/Ad1LandingPage/${affiliateId}`,
+      `https://copartners.in:5133/api/AffiliatePartner/Ad2LandingPage/${affiliateId}`,
+      `https://copartners.in:5133/api/AffiliatePartner/Ad3LandingPage/${affiliateId}`,
+      `https://copartners.in:5133/api/AffiliatePartner/Ad4LandingPage/${affiliateId}`,
+      `https://copartners.in:5133/api/AffiliatePartner/Ad5LandingPage/${affiliateId}`,
+    ];
+    
     try {
-      const response = await fetch(`https://copartners.in:5133/api/AffiliatePartner/Ad1LandingPage/${affiliateId}`);
-      const result = await response.json();
-      if (result.isSuccess) {
-        setLandingLink(result.data);
-      } else {
-        console.error('Failed to fetch landing link');
-      }
+      const links = await Promise.all(landingLinkApis.map(async (api) => {
+        const response = await fetch(api);
+        const result = await response.json();
+        if (result.isSuccess) {
+          return result.data;
+        } else {
+          console.error(`Failed to fetch landing link from ${api}`);
+          return null;
+        }
+      }));
+      setLandingLinks(links.filter(link => link !== null));
+      setCopiedLandingLinks(new Array(links.length).fill(false)); // Initialize copied state for each link
     } catch (error) {
-      console.error('Error fetching landing link:', error);
+      console.error('Error fetching landing links:', error);
     }
     setLoadingLanding(false);
   };
@@ -81,7 +94,7 @@ const DashboardPage = () => {
   };
 
   const referralLinkRef = useRef(null);
-  const landingLinkRef = useRef(null);
+  const landingLinkRefs = useRef([]);
 
   useEffect(() => {
     const fetchAffiliateData = async () => {
@@ -93,7 +106,7 @@ const DashboardPage = () => {
           setReferralCode(data.referralCode || '');
           fetchWalletBalance(data.id);
           generateReferralLink(data.id);
-          fetchLandingLink(data.id);
+          fetchLandingLinks(data.id);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -112,11 +125,21 @@ const DashboardPage = () => {
     }
   };
 
-  const copyLandingLinkToClipboard = () => {
-    if (landingLinkRef.current) {
-      navigator.clipboard.writeText(landingLinkRef.current.innerText).then(() => {
-        setCopiedLandingLink(true);
-        setTimeout(() => setCopiedLandingLink(false), 2000);
+  const copyLandingLinkToClipboard = (index) => {
+    if (landingLinkRefs.current[index]) {
+      navigator.clipboard.writeText(landingLinkRefs.current[index].innerText).then(() => {
+        setCopiedLandingLinks(prev => {
+          const newCopiedState = [...prev];
+          newCopiedState[index] = true;
+          return newCopiedState;
+        });
+        setTimeout(() => {
+          setCopiedLandingLinks(prev => {
+            const newCopiedState = [...prev];
+            newCopiedState[index] = false;
+            return newCopiedState;
+          });
+        }, 2000);
       });
     }
   };
@@ -139,7 +162,7 @@ const DashboardPage = () => {
   const handleClearDates = () => {
     setCustomStartDate(null);
     setCustomEndDate(null);
-    setIsCustomPickerVisible(false); // Close the picker when dates are cleared
+    setIsCustomPickerVisible(false);
   };
 
   const [customEarnStartDate, setCustomEarnStartDate] = useState(null);
@@ -168,6 +191,7 @@ const DashboardPage = () => {
     setPaidUsers(data.paidUsers);
     setNotInterested(data.notInterested);
   };
+
 
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
@@ -207,37 +231,39 @@ const DashboardPage = () => {
             </div>
           </div>
           <div className="flex md:hidden flex-col md:flex-row mt-[1rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
-          <span className="text-lg text-left font-semibold mb-3">For Landing Link : -</span>
-            <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
-              <span className="md:text-lg text-sm">Landing Link</span>
-              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-                {landingLink ? (
-                  <>
-                    <span ref={landingLinkRef} className="mr-1 md:block truncate-link">
-                      {landingLink}
-                    </span>
+            <span className="text-lg text-left font-semibold mb-3">For Landing Link : -</span>
+            {landingLinks.map((link, index) => (
+              <div key={index} className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto mb-3">
+                <span className="md:text-lg text-sm items-center flex">{`Landing Link ${index + 1}`}</span>
+                <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                  {link ? (
+                    <>
+                      <span ref={el => (landingLinkRefs.current[index] = el)} className="mr-1 md:block truncate-link">
+                        {link}
+                      </span>
+                      <button
+                        onClick={() => copyLandingLinkToClipboard(index)}
+                        className="flex items-center mt-[2px]"
+                      >
+                        |
+                        {copiedLandingLinks[index] ? (
+                          <img src={tick} alt="Copied" className="w-5" />
+                        ) : (
+                          <img src={clipboard} alt="Copy" className="w-5" />
+                        )}
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      onClick={copyLandingLinkToClipboard}
+                      onClick={() => fetchLandingLinks(affiliateData.id)}
                       className="flex items-center mt-[2px]"
-                    >
-                      |
-                      {copiedLandingLink ? (
-                        <img src={tick} alt="Copied" className="w-5" />
-                      ) : (
-                        <img src={clipboard} alt="Copy" className="w-5" />
-                      )}
+                      disabled={loadingLanding}>
+                      {loadingLanding ? 'Just a sec...' : 'View Link'}
                     </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => fetchLandingLink(affiliateData.id)}
-                    className="flex items-center mt-[2px]"
-                    disabled={loadingLanding}>
-                    {loadingLanding ? 'Just a sec...' : 'View Link'}
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
           <div className="flex md:flex-row flex-col justify-between md:mt-10 mt-[1rem] items-center">
             <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
@@ -410,39 +436,40 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="md:flex flex-col hidden md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
-        <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
-          <span className="md:text-lg text-sm">Landing Link</span>
-          <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-            {landingLink ? (
-              <>
-                <span ref={landingLinkRef} className="mr-1 md:block">
-                  {landingLink}
-                </span>
-                <button
-                  onClick={copyLandingLinkToClipboard}
-                  className="flex items-center mt-[2px]"
-                >
-                  |
-                  {copiedLandingLink ? (
-                    <img src={tick} alt="Copied" className="w-5" />
+      <div className="md:flex md:flex-col hidden justify-start p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-start">
+      {landingLinks.map((link, index) => (
+              <div key={index} className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto mb-3">
+                <span className="md:text-lg text-sm items-center flex">{`Landing Link ${index + 1}`}</span>
+                <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                  {link ? (
+                    <>
+                      <span ref={el => (landingLinkRefs.current[index] = el)} className="mr-1 md:block truncate-link">
+                        {link}
+                      </span>
+                      <button
+                        onClick={() => copyLandingLinkToClipboard(index)}
+                        className="flex items-center mt-[2px]"
+                      >
+                        |
+                        {copiedLandingLinks[index] ? (
+                          <img src={tick} alt="Copied" className="w-5" />
+                        ) : (
+                          <img src={clipboard} alt="Copy" className="w-5" />
+                        )}
+                      </button>
+                    </>
                   ) : (
-                    <img src={clipboard} alt="Copy" className="w-5" />
+                    <button
+                      onClick={() => fetchLandingLinks(affiliateData.id)}
+                      className="flex items-center mt-[2px]"
+                      disabled={loadingLanding}>
+                      {loadingLanding ? 'Just a sec...' : 'View Link'}
+                    </button>
                   )}
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => fetchLandingLink(affiliateData.id)}
-                className="flex items-center mt-[2px]"
-                disabled={loadingLanding}
-              >
-                {loadingLanding ? 'Just a sec...' : 'View Link'}
-              </button>
-            )}
-          </div>
-          (Ad1 Link)
-        </div>
+                </div>
+                (Ad{index + 1} Link)
+              </div>
+            ))}
       </div>
 
       <div className="flex md:flex-row flex-col justify-between items-center mt-10">
