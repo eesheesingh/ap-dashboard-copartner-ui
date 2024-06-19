@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { dummyUser, logo, notification, searchIcon, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon, customerActive, userImg, close } from './assets';
+import { dummyUser, logo, notification, searchIcon, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon, customerActive, userImg, close, link } from './assets';
 import styles from './style';
 import EarningPopup from './components/EarningPopup';
 import Notification from './components/notificationPage/Notification';
@@ -274,7 +274,7 @@ const Sidebar = () => {
                 onClick={handleMenuItemClick}
                 className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/generate-your-links' ? 'btn-active' : ''}`}
               >
-                <img src={settingIcon} alt="generateLink" className="w-6 mr-1" />
+                <img src={link} alt="generateLink" className="w-6 mr-1" />
                 <span className="ml-3">Links</span>
               </Link>
             </li>

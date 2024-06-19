@@ -60,8 +60,11 @@ import address from './Point On Map.png'
 import state from "./Map Point Wave.png"
 import showPassword from './Eye.png'
 import hidePassword from './Eye Closed.png'
+import link from './Union.png'
+import archieve from "./archive.png"
 export {
     signupBg,
+    archieve,
     showPassword,
     hidePassword,
     notify,
@@ -123,4 +126,5 @@ banner6,
 kotakBank,
 address,
 state,
+link,
 }

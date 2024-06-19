@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { clipboard, tick, close } from '../../assets';
+import { clipboard, tick, close, archieve } from '../../assets';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditLink from './EditLink';
+import ArchiveLinks from './ArchiveLinks';
 
 const Link = () => {
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
@@ -17,7 +18,8 @@ const Link = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentEditLink, setCurrentEditLink] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState(null); // Changed initial state to null
   const [filterButtonPosition, setFilterButtonPosition] = useState({ top: 0, left: 0 });
   const filterButtonRef = useRef(null);
 
@@ -43,8 +45,9 @@ const Link = () => {
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetGeneratedAPLinks/${affiliateData.id}`);
         const result = await response.json();
         if (result.isSuccess) {
-          setGeneratedLinks(result.data);
-          result.data.forEach(link => {
+          const activeLinks = result.data.filter(link => !link.isArchive);
+          setGeneratedLinks(activeLinks);
+          activeLinks.forEach(link => {
             const apurl = getApUrlFromLink(link.generatedLink);
             if (apurl) {
               fetchTotalUserData(apurl);
@@ -66,7 +69,7 @@ const Link = () => {
 
   const fetchTotalUserData = async (apurl) => {
     try {
-      const response = await fetch(`https://copartners.in:5131/api/User/GetUserByLink?page=1&pageSize=10&link=${apurl}`);
+      const response = await fetch(`https://copartners.in:5131/api/User/GetUserByLink?page=1&pageSize=100000&link=${apurl}`);
       const result = await response.json();
       if (result.isSuccess) {
         setUserData(prevState => ({
@@ -83,7 +86,7 @@ const Link = () => {
 
   const fetchSubscriberData = async (apurl) => {
     try {
-      const response = await fetch(`https://copartners.in:5009/api/Subscriber/GetSubscriberByLink?page=1&pageSize=10&link=${apurl}`);
+      const response = await fetch(`https://copartners.in:5009/api/Subscriber/GetSubscriberByLink?page=1&pageSize=100000&link=${apurl}`);
       const result = await response.json();
       if (result.isSuccess) {
         const totalAmount = result.data.reduce((sum, subscriber) => sum + subscriber.totalAmount, 0);
@@ -163,6 +166,11 @@ const Link = () => {
       return;
     }
 
+    if (!numLinks || !url) {
+      toast.error('Please provide both Number of Links and URL');
+      return;
+    }
+
     const requestData = {
       affiliatePartnerId: affiliateData.id,
       num: parseInt(numLinks, 10),
@@ -230,6 +238,51 @@ const Link = () => {
 
     setSortOrder(order);
     setGeneratedLinks(sortedLinks);
+  };
+
+  const handleRemoveSort = () => {
+    fetchGeneratedLinks();
+    setSortOrder(null);
+  };
+
+  const handleArchive = async (linkId) => {
+    try {
+      const response = await fetch(`https://copartners.in:5133/api/APDashboard/PatchGenerateAPLink?Id=${linkId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([
+          {
+            path: 'isArchive',
+            op: 'replace',
+            value: 'true',
+          },
+        ]),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setGeneratedLinks((prevLinks) => prevLinks.filter((link) => link.id !== linkId));
+        toast.success('Link archived successfully');
+      } else {
+        toast.error(`Failed to archive link: ${result.displayMessage || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error archiving link:', error);
+      toast.error('Error archiving link');
+    }
+  };
+
+  const handleOpenArchiveModal = () => {
+    setIsArchiveModalOpen(true);
+  };
+
+  const handleCloseArchiveModal = () => {
+    setIsArchiveModalOpen(false);
+  };
+
+  const handleUnarchive = (unarchivedLink) => {
+    setGeneratedLinks((prevLinks) => [...prevLinks, unarchivedLink]);
   };
 
   return (
@@ -314,6 +367,7 @@ const Link = () => {
           </div>
 
           <div className="generateLinksDiv md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+            <div className='flex md:flex-row flex-col justify-start items-center md:gap-4 md:mb-0 mb-3'>
             <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
               <span className="md:text-lg text-sm">Number of Links :</span>
               <input
@@ -335,18 +389,29 @@ const Link = () => {
             <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
               <button
                 onClick={handleGenerate}
-                className="p-2 md:px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
               >
                 Generate
               </button>
+              </div>
+
+              </div>
+              <div className='flex flex-row items-center justify-center gap-3 p-2'>
+                <button
+                onClick={handleOpenArchiveModal}
+                className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+              >
+                Archived
+              </button>
+              
               <button
                 ref={filterButtonRef}
                 onClick={handleFilterClick}
-                className="p-2 md:px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
               >
                 Filter
               </button>
-            </div>
+              </div>
           </div>
 
           <div className="mt-4 relative">
@@ -361,6 +426,7 @@ const Link = () => {
                     <th className='text-center text-[15px]'>Paid Users</th>
                     <th className='text-center text-[15px]'>Amount</th>
                     <th className='text-center text-[15px]'>Tags</th>
+                    <th className='text-center text-[15px]'>Archive</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -396,6 +462,13 @@ const Link = () => {
                           >
                             {link.tag ? link.tag : 'Name Tag'}
                           </span>
+                        </td>
+                        <td className='text-center'>
+                          <button 
+                            className='border-none bg-transparent cursor-pointer' 
+                            onClick={() => handleArchive(link.id)}>
+                            <img src={archieve} alt="Archive" className="w-6 h-6 mx-auto"/>
+                          </button>
                         </td>
                       </tr>
                     );
@@ -442,16 +515,28 @@ const Link = () => {
               High to Low
             </label>
           </div>
-            <button
-              onClick={() => {
-                handleSort(sortOrder);
-                setIsFilterModalOpen(false);
-              }}
-              className="bg-[#fff] text-[#000] px-3 py-1 rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-200 w-full"
-            >
-              Apply
-            </button>
+          <button
+            onClick={() => {
+              handleSort(sortOrder);
+              setIsFilterModalOpen(false);
+            }}
+            className="bg-[#fff] text-[#000] px-3 py-1 rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-200 w-full"
+          >
+            Apply
+          </button>
+          <button
+            onClick={() => {
+              handleRemoveSort();
+              setIsFilterModalOpen(false);
+            }}
+            className="bg-[#fff] text-[#000] px-3 py-1 rounded-lg hover:bg-[#000] hover:text-[#fff] transition duration-200 w-full mt-2"
+          >
+            Remove
+          </button>
         </div>
+      )}
+      {isArchiveModalOpen && (
+        <ArchiveLinks onClose={handleCloseArchiveModal} onUnarchive={handleUnarchive} />
       )}
     </div>
   );
