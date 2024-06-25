@@ -32,7 +32,7 @@ const ResetPassword = () => {
 
     try {
       // Check if email is present in the database
-      const emailCheckResponse = await fetch("https://copartners.in:5130/api/Users?userType=AP&page=1&pageSize=10", {
+      const emailCheckResponse = await fetch("https://copartners.in:5130/api/Users?userType=AP&page=1&pageSize=100000", {
         method: "GET",
         headers: {
           "Accept": "*/*",

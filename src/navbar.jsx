@@ -110,6 +110,8 @@ const Sidebar = () => {
     navigate("/login");
   };
 
+  const isSpecialUser = affiliateData && affiliateData.id === "9ddc2f38-71e7-4100-4402-08dc94f829a3";
+
   return (
     <div className={`bg-gradient overflow-hidden ${styles.boxWidth} ${styles.paddingX}`}>
       <motion.nav
@@ -208,66 +210,70 @@ const Sidebar = () => {
             {isSidebarOpen ? <>&#x2715;</> : <>&#9776;</>}
           </button>
           <ul className="space-y-2 font-medium">
-            <li>
-              <Link
-                to="/"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/' ? 'btn-active' : ''}`}
-              >
-                <img src={dashboardIcon} alt="dashboard" className="w-4 mr-1" />
-                <span className="ml-3">Dashboard</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/leaderBoard"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/leaderBoard' ? 'btn-active' : ''}`}
-              >
-                <img src={leaderActive} alt="leader" className="w-4 mr-1" />
-                <span className="ml-3">Lead Board</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/customers"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
-              >
-                <img src={customerActive} alt="customer" className="w-6 mr-1" />
-                <span className="ml-3">Customer</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/marketing-planning"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/marketing-planning' ? 'btn-active' : ''}`}
-              >
-                <img src={marketingIcon} alt="wallet" className="w-6 mr-1" />
-                <span className="ml-3">Marketing Partner</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/wallet"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/wallet' ? 'btn-active' : ''}`}
-              >
-                <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
-                <span className="ml-3">Wallet</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/setting"
-                onClick={handleMenuItemClick}
-                className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/setting' ? 'btn-active' : ''}`}
-              >
-                <img src={settingIcon} alt="setting" className="w-6 mr-1" />
-                <span className="ml-3">Setting</span>
-              </Link>
-            </li>
+            {!isSpecialUser && (
+              <>
+                <li>
+                  <Link
+                    to="/"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/' ? 'btn-active' : ''}`}
+                  >
+                    <img src={dashboardIcon} alt="dashboard" className="w-4 mr-1" />
+                    <span className="ml-3">Dashboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/leaderBoard"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/leaderBoard' ? 'btn-active' : ''}`}
+                  >
+                    <img src={leaderActive} alt="leader" className="w-4 mr-1" />
+                    <span className="ml-3">Lead Board</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/customers"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/customers' ? 'btn-active' : ''}`}
+                  >
+                    <img src={customerActive} alt="customer" className="w-6 mr-1" />
+                    <span className="ml-3">Customer</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/marketing-planning"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/marketing-planning' ? 'btn-active' : ''}`}
+                  >
+                    <img src={marketingIcon} alt="wallet" className="w-6 mr-1" />
+                    <span className="ml-3">Marketing Partner</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/wallet"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/wallet' ? 'btn-active' : ''}`}
+                  >
+                    <img src={walletIcon} alt="wallet" className="w-6 mr-1" />
+                    <span className="ml-3">Wallet</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/setting"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/setting' ? 'btn-active' : ''}`}
+                  >
+                    <img src={settingIcon} alt="setting" className="w-6 mr-1" />
+                    <span className="ml-3">Setting</span>
+                  </Link>
+                </li>
+              </>
+            )}
             <li>
               <Link
                 to="/generate-your-links"

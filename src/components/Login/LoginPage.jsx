@@ -72,7 +72,9 @@ const LoginPage = () => {
           localStorage.setItem("email", data.data.email);
           localStorage.setItem("stackIdData", JSON.stringify(stackIdData));
 
-          if (password === "Copartner@1234#") {
+          if (stackIdData.id === "9ddc2f38-71e7-4100-4402-08dc94f829a3") {
+            navigate("/generate-your-links");
+          } else if (password === "Copartner@1234#") {
             navigate("/reset-password", { state: { email, password } });
           } else {
             navigate("/");
@@ -93,7 +95,7 @@ const LoginPage = () => {
     }
 
     setLoading(false);
-  };
+};
 
   const handleLogout = () => {
     localStorage.removeItem("token");

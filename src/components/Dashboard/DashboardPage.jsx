@@ -230,7 +230,7 @@ const DashboardPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex md:hidden flex-col md:flex-row mt-[1rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
+          {/* <div className="flex md:hidden flex-col md:flex-row mt-[1rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
             <span className="text-lg text-left font-semibold mb-3">For Landing Link : -</span>
             {landingLinks.map((link, index) => (
               <div key={index} className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto mb-3">
@@ -264,7 +264,7 @@ const DashboardPage = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
           <div className="flex md:flex-row flex-col justify-between md:mt-10 mt-[1rem] items-center">
             <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
               Earning Analysis
@@ -436,7 +436,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <div className="md:flex md:flex-col hidden justify-start p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-start">
+      {/* <div className="md:flex md:flex-col hidden justify-start p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-start">
       {landingLinks.map((link, index) => (
               <div key={index} className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto mb-3">
                 <span className="md:text-lg text-sm items-center flex">{`Landing Link ${index + 1}`}</span>
@@ -470,7 +470,7 @@ const DashboardPage = () => {
                 (Ad{index + 1} Link)
               </div>
             ))}
-      </div>
+      </div> */}
 
       <div className="flex md:flex-row flex-col justify-between items-center mt-10">
         <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">

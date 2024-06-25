@@ -125,6 +125,8 @@ const Setting = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
+  const isSpecialUser = affiliateData && affiliateData.id === "9ddc2f38-71e7-4100-4402-08dc94f829a3";
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <motion.div
@@ -260,23 +262,27 @@ const Setting = () => {
             <ProfileCardMob />
           </motion.div>
 
-          <motion.div
-            className='my-5'
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-          >
-            <DocumentSetting />
-          </motion.div>
+          {!isSpecialUser && (
+            <>
+              <motion.div
+                className='my-5'
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+              >
+                <DocumentSetting />
+              </motion.div>
 
-          <motion.div
-            className='my-5'
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-          >
-            <BankSetting />
-          </motion.div>
+              <motion.div
+                className='my-5'
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+              >
+                <BankSetting />
+              </motion.div>
+            </>
+          )}
         </motion.div>
       </motion.div>
       <EditProfilePopup 

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { clipboard, tick, close, archieve } from '../../assets';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { clipboard, tick, close, archieve, filterBlack, filterBtn } from '../../assets';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditLink from './EditLink';
@@ -19,8 +21,11 @@ const Link = () => {
   const [currentEditLink, setCurrentEditLink] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
-  const [sortOrder, setSortOrder] = useState(null); // Changed initial state to null
+  const [sortOrder, setSortOrder] = useState(null);
   const [filterButtonPosition, setFilterButtonPosition] = useState({ top: 0, left: 0 });
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
   const filterButtonRef = useRef(null);
 
   useEffect(() => {
@@ -74,7 +79,7 @@ const Link = () => {
       if (result.isSuccess) {
         setUserData(prevState => ({
           ...prevState,
-          [apurl]: result.data.length,
+          [apurl]: result.data,
         }));
       } else {
         console.error('Failed to fetch user data', result);
@@ -89,13 +94,9 @@ const Link = () => {
       const response = await fetch(`https://copartners.in:5009/api/Subscriber/GetSubscriberByLink?page=1&pageSize=100000&link=${apurl}`);
       const result = await response.json();
       if (result.isSuccess) {
-        const totalAmount = result.data.reduce((sum, subscriber) => sum + subscriber.totalAmount, 0);
         setSubscriberData(prevState => ({
           ...prevState,
-          [apurl]: {
-            totalAmount,
-            count: result.data.length,
-          },
+          [apurl]: result.data,
         }));
       } else {
         console.error('Failed to fetch subscriber data', result);
@@ -106,9 +107,12 @@ const Link = () => {
   };
 
   const getApUrlFromLink = (link) => {
-    const urlParams = new URLSearchParams(link.split('?')[1]);
-    const apurl = urlParams.get('apurl');
-    return apurl;
+    if (link) {
+      const urlParams = new URLSearchParams(link.split('?')[1]);
+      const apurl = urlParams.get('apurl');
+      return apurl;
+    }
+    return null;
   };
 
   const generateReferralLink = async (affiliateId) => {
@@ -141,17 +145,17 @@ const Link = () => {
   };
 
   const truncateLinkStart = (link, maxLength) => {
-    if (link.length > maxLength) {
+    if (link && link.length > maxLength) {
       return '...' + link.substring(link.length - maxLength);
     }
-    return link;
+    return link || '';
   };
 
   const truncateLinkEnd = (link, maxLength) => {
-    if (link.length > maxLength) {
+    if (link && link.length > maxLength) {
       return link.substring(0, maxLength) + '...';
     }
-    return link;
+    return link || '';
   };
 
   const copyToClipboard = (text) => {
@@ -226,8 +230,8 @@ const Link = () => {
     const sortedLinks = [...generatedLinks].sort((a, b) => {
       const apurlA = getApUrlFromLink(a.generatedLink);
       const apurlB = getApUrlFromLink(b.generatedLink);
-      const usersA = userData[apurlA] || 0;
-      const usersB = userData[apurlB] || 0;
+      const usersA = userData[apurlA] ? userData[apurlA].length : 0;
+      const usersB = userData[apurlB] ? userData[apurlB].length : 0;
 
       if (order === 'asc') {
         return usersA - usersB;
@@ -285,6 +289,56 @@ const Link = () => {
     setGeneratedLinks((prevLinks) => [...prevLinks, unarchivedLink]);
   };
 
+  const filterUsersByDateRange = (start, end) => {
+    const filteredUserData = {};
+    const filteredSubscriberData = {};
+
+    Object.keys(userData).forEach((key) => {
+      filteredUserData[key] = userData[key].filter((user) => {
+        const userDate = new Date(user.createdOn);
+        if (start && end) {
+          return userDate >= start && userDate <= end;
+        } else if (start) {
+          return userDate >= start;
+        } else if (end) {
+          return userDate <= end;
+        }
+        return true;
+      });
+    });
+
+    Object.keys(subscriberData).forEach((key) => {
+      filteredSubscriberData[key] = subscriberData[key].filter((subscriber) => {
+        const subscriberDate = new Date(subscriber.createdOn);
+        if (start && end) {
+          return subscriberDate >= start && subscriberDate <= end;
+        } else if (start) {
+          return subscriberDate >= start;
+        } else if (end) {
+          return subscriberDate <= end;
+        }
+        return true;
+      });
+    });
+
+    return { filteredUserData, filteredSubscriberData };
+  };
+
+  const { filteredUserData, filteredSubscriberData } = filterUsersByDateRange(startDate, endDate);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  const handleClearDates = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
@@ -328,6 +382,12 @@ const Link = () => {
                 )}
               </div>
             </div>
+            <button
+              onClick={handleOpenArchiveModal}
+              className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+            >
+              Archive
+            </button>
           </div>
 
           {/* Mobile version */}
@@ -364,54 +424,117 @@ const Link = () => {
                 )}
               </div>
             </div>
+            <div className='mt-2 w-full'>
+              <button
+                onClick={handleOpenArchiveModal}
+                className="p-2 md:px-8 px-3 w-full transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+              >
+                Archives
+              </button>
+            </div>
           </div>
 
           <div className="generateLinksDiv md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
             <div className='flex md:flex-row flex-col justify-start items-center md:gap-4 md:mb-0 mb-3'>
-            <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
-              <span className="md:text-lg text-sm">Number of Links :</span>
-              <input
-                type="number"
-                value={numLinks}
-                onChange={(e) => setNumLinks(e.target.value)}
-                className="p-2 bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none rounded-xl focus:border-[#fff]"
-              />
-            </div>
-            <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
-              <span className="md:text-lg text-sm">URL :</span>
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
-              />
-            </div>
-            <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
-              <button
-                onClick={handleGenerate}
-                className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
-              >
-                Generate
-              </button>
+              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
+                <span className="md:text-lg text-sm">Number of Links :</span>
+                <input
+                  type="number"
+                  value={numLinks}
+                  onChange={(e) => setNumLinks(e.target.value)}
+                  className="p-2 bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none rounded-xl focus:border-[#fff]"
+                />
               </div>
-
+              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
+                <span className="md:text-lg text-sm">URL :</span>
+                <input
+                  type="text"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
+                />
               </div>
-              <div className='flex flex-row items-center justify-center gap-3 p-2'>
+              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
                 <button
-                onClick={handleOpenArchiveModal}
-                className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
-              >
-                Archived
-              </button>
-              
-              <button
-                ref={filterButtonRef}
-                onClick={handleFilterClick}
-                className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
-              >
-                Filter
-              </button>
+                  onClick={handleGenerate}
+                  className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                >
+                  Generate
+                </button>
               </div>
+            </div>
+          </div>
+
+          <div className="filterCard md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+            <div className='flex md:flex-row flex-col items-center justify-center md:border-r-2 border-r-0 md:border-b-0 border-b-[1px] md:pb-0 pb-2 md:mb-0 mb-2 md:pr-2 gap-2'>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="Start Date"
+                className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
+                renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                  <div className="flex justify-center">
+                    <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
+                    <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                      {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                        <option key={year} value={year}>{year}</option>
+                      ))}
+                    </select>
+                    <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                      {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                        <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                      ))}
+                    </select>
+                    <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>&gt;</button>
+                  </div>
+                )}
+              />
+              To
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                placeholderText="End Date"
+                className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
+                renderCustomHeader={({ date, changeYear, changeMonth, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                  <div className="flex justify-center">
+                    <button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>&lt;</button>
+                    <select value={date.getFullYear()} onChange={({ target: { value } }) => changeYear(parseInt(value))}>
+                      {Array.from({ length: 80 }, (_, i) => new Date().getFullYear() - 79 + i).map(year => (
+                        <option key={year} value={year}>{year}</option>
+                      ))}
+                    </select>
+                    <select value={date.getMonth()} onChange={({ target: { value } }) => changeMonth(parseInt(value))}>
+                      {Array.from({ length: 12 }, (_, i) => i).map(month => (
+                        <option key={month} value={month}>{new Date(0, month).toLocaleString(undefined, { month: 'long' })}</option>
+                      ))}
+                    </select>
+                    <button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>&gt;</button>
+                  </div>
+                )}
+              />
+              <button
+                onClick={handleClearDates}
+                className="ml-1 px-6 py-2 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] transition-all duration-300"
+              >
+                Clear
+              </button>
+            </div>
+            <button
+              ref={filterButtonRef}
+              onClick={handleFilterClick}
+              className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              Order
+            </button>
           </div>
 
           <div className="mt-4 relative">
@@ -432,8 +555,13 @@ const Link = () => {
                 <tbody>
                   {generatedLinks.map((link, index) => {
                     const apurl = getApUrlFromLink(link.generatedLink);
-                    const userCount = userData[apurl] || 0;
-                    const subscriberInfo = subscriberData[apurl] || { totalAmount: 0, count: 0 };
+                    const users = filteredUserData[apurl] || [];
+                    const userCount = Array.isArray(users) ? users.length : 0;
+
+                    const subscribers = filteredSubscriberData[apurl] || [];
+                    const subscriberCount = Array.isArray(subscribers) ? subscribers.length : 0;
+                    const totalAmount = Array.isArray(subscribers) ? subscribers.reduce((sum, subscriber) => sum + subscriber.totalAmount, 0) : 0;
+
                     return (
                       <tr key={link.id}>
                         <td className='text-center'>{index + 1}</td>
@@ -453,8 +581,8 @@ const Link = () => {
                           {truncateLinkEnd(link.apReferralLink, 30)}
                         </td>
                         <td className='text-center'>{userCount}</td>
-                        <td className='text-center'>{subscriberInfo.count}</td>
-                        <td className='text-center'>{subscriberInfo.totalAmount}</td>
+                        <td className='text-center'>{subscriberCount}</td>
+                        <td className='text-center'>{totalAmount}</td>
                         <td className='text-center'>
                           <span
                             className='border-[1px] rounded-md p-1 bg-[#0000002a] hover:bg-[#ffffff25] transition-all duration-300 cursor-pointer'
@@ -488,9 +616,15 @@ const Link = () => {
         />
       )}
       {isFilterModalOpen && (
-        <div className="absolute bg-[#1E293B] rounded-lg shadow-lg p-5 w-[150px] z-50" style={{ top: filterButtonPosition.top, left: filterButtonPosition.left }}>
+        <div
+          className="absolute bg-[#1E293B] rounded-lg shadow-lg p-5 w-[180px] z-50"
+          style={{
+            top: `${filterButtonPosition.top + window.scrollY}px`,
+            left: `${filterButtonPosition.left}px`,
+          }}
+        >
           <button onClick={() => setIsFilterModalOpen(false)} className="absolute top-2 right-2">
-            <img src={close} alt="Close" className="w-4 h-4" />
+            <img src={close} alt="Close" className="w-6 h-6" />
           </button>
           <h2 className="text-lg font-semibold mb-4 text-white">Sort by Users</h2>
           <div className="mb-4">
