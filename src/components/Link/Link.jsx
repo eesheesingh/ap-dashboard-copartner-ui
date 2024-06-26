@@ -339,131 +339,139 @@ const Link = () => {
     setEndDate(null);
   };
 
+  const isSpecialUser = affiliateData?.id === "9ddc2f38-71e7-4100-4402-08dc94f829a3";
+
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
           <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">
             <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
-              Generate Your Links
+              {isSpecialUser ? 'Links Listings' : 'Generate Your Links'}
             </h2>
           </div>
 
           {/* Desktop version */}
-          <div className="md:flex hidden flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
-            <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
-              <span className="md:text-lg text-sm">Referral Link</span>
-              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-                {referralLink ? (
-                  <>
-                    <span className="mr-1 md:block">
-                      {referralLink}
-                    </span>
+          {!isSpecialUser && (
+            <div className="md:flex hidden flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+              <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
+                <span className="md:text-lg text-sm">Referral Link</span>
+                <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                  {referralLink ? (
+                    <>
+                      <span className="mr-1 md:block">
+                        {referralLink}
+                      </span>
+                      <button
+                        onClick={copyReferralLinkToClipboard}
+                        className="flex items-center mt-[2px]"
+                      >
+                        |
+                        {copiedReferralLink ? (
+                          <img src={tick} alt="Copied" className="w-5" />
+                        ) : (
+                          <img src={clipboard} alt="Copy" className="w-5" />
+                        )}
+                      </button>
+                    </>
+                  ) : (
                     <button
-                      onClick={copyReferralLinkToClipboard}
+                      onClick={() => generateReferralLink(affiliateData.id)}
                       className="flex items-center mt-[2px]"
+                      disabled={loadingReferral}
                     >
-                      |
-                      {copiedReferralLink ? (
-                        <img src={tick} alt="Copied" className="w-5" />
-                      ) : (
-                        <img src={clipboard} alt="Copy" className="w-5" />
-                      )}
+                      {loadingReferral ? 'Just a sec...' : 'View Link'}
                     </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => generateReferralLink(affiliateData.id)}
-                    className="flex items-center mt-[2px]"
-                    disabled={loadingReferral}
-                  >
-                    {loadingReferral ? 'Just a sec...' : 'View Link'}
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-            <button
-              onClick={handleOpenArchiveModal}
-              className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
-            >
-              Archive
-            </button>
-          </div>
-
-          {/* Mobile version */}
-          <div className="flex md:hidden flex-col md:flex-row mt-[2rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
-            <span className="text-lg text-left font-semibold mb-3">For Signing Up : -</span>
-            <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
-              <span className="md:text-lg text-sm">Referral Link</span>
-              <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
-                {referralLink ? (
-                  <>
-                    <span className="mr-1 md:block truncate-link">
-                      {referralLink}
-                    </span>
-                    <button
-                      onClick={copyReferralLinkToClipboard}
-                      className="flex items-center mt-[2px]"
-                    >
-                      |
-                      {copiedReferralLink ? (
-                        <img src={tick} alt="Copied" className="w-5" />
-                      ) : (
-                        <img src={clipboard} alt="Copy" className="w-5" />
-                      )}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => generateReferralLink(affiliateData.id)}
-                    className="flex items-center mt-[2px]"
-                    disabled={loadingReferral}
-                  >
-                    {loadingReferral ? 'Just a sec...' : 'View Link'}
-                  </button>
-                )}
-              </div>
-            </div>
-            <div className='mt-2 w-full'>
               <button
                 onClick={handleOpenArchiveModal}
-                className="p-2 md:px-8 px-3 w-full transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                className="p-2 md:px-8 px-11 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
               >
-                Archives
+                Archive
               </button>
             </div>
-          </div>
+          )}
 
-          <div className="generateLinksDiv md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
-            <div className='flex md:flex-row flex-col justify-start items-center md:gap-4 md:mb-0 mb-3'>
-              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
-                <span className="md:text-lg text-sm">Number of Links :</span>
-                <input
-                  type="number"
-                  value={numLinks}
-                  onChange={(e) => setNumLinks(e.target.value)}
-                  className="p-2 bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none rounded-xl focus:border-[#fff]"
-                />
+          {/* Mobile version */}
+          {!isSpecialUser && (
+            <div className="flex md:hidden flex-col md:flex-row mt-[2rem] justify-between p-3 md:px-[40px] bg-[#29303F] rounded-[20px] items-start">
+              <span className="text-lg text-left font-semibold mb-3">For Signing Up : -</span>
+              <div className="flex flex-row md:flex-row items-center gap-3 w-full md:w-auto">
+                <span className="md:text-lg text-sm">Referral Link</span>
+                <div className="p-1 px-3 flex rounded-[30px] bg-transparent border-[1px]">
+                  {referralLink ? (
+                    <>
+                      <span className="mr-1 md:block truncate-link">
+                        {referralLink}
+                      </span>
+                      <button
+                        onClick={copyReferralLinkToClipboard}
+                        className="flex items-center mt-[2px]"
+                      >
+                        |
+                        {copiedReferralLink ? (
+                          <img src={tick} alt="Copied" className="w-5" />
+                        ) : (
+                          <img src={clipboard} alt="Copy" className="w-5" />
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => generateReferralLink(affiliateData.id)}
+                      className="flex items-center mt-[2px]"
+                      disabled={loadingReferral}
+                    >
+                      {loadingReferral ? 'Just a sec...' : 'View Link'}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
-                <span className="md:text-lg text-sm">URL :</span>
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
-                />
-              </div>
-              <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+              <div className='mt-2 w-full'>
                 <button
-                  onClick={handleGenerate}
-                  className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                  onClick={handleOpenArchiveModal}
+                  className="p-2 md:px-8 px-3 w-full transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
                 >
-                  Generate
+                  Archives
                 </button>
               </div>
             </div>
-          </div>
+          )}
+
+          {!isSpecialUser && (
+            <div className="generateLinksDiv md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
+              <div className='flex md:flex-row flex-col justify-start items-center md:gap-4 md:mb-0 mb-3'>
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
+                  <span className="md:text-lg text-sm">Number of Links :</span>
+                  <input
+                    type="number"
+                    value={numLinks}
+                    onChange={(e) => setNumLinks(e.target.value)}
+                    className="p-2 bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none rounded-xl focus:border-[#fff]"
+                  />
+                </div>
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto mb-3 md:mb-0">
+                  <span className="md:text-lg text-sm">URL :</span>
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    className="p-2 rounded-xl bg-[#0b0c104d] border-[1px] border-gray-500 text-white focus:outline-none focus:border-[#fff]"
+                  />
+                </div>
+                <div className="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                  <button
+                    onClick={handleGenerate}
+                    className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                  >
+                    Generate
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="filterCard md:flex flex-col md:flex-row justify-between p-3 md:px-[40px] mt-5 bg-[#29303F] rounded-[20px] items-center">
             <div className='flex md:flex-row flex-col items-center justify-center md:border-r-2 border-r-0 md:border-b-0 border-b-[1px] md:pb-0 pb-2 md:mb-0 mb-2 md:pr-2 gap-2'>
@@ -549,7 +557,7 @@ const Link = () => {
                     <th className='text-center text-[15px]'>Paid Users</th>
                     <th className='text-center text-[15px]'>Amount</th>
                     <th className='text-center text-[15px]'>Tags</th>
-                    <th className='text-center text-[15px]'>Archive</th>
+                    {!isSpecialUser && <th className='text-center text-[15px]'>Archive</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -585,19 +593,21 @@ const Link = () => {
                         <td className='text-center'>{totalAmount}</td>
                         <td className='text-center'>
                           <span
-                            className='border-[1px] rounded-md p-1 bg-[#0000002a] hover:bg-[#ffffff25] transition-all duration-300 cursor-pointer'
-                            onClick={() => handleEdit(link)}
+                            className={`border-[1px] rounded-md p-1 ${!isSpecialUser ? 'bg-[#0000002a] hover:bg-[#ffffff25] transition-all duration-300 cursor-pointer' : 'cursor-not-allowed'}`}
+                            onClick={() => !isSpecialUser && handleEdit(link)}
                           >
                             {link.tag ? link.tag : 'Name Tag'}
                           </span>
                         </td>
-                        <td className='text-center'>
-                          <button 
-                            className='border-none bg-transparent cursor-pointer' 
-                            onClick={() => handleArchive(link.id)}>
-                            <img src={archieve} alt="Archive" className="w-6 h-6 mx-auto"/>
-                          </button>
-                        </td>
+                        {!isSpecialUser && (
+                          <td className='text-center'>
+                            <button 
+                              className='border-none bg-transparent cursor-pointer' 
+                              onClick={() => handleArchive(link.id)}>
+                              <img src={archieve} alt="Archive" className="w-6 h-6 mx-auto"/>
+                            </button>
+                          </td>
+                        )}
                       </tr>
                     );
                   })}

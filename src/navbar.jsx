@@ -186,6 +186,8 @@ const Sidebar = () => {
                       <img src={notification} alt="Notification Icon" className="w-[21px] h-[21px]" />
                     </div>
                   </div> */}
+                  {!isSpecialUser && (
+                    <>
                   <Link to="/setting">
                     <button type="button" className="flex text-sm bg-[#000] rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                       <span className="sr-only">Open user menu</span>
@@ -194,6 +196,8 @@ const Sidebar = () => {
                       </div>
                     </button>
                   </Link>
+                  </>
+                  )}
                 </div>
               </div>
             </div>

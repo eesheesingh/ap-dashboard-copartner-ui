@@ -52,13 +52,19 @@ const DashboardTable = () => {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const formatDate = (dateString) => {
+  const formatDateTime = (dateString) => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const strTime = `${hours}:${minutes} ${ampm}`;
+    return `${day}-${month}-${year} ${strTime}`;
   };
 
   const getSubscriptionName = (subscriptionId) => {
@@ -92,7 +98,7 @@ const DashboardTable = () => {
             <table className='md:w-full w-[150%]'>
               <thead className='text-center bg-[#29303F] sticky top-0'>
                 <tr className='uppercase'>
-                  <th className='text-center text-[15px]'>Date</th>
+                  <th className='text-center text-[15px]'>Date & Time</th>
                   <th className='text-center text-[15px]'>Mobile Number</th>
                   <th className='text-center text-[15px]'>Subscription</th>
                   <th className='text-center text-[15px]'>Experts</th>
@@ -102,7 +108,7 @@ const DashboardTable = () => {
               <tbody>
                 {currentData.map((customer, index) => (
                   <tr key={index}>
-                    <td className='text-center'>{formatDate(customer.subscribeDate)}</td>
+                    <td className='text-center'>{formatDateTime(customer.subscribeDate)}</td>
                     <td className='text-center'>{customer.userMobileNo || 'N/A'}</td>
                     <td className='text-center'>{getSubscriptionName(customer.subscription)}</td>
                     <td className='text-center'>{customer.raName || 'N/A'}</td>

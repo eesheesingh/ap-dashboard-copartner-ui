@@ -89,12 +89,18 @@ const LeaderboardTable = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const strTime = `${hours}:${minutes} ${ampm}`;
+    return `${day}-${month}-${year} ${strTime}`;
   };
 
   const getSubscriptionStatus = (subscriptionId) => {
@@ -185,10 +191,10 @@ const LeaderboardTable = () => {
         </div>
       )}
       <div className="mt-4 overflow-x-auto rounded-[30px] border-[#ffffff3e] border">
-        <table className='md:w-full w-[105%]'>
+        <table className='md:w-full w-[140%]'>
           <thead>
             <tr className='uppercase'>
-              <th>Date</th>
+              <th>Date & Time</th>
               <th>Mobile Number</th>
               <th>Subscription</th>
             </tr>
@@ -199,7 +205,7 @@ const LeaderboardTable = () => {
             ) : (
               currentData.map((item, index) => (
                 <tr key={index} className='text-center'>
-                  <td>{formatDate(item.userJoiningDate)}</td>
+                  <td>{formatDateTime(item.userJoiningDate)}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
                   <td>{getSubscriptionStatus(item.subscription)}</td>
                 </tr>
