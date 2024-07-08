@@ -62,6 +62,7 @@ import showPassword from './Eye.png'
 import hidePassword from './Eye Closed.png'
 import link from './Union.png'
 import archieve from "./archive.png"
+import TelgramMsg from './TelegramMessage.png'
 export {
     signupBg,
     archieve,
@@ -127,4 +128,5 @@ kotakBank,
 address,
 state,
 link,
+TelgramMsg,
 }

@@ -15,6 +15,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import ForgotPassword from "./components/Login/ForgotPAssword.jsx";
 import SetNewPassword from "./components/Login/SetNewPassword.jsx";
 import Link from "./components/Link/Link.jsx";
+import TelegramMessage from "./components/TelegamMessage/TelegramMessage.jsx";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ const MainLayout = () => {
             <Route path="/marketing-planning" element={<Marketing />} />
             <Route path="/customers/:id" element={<SingleCustomer />} />
             <Route path="/generate-your-links" element={<Link />} />
+            <Route path="/send-prompt-messages" element={<TelegramMessage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

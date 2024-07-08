@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { dummyUser, logo, notification, searchIcon, dashboardIcon, filterBlack, leaderActive, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon, customerActive, userImg, close, link } from './assets';
+import { dummyUser, logo, notification, searchIcon, dashboardIcon, filterBlack, leaderActive, TelgramMsg, loginBlack, loginBtn, marketingIcon, settingIcon, walletIcon, customerActive, userImg, close, link } from './assets';
 import styles from './style';
 import EarningPopup from './components/EarningPopup';
 import Notification from './components/notificationPage/Notification';
@@ -19,6 +19,7 @@ const Sidebar = () => {
   const [affiliateData, setAffiliateData] = useState(null);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [hasMessageData, setHasMessageData] = useState(false);
 
   useEffect(() => {
     const fetchAffiliateData = async () => {
@@ -30,6 +31,13 @@ const Sidebar = () => {
           setProfile({
             imageURL: data.affiliatePartnerImagePath || ''
           });
+          
+          // Fetch message data for the affiliate
+          const response = await fetch(`https://copartners.in:5134/api/TelegramMessage/${data.id}?userType=AP&page=1&pageSize=10`);
+          const result = await response.json();
+          if (result.data && result.data.length > 0) {
+            setHasMessageData(true);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -152,40 +160,9 @@ const Sidebar = () => {
             </div>
             <div className="flex items-center">
               <div className="items-center ms-3 gap-4 flex">
-                {/* {!isMobileView && (
-                  <div className="relative">
-                    <div
-                      className="flex items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px] cursor-pointer"
-                      onClick={toggleNotification}
-                    >
-                      <img
-                        src={notification}
-                        alt="Notification Icon"
-                        className="w-[21px] h-[21px]"
-                      />
-                    </div>
-                    {isNotificationOpen && (
-                      <div className="absolute top-full right-5 mt-2 w-72 p-4 bg-gradient shadow-lg rounded-lg z-50">
-                        <div className="flex justify-between items-center text-[#fff]">
-                          <span className="text-lg font-bold">Notifications</span>
-                          <button onClick={toggleNotification}>
-                            <img src={close} alt="close" className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <Notification notifications={notifications} />
-                      </div>
-                    )}
-                  </div>
-                )} */}
+               
                 <div className='flex'>
-                  {/* <div className='flex items-center justify-center mr-4'>
-                    <div
-                      className="flex md:hidden items-center justify-center w-[46px] h-[50px] border-2 border-[#282F3E] p-1 rounded-[10px] cursor-pointer"
-                      onClick={toggleNotification}
-                    >
-                      <img src={notification} alt="Notification Icon" className="w-[21px] h-[21px]" />
-                    </div>
-                  </div> */}
+                  
                   {!isSpecialUser && (
                     <>
                   <Link to="/setting">
@@ -276,6 +253,18 @@ const Sidebar = () => {
                     <span className="ml-3">Setting</span>
                   </Link>
                 </li>
+                {hasMessageData && (
+                  <li>
+                    <Link
+                      to="/send-prompt-messages"
+                      onClick={handleMenuItemClick}
+                      className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/send-prompt-messages' ? 'btn-active' : ''}`}
+                    >
+                      <img src={TelgramMsg} alt="sendPromptedMessages" className="w-6 mr-1" />
+                      <span className="ml-3">Message</span>
+                    </Link>
+                  </li>
+                )}
               </>
             )}
             <li>

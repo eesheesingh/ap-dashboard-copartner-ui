@@ -44,30 +44,40 @@ const LeaderBoardChartMob = ({ activeButton, customStartDate, customEndDate, onD
             }
 
             apiData.forEach((item) => {
-              const date = parseISO(item.userJoiningDate);
+              // Use subscribeDate if available, otherwise fall back to userJoiningDate
+              const rawDate = item.subscribeDate || item.userJoiningDate;
+              if (!rawDate) return; // Skip if both dates are unavailable
+
+              const date = parseISO(rawDate);
               const dayLabel = format(date, 'yyyy-MM-dd');
               const weekIndex = weeklyData.findIndex(d => d.name === dayLabel);
               const month = date.getMonth();
 
+              const paidUser = item.amount !== null ? 1 : 0;
+              const notInterested = item.amount === null ? 1 : 0;
               const totalVisit = 1;
-              const paidUser = item.subscription !== '0' ? 1 : 0;
-              const notInterested = item.subscription === '0' ? 1 : 0;
 
               if (dailyData[dayLabel]) {
                 dailyData[dayLabel].totalVisit += totalVisit;
-                dailyData[dayLabel].paidUsers += paidUser;
                 dailyData[dayLabel].usersLeft += notInterested;
+                if (item.subscribeDate) {
+                  dailyData[dayLabel].paidUsers += paidUser;
+                }
               }
 
               if (weekIndex !== -1) {
                 weeklyData[weekIndex].totalVisit += totalVisit;
-                weeklyData[weekIndex].paidUsers += paidUser;
                 weeklyData[weekIndex].usersLeft += notInterested;
+                if (item.subscribeDate && weeklyData[weekIndex].name === dayLabel) {
+                  weeklyData[weekIndex].paidUsers += paidUser;
+                }
               }
 
               monthlyData[month].totalVisit += totalVisit;
-              monthlyData[month].paidUsers += paidUser;
               monthlyData[month].usersLeft += notInterested;
+              if (item.subscribeDate && month === date.getMonth()) {
+                monthlyData[month].paidUsers += paidUser;
+              }
             });
 
             setData({

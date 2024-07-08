@@ -46,8 +46,12 @@ const WalletChartMob = ({ activeButton, customStartDate, customEndDate }) => {
             }
 
             apiData.forEach((item) => {
+              // Use subscribeDate if available, otherwise fall back to userJoiningDate
+              const rawDate = item.subscribeDate || item.userJoiningDate;
+              if (!rawDate) return; // Skip if both dates are unavailable
+
               // Convert the date to IST (UTC+5:30)
-              const date = addMinutes(parseISO(item.userJoiningDate), 330);
+              const date = addMinutes(parseISO(rawDate), 330);
               const dayLabel = format(date, 'yyyy-MM-dd');
               const weekIndex = weeklyData.findIndex(d => d.name === dayLabel);
               const month = date.getMonth();

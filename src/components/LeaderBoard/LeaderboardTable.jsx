@@ -47,7 +47,11 @@ const LeaderboardTable = () => {
         const response = await fetch(`https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`);
         const result = await response.json();
         // Sort data by date and time in descending order
-        result.data.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
+        result.data.sort((a, b) => {
+          const dateA = new Date(a.subscribeDate || a.userJoiningDate);
+          const dateB = new Date(b.subscribeDate || b.userJoiningDate);
+          return dateB - dateA;
+        });
         setCustomers(result.data);
       }
     } catch (error) {
@@ -62,7 +66,7 @@ const LeaderboardTable = () => {
   }, []);
 
   const filteredData = customers.filter((item) => {
-    const itemDate = new Date(item.userJoiningDate.split('T')[0]);
+    const itemDate = new Date(item.subscribeDate || item.userJoiningDate.split('T')[0]);
     if (startDate && endDate) {
       return itemDate >= startDate && itemDate <= endDate;
     } else if (startDate) {
@@ -74,7 +78,7 @@ const LeaderboardTable = () => {
   });
 
   // Sort data by date in descending order
-  filteredData.sort((a, b) => new Date(b.userJoiningDate) - new Date(a.userJoiningDate));
+  filteredData.sort((a, b) => new Date(b.subscribeDate || b.userJoiningDate) - new Date(a.subscribeDate || a.userJoiningDate));
 
   // Pagination
   const dataPerPage = 10;
@@ -103,8 +107,8 @@ const LeaderboardTable = () => {
     return `${day}-${month}-${year} ${strTime}`;
   };
 
-  const getSubscriptionStatus = (subscriptionId) => {
-    return subscriptionId === "0" ? "Unpaid" : "Paid";
+  const getSubscriptionStatus = (amount) => {
+    return amount === null ? "Unpaid" : "Paid";
   };
 
   return (
@@ -205,9 +209,9 @@ const LeaderboardTable = () => {
             ) : (
               currentData.map((item, index) => (
                 <tr key={index} className='text-center'>
-                  <td>{formatDateTime(item.userJoiningDate)}</td>
+                  <td>{formatDateTime(item.subscribeDate || item.userJoiningDate)}</td>
                   <td>{item.userMobileNo.replace(/^\d{6}/, '******')}</td>
-                  <td>{getSubscriptionStatus(item.subscription)}</td>
+                  <td>{getSubscriptionStatus(item.amount)}</td>
                 </tr>
               ))
             )}
