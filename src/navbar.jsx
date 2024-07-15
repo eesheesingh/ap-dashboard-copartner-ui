@@ -31,13 +31,13 @@ const Sidebar = () => {
           setProfile({
             imageURL: data.affiliatePartnerImagePath || ''
           });
-          
+
           // Fetch message data for the affiliate
-          const response = await fetch(`https://copartners.in:5134/api/TelegramMessage/${data.id}?userType=AP&page=1&pageSize=10`);
-          const result = await response.json();
-          if (result.data && result.data.length > 0) {
-            setHasMessageData(true);
-          }
+          // const response = await fetch(`https://copartners.in:5134/api/TelegramMessage/${data.id}?userType=AP&page=1&pageSize=10`);
+          // const result = await response.json();
+          // if (result.data && result.data.length > 0) {
+          //   setHasMessageData(true);
+          // }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -160,9 +160,9 @@ const Sidebar = () => {
             </div>
             <div className="flex items-center">
               <div className="items-center ms-3 gap-4 flex">
-               
+
                 <div className='flex'>
-                  
+
                   {!isSpecialUser && (
                     <>
                   <Link to="/setting">
@@ -253,18 +253,16 @@ const Sidebar = () => {
                     <span className="ml-3">Setting</span>
                   </Link>
                 </li>
-                {hasMessageData && (
-                  <li>
-                    <Link
-                      to="/send-prompt-messages"
-                      onClick={handleMenuItemClick}
-                      className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/send-prompt-messages' ? 'btn-active' : ''}`}
-                    >
-                      <img src={TelgramMsg} alt="sendPromptedMessages" className="w-6 mr-1" />
-                      <span className="ml-3">Message</span>
-                    </Link>
-                  </li>
-                )}
+                <li>
+                  <Link
+                    to="/send-prompt-messages"
+                    onClick={handleMenuItemClick}
+                    className={`flex items-center p-2 py-4 text-white text-[18px] rounded-lg tab-btn group ${activeItem === '/send-prompt-messages' ? 'btn-active' : ''}`}
+                  >
+                    <img src={TelgramMsg} alt="sendPromptedMessages" className="w-6 mr-1" />
+                    <span className="ml-3">Message</span>
+                  </Link>
+                </li>
               </>
             )}
             <li>

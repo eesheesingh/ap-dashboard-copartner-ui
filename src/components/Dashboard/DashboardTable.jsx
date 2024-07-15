@@ -28,6 +28,9 @@ const DashboardTable = () => {
         setData(filteredData);
         setFilteredData(filteredData);
         setTotalPages(Math.ceil(filteredData.length / dataPerPage));
+
+        // Log the total number of data items to the console
+        console.log(`Total number of data items: ${filteredData.length}`);
       }
     } catch (error) {
       console.error('Error fetching data:', error);

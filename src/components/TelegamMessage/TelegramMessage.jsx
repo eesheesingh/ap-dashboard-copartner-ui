@@ -18,9 +18,10 @@ const TelegramMessage = () => {
         if (storedStackIdData) {
           const stackIdData = JSON.parse(storedStackIdData);
           const affiliateId = stackIdData.id;
+          console.log("", affiliateId);
 
           const response = await axios.get(
-            `https://copartners.in:5134/api/TelegramMessage/${affiliateId}?userType=AP&page=1&pageSize=10`
+            `https://copartners.in:5134/api/TelegramMessage/${affiliateId}?userType=AP&page=1&pageSize=1000`
           );
 
           if (response.data) {
@@ -100,7 +101,7 @@ const TelegramMessage = () => {
           <p>{error}</p>
         ) : (
           telegramChannels.map((channel, index) => (
-            <motion.div
+            <div
               key={channel.id}
               className="telegramChannels text-xl border border-gray-600 rounded-[20px] bg-gray-800 shadow-lg"
               initial={{ opacity: 0, scale: 0.5 }}
@@ -169,7 +170,7 @@ const TelegramMessage = () => {
                   Save
                 </motion.button>
               </div>
-            </motion.div>
+            </div>
           ))
         )}
       </div>

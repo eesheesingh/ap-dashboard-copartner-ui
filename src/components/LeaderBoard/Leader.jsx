@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { customBtn, graph, graph2, usersPurple } from "../../assets";
+import { usersPurple } from "../../assets";
 import LeaderboardTable from "./LeaderboardTable";
 import LeaderBoardAnalysisChart from "../Dashboard/LeaderBoardAnalysisChart";
 import LeaderBoardChartMob from '../Dashboard/LeaderBoardChartMob';
-import DataSampleFilter from "./DataSampleFilter";
 
 const Leader = () => {
   const [activeButtonSecondSection, setActiveButtonSecondSection] = useState("today");
@@ -39,17 +38,10 @@ const Leader = () => {
     setNotInterested(data.notInterested);
   };
 
-  // useEffect(() => {
-  //   console.log("Total Visits: ", totalVisits);
-  //   console.log("Paid Users: ", paidUsers);
-  //   console.log("Not Interested: ", notInterested);
-  // }, [totalVisits, paidUsers, notInterested]);
-
   return (
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
-          {/* Second Section */}
           <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">
             <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">Lead Board Analysis</h2>
             <div className="space-x-4 md:mr-1 xl:mr-[10px] flex w-full md:justify-end justify-start md:flex-nowrap flex-wrap">

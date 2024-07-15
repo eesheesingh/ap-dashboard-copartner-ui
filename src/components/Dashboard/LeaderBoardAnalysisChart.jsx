@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { parseISO, format, addDays, startOfWeek, isWithinInterval } from 'date-fns';
+import { parseISO, format, addDays, startOfWeek, isWithinInterval, startOfMonth, endOfMonth } from 'date-fns';
 
 const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate, onDataUpdate }) => {
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
           const affiliateId = stackIdData.id;
 
           const response = await axios.get(
-            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000`
+            `https://copartners.in:5133/api/APDashboard/GetDashboardAPListingData/${affiliateId}?page=1&pageSize=100000000`
           );
 
           if (response.data.isSuccess) {
@@ -31,10 +31,15 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
             }));
 
             const currentDate = new Date();
-            const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) {
-              const dayLabel = format(new Date(currentDate.getFullYear(), currentDate.getMonth(), day), 'yyyy-MM-dd');
-              dailyData[dayLabel] = { name: dayLabel, totalVisit: 0, paidUsers: 0, usersLeft: 0 };
+            const currentYear = currentDate.getFullYear();
+            const monthsToProcess = 12; // Process last 12 months including the current month
+            for (let monthOffset = 0; monthOffset < monthsToProcess; monthOffset++) {
+              const month = new Date(currentYear, currentDate.getMonth() - monthOffset, 1);
+              const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+              for (let day = 1; day <= daysInMonth; day++) {
+                const dayLabel = format(new Date(month.getFullYear(), month.getMonth(), day), 'yyyy-MM-dd');
+                dailyData[dayLabel] = { name: dayLabel, totalVisit: 0, paidUsers: 0, usersLeft: 0 };
+              }
             }
 
             const startOfCurrentWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
@@ -44,9 +49,8 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
             }
 
             apiData.forEach((item) => {
-              // Use subscribeDate if available, otherwise fall back to userJoiningDate
               const rawDate = item.subscribeDate || item.userJoiningDate;
-              if (!rawDate) return; // Skip if both dates are unavailable
+              if (!rawDate) return;
 
               const date = parseISO(rawDate);
               const dayLabel = format(date, 'yyyy-MM-dd');
@@ -121,7 +125,7 @@ const LeaderBoardAnalysisChart = ({ activeButton, customStartDate, customEndDate
         return data.monthly || [];
       case 'custom':
         if (customStartDate) {
-          const endDate = customEndDate || customStartDate;
+          const endDate = customEndDate || new Date();
           return data.daily?.filter(d => isWithinInterval(parseISO(d.name), { start: customStartDate, end: endDate })) || [];
         }
         return [];
