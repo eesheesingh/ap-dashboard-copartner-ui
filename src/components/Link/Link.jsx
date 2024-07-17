@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { clipboard, tick, close, archieve, filterBlack, filterBtn } from '../../assets';
+import { clipboard, tick, close, archieve } from '../../assets';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import EditLink from './EditLink';
 import ArchiveLinks from './ArchiveLinks';
+import MinorSub from './MinorSub';
 
 const Link = () => {
   const [copiedReferralLink, setCopiedReferralLink] = useState(false);
@@ -21,6 +22,7 @@ const Link = () => {
   const [currentEditLink, setCurrentEditLink] = useState(null);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [isMinorModalOpen, setIsMinorModalOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState(null);
   const [filterButtonPosition, setFilterButtonPosition] = useState({ top: 0, left: 0 });
   const [startDate, setStartDate] = useState(null);
@@ -289,6 +291,14 @@ const Link = () => {
     setGeneratedLinks((prevLinks) => [...prevLinks, unarchivedLink]);
   };
 
+  const handleOpenMinorModal = () => {
+    setIsMinorModalOpen(true);
+  };
+
+  const handleCloseMinorModal = () => {
+    setIsMinorModalOpen(false);
+  };
+
   const filterUsersByDateRange = (start, end) => {
     const filteredUserData = {};
     const filteredSubscriberData = {};
@@ -345,10 +355,17 @@ const Link = () => {
     <div className="xl:px-1 md:p-4 sm:ml-[10rem] text-white">
       <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700 md:mt-14 mt-[30px]">
         <div className="text-white text-center">
-          <div className="flex md:flex-row flex-col justify-between mt-10 md:flex-nowrap flex-wrap">
+          <div className="flex md:flex-row flex-col justify-around mt-10 md:flex-nowrap flex-wrap">
             <h2 className="md:text-left text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold w-full">
               {isSpecialUser ? 'Links Listings' : 'Generate Your Links'}
             </h2>
+            <div className='flex justify-center items-center'>
+              <button className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+                onClick={handleOpenMinorModal}
+              >
+                Minor
+              </button>
+            </div>
           </div>
 
           {/* Desktop version */}
@@ -681,6 +698,9 @@ const Link = () => {
       )}
       {isArchiveModalOpen && (
         <ArchiveLinks onClose={handleCloseArchiveModal} onUnarchive={handleUnarchive} />
+      )}
+      {isMinorModalOpen && (
+        <MinorSub onClose={handleCloseMinorModal} />
       )}
     </div>
   );
