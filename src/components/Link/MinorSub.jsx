@@ -59,7 +59,7 @@ const MinorSub = ({ onClose }) => {
           <img src={close} alt="Close" className="w-8 h-8" />
         </button>
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-semibold">Minor Sub</h2>
+          <h2 className="text-3xl font-semibold">Micro Subscriptions</h2>
         </div>
 
         <div className="overflow-x-auto rounded-lg border border-gray-700 max-h-96 overflow-y-auto">
@@ -102,7 +102,7 @@ const MinorSub = ({ onClose }) => {
                     ₹ {sub.amount}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
-                    {sub.durationMonth} Months
+                    {sub.durationMonth} Days
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-center">
                     <img

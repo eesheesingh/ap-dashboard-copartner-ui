@@ -360,10 +360,10 @@ const Link = () => {
               {isSpecialUser ? 'Links Listings' : 'Generate Your Links'}
             </h2>
             <div className='flex justify-center items-center'>
-              <button className="p-2 px-8 transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
+              <button className="p-2 px-8 xl:w-[250px] text-[20px] md:text-[15px] md:w-[260px] w-full lg:w-[270px] transitions-all duration-300 rounded bg-[#fff] hover:bg-[#000] hover:text-[#fff] text-[#000] font-semibold focus:outline-none focus:text-[#fff] focus:bg-[#000]"
                 onClick={handleOpenMinorModal}
               >
-                Minor
+                Minor Subscription Link
               </button>
             </div>
           </div>
