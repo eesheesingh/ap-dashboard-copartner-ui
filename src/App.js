@@ -16,6 +16,7 @@ import ForgotPassword from "./components/Login/ForgotPAssword.jsx";
 import SetNewPassword from "./components/Login/SetNewPassword.jsx";
 import Link from "./components/Link/Link.jsx";
 import TelegramMessage from "./components/TelegamMessage/TelegramMessage.jsx";
+import BotList from "./components/BotListing/BotList.jsx";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ const MainLayout = () => {
             <Route path="/customers/:id" element={<SingleCustomer />} />
             <Route path="/generate-your-links" element={<Link />} />
             <Route path="/send-prompt-messages" element={<TelegramMessage />} />
+            <Route path="/bot-listing" element={<BotList />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </div>

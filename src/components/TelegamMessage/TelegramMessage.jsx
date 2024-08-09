@@ -143,7 +143,7 @@ const TelegramMessage = () => {
                   }
                 />
               </div>
-              <div className="p-4">
+              {/* <div className="p-4">
                 <label htmlFor={`marketingMessage${channel.id}`} className="block mb-2 text-xs font-medium text-gray-300">
                   Marketing Message
                 </label>
@@ -157,7 +157,7 @@ const TelegramMessage = () => {
                     handleInputChange(channel.id, "marketingMessage", e.target.value)
                   }
                 />
-              </div>
+              </div> */}
               <div className="p-4">
                 <motion.button
                   className="w-full bg-[#fff] border-[1px] p-3 rounded-[10px] text-[#000] disabled:opacity-50"
