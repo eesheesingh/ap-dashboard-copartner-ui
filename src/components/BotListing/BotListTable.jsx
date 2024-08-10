@@ -89,7 +89,7 @@ const BotListTable = ({ tableData }) => {
                   <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{new Date(user.usercreationdatetime).toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.mobileNumber || " - "}</td>
                   <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.otp_verified ? "Yes" : "No"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.landing_page_url}</td>
+                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.landing_page_url || " - "}</td>
                 </tr>
               ))
             ) : (

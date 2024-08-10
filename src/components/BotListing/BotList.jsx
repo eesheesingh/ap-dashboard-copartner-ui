@@ -4,9 +4,10 @@ import IconBox from './IconBox';
 import BotListTable from './BotListTable';
 import LinkListTable from './LinkListTable';
 import './carousel.css';  // Ensure this CSS file exists
-import { IoPhonePortraitOutline } from 'react-icons/io5';
+import { IoCloseCircle, IoPhonePortraitOutline } from 'react-icons/io5';
 import { RiVerifiedBadgeFill } from 'react-icons/ri';
 import { FaUsers } from 'react-icons/fa';
+import { MdClose } from 'react-icons/md';
 
 const BotList = () => {
   const [activeBox, setActiveBox] = useState(null);
@@ -19,6 +20,7 @@ const BotList = () => {
   const [groupedUserData, setGroupedUserData] = useState({});
   const [currentBotForLinks, setCurrentBotForLinks] = useState(null); // Track which bot's links are being shown
   const [userCounts, setUserCounts] = useState({ interacted: 0, phoneProvided: 0, otpVerified: 0 });
+  const [userTableData, setUserTableData] = useState([]); // New state for table data
 
   useEffect(() => {
     const fetchBotData = async () => {
@@ -59,6 +61,8 @@ const BotList = () => {
             phoneProvided: phoneProvidedCount,
             otpVerified: otpVerifiedCount,
           });
+
+          setUserTableData(userResult.users); // Set the table data for the bot
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -107,18 +111,43 @@ const BotList = () => {
           phoneProvided: phoneProvidedCount,
           otpVerified: otpVerifiedCount,
         });
+
+        setUserTableData(userResult.users); // Set the table data for the bot
       }
     } catch (error) {
       console.error('Error fetching links for selected bot:', error);
     }
   };
 
-  // Convert groupedUserData into an array of user objects for the table
-  const userTableData = Object.values(groupedUserData).flat();
+  const handleUserLinkClick = async (landingPageUrl) => {
+    try {
+      const selectedBot = botData.find(b => b.channel_name === activeBot);
+      if (selectedBot) {
+        const token = selectedBot.token;
+        const userResponse = await fetch(`http://213.210.36.35:8090/api/usersbylandingpageurl?token=${token}&landing_page_url=${landingPageUrl}`);
+        const userResult = await userResponse.json();
+        
+        // Update counts based on the clicked link's data
+        const interactedCount = userResult.users.filter(user => user.just_interacted).length;
+        const phoneProvidedCount = userResult.users.filter(user => user.phone_provided).length;
+        const otpVerifiedCount = userResult.users.filter(user => user.otp_verified).length;
+        setUserCounts({
+          interacted: interactedCount,
+          phoneProvided: phoneProvidedCount,
+          otpVerified: otpVerifiedCount,
+        });
 
-  const handleUserLinkClick = (landingPageUrl) => {
-    setActiveLink(landingPageUrl);
-    console.log('Clicked User Data for:', landingPageUrl, groupedUserData[landingPageUrl]);
+        setUserTableData(userResult.users); // Update the table data for the link
+        setActiveLink(landingPageUrl); // Set the active link
+      }
+    } catch (error) {
+      console.error('Error fetching data for the selected link:', error);
+    }
+  };
+
+  const handleLinkDeselect = () => {
+    setActiveLink(null);
+    handleBotClick(activeBot); // Recalculate and show bot data when link is deselected
   };
 
   return (
@@ -166,13 +195,19 @@ const BotList = () => {
                 <div className="carousel-wrapper">
                   <div className="carousel-content">
                     {Object.keys(groupedUserData).map((landingPageUrl, index) => (
-                      <button 
-                        key={index}
-                        className={`text-lg font-medium rounded-lg py-2 px-6 ${activeLink === landingPageUrl && activeBot === currentBotForLinks ? 'bg-white text-black' : 'bg-transparent text-white'} border-[1px] border-white hover:text-black hover:bg-white transition-all m-2`}
-                        onClick={() => handleUserLinkClick(landingPageUrl)}
-                      >
-                        {landingPageUrl}
-                      </button>
+                      <div className="relative" key={index}>
+                        <button 
+                          className={`text-lg font-medium rounded-lg py-2 px-6 ${activeLink === landingPageUrl && activeBot === currentBotForLinks ? 'bg-white text-black' : 'bg-transparent text-white'} border-[1px] border-white hover:text-black hover:bg-white transition-all m-2`}
+                          onClick={() => handleUserLinkClick(landingPageUrl)}
+                        >
+                          {landingPageUrl}
+                        </button>
+                        {activeLink === landingPageUrl && (
+                          <button className="absolute top-0 right-0 mt-2 mr-2 text-black bg-white rounded-full p-1" onClick={handleLinkDeselect}>
+                            <IoCloseCircle />
+                          </button>
+                        )}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -199,11 +234,7 @@ const BotList = () => {
           </div>
 
           {/* Show table data based on the active data type */}
-          {activeDataType === 'Bot' ? (
-            <BotListTable tableData={userTableData} />
-          ) : (
-            groupedUserData && <LinkListTable tableData={groupedUserData} />
-          )}
+          <BotListTable tableData={userTableData} />
         </>
       )}
 
