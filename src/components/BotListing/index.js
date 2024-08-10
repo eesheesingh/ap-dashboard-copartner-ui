@@ -1,15 +1,9 @@
-import { RiVerifiedBadgeFill } from "react-icons/ri";
-import { FaPeopleGroup } from "react-icons/fa6";
-import { FaUsers } from 'react-icons/fa';
-import { IoPhonePortraitOutline } from "react-icons/io5";
-
 export const botData = {
   Bot1: {
     iconBoxes: [
-      { title: 'Interacted Visitors', count: 69, icon: <FaUsers className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Number Provided', count: 45, icon: <IoPhonePortraitOutline className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Verified Users', count: 30, icon: <RiVerifiedBadgeFill className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Joined Users', count: 30, icon: <FaPeopleGroup className="text-4xl text-white transition transform hover:scale-110" /> },
+      { title: 'Interacted Visitors', count: 69, iconType: 'FaUsers' },
+      { title: 'Number Provided', count: 45, iconType: 'IoPhonePortraitOutline' },
+      { title: 'Verified Users', count: 30, iconType: 'RiVerifiedBadgeFill' },
     ],
     tableData: [
       { date: '2024-08-01', mobile: '1234567890', verified: 'Yes', joined: 'Commodity' },
@@ -19,10 +13,9 @@ export const botData = {
   },
   Bot2: {
     iconBoxes: [
-        { title: 'Interacted Visitors', count: 69, icon: <FaUsers className="text-4xl text-white transition transform hover:scale-110" /> },
-        { title: 'Number Provided', count: 45, icon: <IoPhonePortraitOutline className="text-4xl text-white transition transform hover:scale-110" /> },
-        { title: 'Verified Users', count: 30, icon: <RiVerifiedBadgeFill className="text-4xl text-white transition transform hover:scale-110" /> },
-        { title: 'Joined Users', count: 30, icon: <FaPeopleGroup className="text-4xl text-white transition transform hover:scale-110" /> },
+      { title: 'Interacted Visitors', count: 69, iconType: 'FaUsers' },
+      { title: 'Number Provided', count: 45, iconType: 'IoPhonePortraitOutline' },
+      { title: 'Verified Users', count: 30, iconType: 'RiVerifiedBadgeFill' },
     ],
     tableData: [
       { date: '2024-08-01', mobile: '2233445566', verified: 'Yes', joined: 'Equity' },
@@ -35,9 +28,9 @@ export const botData = {
 export const LinkData = {
   Bot1: {
     iconBoxes: [
-      { title: 'Total Visitors', count: 63, icon: <FaUsers className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Verified Users', count: 41, icon: <RiVerifiedBadgeFill className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Joined Users', count: 39, icon: <FaPeopleGroup className="text-4xl text-white transition transform hover:scale-110" /> },
+      { title: 'Total Visitors', count: 63, iconType: 'FaUsers' },
+      { title: 'Verified Users', count: 41, iconType: 'RiVerifiedBadgeFill' },
+      { title: 'Joined Users', count: 39, iconType: 'FaPeopleGroup' },
     ],
     tableData: [
       { date: '2024-08-01', mobile: '1234567890', verified: 'No', joined: 'Commodity' },
@@ -47,9 +40,9 @@ export const LinkData = {
   },
   Bot2: {
     iconBoxes: [
-      { title: 'Total Visitors', count: 53, icon: <FaUsers className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Verified Users', count: 37, icon: <RiVerifiedBadgeFill className="text-4xl text-white transition transform hover:scale-110" /> },
-      { title: 'Joined Users', count: 20, icon: <FaPeopleGroup className="text-4xl text-white transition transform hover:scale-110" /> },
+      { title: 'Total Visitors', count: 53, iconType: 'FaUsers' },
+      { title: 'Verified Users', count: 37, iconType: 'RiVerifiedBadgeFill' },
+      { title: 'Joined Users', count: 20, iconType: 'FaPeopleGroup' },
     ],
     tableData: [
       { date: '2024-08-01', mobile: '2233445566', verified: 'Yes', joined: 'Equity' },

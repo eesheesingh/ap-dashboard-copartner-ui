@@ -1,0 +1,20 @@
+.carousel-container {
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .carousel-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  }
+  
+  .carousel-content {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  
+  .carousel-content button {
+    flex: 0 0 auto;
+  }
+  
