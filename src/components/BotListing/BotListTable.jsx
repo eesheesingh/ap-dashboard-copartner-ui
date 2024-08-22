@@ -1,38 +1,72 @@
 import React, { useState } from 'react';
 import { FaCheckCircle } from 'react-icons/fa';
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from 'react-icons/md';
+import SendMessage from './SendMessage';
 
-const BotListTable = ({ tableData }) => {
-  const [selectedRows, setSelectedRows] = useState([]);
+const BotListTable = ({ tableData, token, affiliatePartnerId }) => {
+  const [selectedRows, setSelectedRows] = useState([]); // Store selected user IDs
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSendMessagePopupOpen, setIsSendMessagePopupOpen] = useState(false);
   const itemsPerPage = 10;
 
   const totalPages = Math.ceil(tableData.length / itemsPerPage);
 
   const handleSelectAll = () => {
-    const pageData = tableData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-    if (selectedRows.length === pageData.length) {
-      setSelectedRows([]);
+    if (selectedRows.length === tableData.length) {
+      setSelectedRows([]); // Deselect all if all are currently selected
     } else {
-      setSelectedRows(pageData.map((_, index) => (currentPage - 1) * itemsPerPage + index));
+      setSelectedRows(tableData.map((user) => user.UserID)); // Select all users across all pages
     }
   };
 
-  const handleSelectRow = (index) => {
-    if (selectedRows.includes(index)) {
-      setSelectedRows(selectedRows.filter((i) => i !== index));
+  const handleSelectRow = (userId) => {
+    if (selectedRows.includes(userId)) {
+      setSelectedRows(selectedRows.filter((id) => id !== userId));
     } else {
-      setSelectedRows([...selectedRows, index]);
+      setSelectedRows([...selectedRows, userId]);
     }
   };
 
-  const isSelected = (index) => selectedRows.includes(index);
+  const isSelected = (userId) => selectedRows.includes(userId);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      setSelectedRows([]);
     }
+  };
+
+  const handleOpenSendMessagePopup = () => {
+    setIsSendMessagePopupOpen(true);
+  };
+
+  const handleCloseSendMessagePopup = () => {
+    setIsSendMessagePopupOpen(false);
+  };
+
+  const handleSendMessage = (message) => {
+    console.log('Message to send:', message);
+    console.log('Selected users:', selectedRows);
+    // Send the message via the API
+    fetch('https://apbot.copartner.in/api/sendmessagetousers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        affiliate_partner_id: affiliatePartnerId,
+        message: message,
+        selected_users: selectedRows,
+        token: token,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Message sent successfully:', data);
+        setIsSendMessagePopupOpen(false);
+      })
+      .catch(error => {
+        console.error('Error sending message:', error);
+      });
   };
 
   // Slice data to get the current page data
@@ -40,13 +74,18 @@ const BotListTable = ({ tableData }) => {
 
   return (
     <div className="p-1 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-      <div className='flex justify-between items-center my-3'>
+      <div className='flex flex-row justify-between items-center my-3'>
         <h2 className="text-left md:text-[27px] text-[30px] xl:text-[40px] font-semibold">
           User Listing
         </h2>
-        <button className='text-lg font-medium rounded-lg py-2 px-2 bg-transparent text-white border-[1px] hover:bg-white transition-all'>
-          Message
-        </button>
+        <div className="md:flex md:w-auto md:justify-end items-center xl:items-center justify-start mt-4 md:mt-0">
+          <button
+            onClick={handleOpenSendMessagePopup}
+            className="bg-transparent border-[1px] border-white hover:bg-white hover:text-black transition duration-300 py-2 px-6 rounded-lg"
+          >
+            Message
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto rounded-[20px] border border-gray-700 max-h-96 overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-700 relative">
@@ -57,7 +96,7 @@ const BotListTable = ({ tableData }) => {
                   <input
                     type="checkbox"
                     className="form-checkbox h-5 w-5 text-blue-600 rounded-full"
-                    checked={selectedRows.length === currentPageData.length}
+                    checked={selectedRows.length === tableData.length}
                     onChange={handleSelectAll}
                   />
                 </div>
@@ -72,24 +111,32 @@ const BotListTable = ({ tableData }) => {
             {currentPageData.length > 0 ? (
               currentPageData.map((user, index) => (
                 <tr
-                  key={index}
+                  key={user.UserID}
                   className={`${
-                    isSelected((currentPage - 1) * itemsPerPage + index) ? "font-bold hover:bg-gray-700" : ""
+                    isSelected(user.UserID) ? "font-bold hover:bg-gray-700" : ""
                   }  transition-all duration-300`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center relative transition-all duration-300">
                     <input
                       type="checkbox"
                       className="form-checkbox h-5 w-5 text-blue-600 rounded-full"
-                      checked={isSelected((currentPage - 1) * itemsPerPage + index)}
-                      onChange={() => handleSelectRow((currentPage - 1) * itemsPerPage + index)}
+                      checked={isSelected(user.UserID)}
+                      onChange={() => handleSelectRow(user.UserID)}
                     />
-                    {isSelected((currentPage - 1) * itemsPerPage + index) && <FaCheckCircle className="absolute top-1/2 left-4 transform -translate-y-1/2 text-[#fff]" />}
+                    {isSelected(user.UserID) }
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{new Date(user.usercreationdatetime).toLocaleString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.mobileNumber || " - "}</td>
-                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.otp_verified ? "Yes" : "No"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">{user.landing_page_url || " - "}</td>
+                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">
+                    {new Date(user.usercreationdatetime).toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">
+                    {user.mobileNumber || " - "}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">
+                    {user.otp_verified ? "Yes" : "No"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap md:text-[18px] text-center transition-all duration-300">
+                    {user.landing_page_url || " - "}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -123,6 +170,16 @@ const BotListTable = ({ tableData }) => {
           </button>
         </div>
       </div>
+
+      {isSendMessagePopupOpen && (
+        <SendMessage
+          onClose={handleCloseSendMessagePopup}
+          onSend={handleSendMessage}
+          token={token}
+          affiliatePartnerId={affiliatePartnerId}
+          selectedUsers={selectedRows}
+        />
+      )}
     </div>
   );
 };
