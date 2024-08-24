@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
 
 const SendMessage = ({ onClose, onSend, selectedUsers, token }) => {
   const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
-  const handleSend = () => {
-    if (message.trim() && selectedUsers.length > 0) {
-      const stackIdData = localStorage.getItem('stackIdData');
-      const affiliateId = stackIdData ? JSON.parse(stackIdData).id : null;
+  const sendMessage = () => {
+    if (message.trim() && selectedUsers.length > 0 && !isSending) {
+      setIsSending(true);  // Prevent further clicks immediately
 
       const payload = {
-        affiliate_partner_id: affiliateId,
         message: message.trim(),
         selected_users: selectedUsers,
-        token: token // Use the token passed as a prop
+        token: token,
       };
-
-      console.log('Sending message:', payload);
 
       fetch('https://apbot.copartner.in/api/sendmessagetousers', {
         method: 'POST',
@@ -27,13 +23,15 @@ const SendMessage = ({ onClose, onSend, selectedUsers, token }) => {
       })
         .then(response => response.json())
         .then(data => {
-          toast.success('Message sent successfully!');
+          console.log('Message sent successfully:', data);
           onSend(message);
           onClose();
         })
         .catch(error => {
-          toast.error('Failed to send message. Please try again.');
-          console.error('Error sending message:', error);
+          console.error('Failed to send message:', error);
+        })
+        .finally(() => {
+          setIsSending(false);  // Re-enable the button after API response
         });
     }
   };
@@ -54,10 +52,11 @@ const SendMessage = ({ onClose, onSend, selectedUsers, token }) => {
         />
         <div className="flex justify-end space-x-4">
           <button
-            onClick={handleSend}
+            onClick={sendMessage}
             className="px-4 py-2 bg-[#fff] text-[#000] hover:text-[#fff] rounded-lg hover:bg-[#000] transition-all"
+            disabled={isSending}
           >
-            Send
+            {isSending ? 'Sending...' : 'Send'}
           </button>
         </div>
       </div>
